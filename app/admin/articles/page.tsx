@@ -1,99 +1,78 @@
-'use client';
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Plus, Pencil, Trash2 } from 'lucide-react';
+import { Plus, Pencil } from 'lucide-react';
+import { db } from '@/lib/db';
+import { DeleteButton } from './DeleteButton';
 
-export default function AdminArticles() {
-  const [articles, setArticles] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [refresh, setRefresh] = useState(0); // Триггер для обновления
-
-  useEffect(() => {
-    let isMounted = true;
-    
-    const loadArticles = async () => {
-      try {
-        const res = await fetch('/api/articles');
-        if (!res.ok) throw new Error('Ошибка загрузки статей');
-        const data = await res.json();
-        if (isMounted) setArticles(data);
-      } catch (error: any) {
-        if (isMounted) alert(error.message);
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    };
-
-    loadArticles();
-    
-    return () => { isMounted = false; };
-  }, [refresh]); // Эффект перезапускается при изменении refresh
-
-  const deleteArticle = async (id: number) => {
-    if (!confirm('Удалить статью? Действие необратимо.')) return;
-    
-    try {
-      const res = await fetch(`/api/articles/${id}`, { method: 'DELETE' });
-      if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData.error || 'Ошибка при удалении');
-      }
-      setRefresh(prev => prev + 1); // Дергаем триггер, таблица сама обновится
-    } catch (error: any) {
-      alert(error.message);
-    }
-  };
-
-  if (loading) return <p style={{ padding: '20px' }}>Загрузка статей...</p>;
+// Next.js выполнит этот компонент на сервере
+export default async function AdminArticles() {
+  const articles = db.prepare('SELECT id, title, category, tag, status, created_at FROM articles ORDER BY created_at DESC').all() as any[];
 
   return (
     <>
-      <div className="admin-header">
-        <h1>Статьи</h1>
-        <Link href="/admin/articles/new" className="button button-primary button-small">
-          <Plus size={16} /> Написать статью
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-[32px] font-bold text-coal m-0">Статьи</h1>
+        <Link 
+          href="/admin/articles/new" 
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-br from-matcha to-forest text-white font-bold hover:-translate-y-0.5 transition-transform shadow-[0_10px_20px_rgba(47,63,23,0.15)]"
+        >
+          <Plus size={18} /> Написать статью
         </Link>
       </div>
-      <div className="admin-card" style={{ padding: 0, overflow: 'hidden' }}>
-        <table className="admin-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Дата</th>
-              <th>Заголовок</th>
-              <th>Категория / Тег</th>
-              <th>Статус</th>
-              <th style={{ width: '80px' }}></th>
-            </tr>
-          </thead>
-          <tbody>
-            {articles.length === 0 ? (
-              <tr>
-                <td colSpan={6} style={{ textAlign: 'center', padding: '20px' }}>Статей пока нет</td>
+      
+      <div className="bg-white border border-forest/15 rounded-[24px] shadow-sm overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse min-w-[700px]">
+            <thead>
+              <tr className="bg-snow border-b border-forest/15">
+                <th className="p-4 text-[13px] font-bold text-coal/60 uppercase tracking-wider">ID</th>
+                <th className="p-4 text-[13px] font-bold text-coal/60 uppercase tracking-wider">Дата</th>
+                <th className="p-4 text-[13px] font-bold text-coal/60 uppercase tracking-wider">Заголовок</th>
+                <th className="p-4 text-[13px] font-bold text-coal/60 uppercase tracking-wider">Категория / Тег</th>
+                <th className="p-4 text-[13px] font-bold text-coal/60 uppercase tracking-wider">Статус</th>
+                <th className="p-4 w-[100px]"></th>
               </tr>
-            ) : (
-              articles.map(art => (
-                <tr key={art.id}>
-                  <td>{art.id}</td>
-                  <td>{new Date(art.created_at).toLocaleDateString('ru-RU')}</td>
-                  <td><strong>{art.title}</strong></td>
-                  <td>{art.category} <br/><small>{art.tag}</small></td>
-                  <td><span className="admin-badge completed">{art.status || 'published'}</span></td>
-                  <td>
-                    <div style={{ display: 'flex', gap: '8px' }}>
-                      <Link href={`/admin/articles/${art.id}/edit`} className="action-btn" title="Редактировать">
-                        <Pencil size={16} />
-                      </Link>
-                      <button onClick={() => deleteArticle(art.id)} className="action-btn danger" title="Удалить">
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
+            </thead>
+            <tbody>
+              {articles.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="text-center p-10 text-coal/60 font-medium">
+                    Статей пока нет
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                articles.map(art => (
+                  <tr key={art.id} className="border-b border-forest/5 hover:bg-snow/50 transition-colors">
+                    <td className="p-4 text-coal font-medium">{art.id}</td>
+                    <td className="p-4 text-coal">{new Date(art.created_at).toLocaleDateString('ru-RU')}</td>
+                    <td className="p-4"><strong className="text-coal font-bold">{art.title}</strong></td>
+                    <td className="p-4 text-coal">
+                      <span className="block">{art.category}</span>
+                      <small className="text-coal/60 font-medium">{art.tag}</small>
+                    </td>
+                    <td className="p-4">
+                      <span className={`inline-block px-3 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider ${art.status === 'draft' ? 'bg-fog text-coal' : 'bg-matcha/10 text-forest'}`}>
+                        {art.status === 'draft' ? 'Черновик' : 'Опубликована'}
+                      </span>
+                    </td>
+                    <td className="p-4">
+                      <div className="flex gap-1 justify-end">
+                        <Link 
+                          href={`/admin/articles/${art.id}/edit`} 
+                          className="p-2 rounded-xl text-coal/60 hover:bg-snow hover:text-forest transition-colors" 
+                          title="Редактировать"
+                        >
+                          <Pencil size={18} />
+                        </Link>
+                        {/* Клиентская кнопка */}
+                        <DeleteButton id={art.id} />
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </>
   );

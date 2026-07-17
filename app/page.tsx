@@ -15,6 +15,8 @@ import { ScrollReveal } from "@/components/ScrollReveal";
 import { ClinicalBehaviorChart } from "@/components/ClinicalBehaviorChart";
 import { FaqItem } from "@/components/FaqItem";
 
+import { db } from "@/lib/db";
+
 export const metadata: Metadata = {
   title: "Главная — Busido-Pesido",
   description: "Busido-Pesido — поведение, состояние и благополучие животных.",
@@ -53,6 +55,9 @@ export default function Home() {
     },
     priceRange: "$$",
   };
+
+  const dbFormats = db.prepare('SELECT * FROM services ORDER BY sort_order').all() as any[];
+  const dbSchedule = db.prepare('SELECT * FROM free_schedule ORDER BY day_number ASC').all() as any[];
 
   return (
     <main>
@@ -354,7 +359,7 @@ export default function Home() {
         </div>
       </section>
 
-      <FormatsSection />
+      <FormatsSection formats={dbFormats} />
 
 {/* ПОСЛЕ КОНСУЛЬТАЦИИ (RESULT) */}
 <section className="py-[92px] mobile:py-[64px] bg-white relative overflow-hidden">
@@ -500,7 +505,7 @@ export default function Home() {
             </Link>
           </div>
           {/* Вставляем наш обновленный виджет */}
-          <FreeConsultationsWidget />
+          <FreeConsultationsWidget scheduleData={dbSchedule} />
         </div>
       </section>
 

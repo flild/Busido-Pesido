@@ -48,8 +48,25 @@ export async function POST(req: Request) {
       'new'
     );
 
-    // TODO для админки: здесь в будущем можно добавить логику уменьшения количества свободных мест (slots) в таблице расписания
 
+    // Удаляем занятое время из слотов
+    const scheduleStmt = db.prepare('SELECT slots FROM free_schedule WHERE date_id = ?');
+    const scheduleRow = scheduleStmt.get(dateId) as { slots: string };
+    
+    if (scheduleRow) {
+      let slots = JSON.parse(scheduleRow.slots);
+      // Убираем время, которое только что забронировали
+      slots = slots.filter((s: string) => s !== time);
+      
+      const updateScheduleStmt = db.prepare('UPDATE free_schedule SET slots = ? WHERE date_id = ?');
+      updateScheduleStmt.run(JSON.stringify(slots), dateId);
+      
+      // Если слотов не осталось, автоматически закрываем день
+      if (slots.length === 0) {
+        db.prepare("UPDATE free_schedule SET is_available = 0, custom_message = 'Нет мест' WHERE date_id = ?").run(dateId);
+      }
+    }
+    
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Ошибка при записи на бесплатную консультацию:', error);

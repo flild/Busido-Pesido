@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { LayoutDashboard, FileText, Users, ArrowLeft } from 'lucide-react';
+import { LayoutDashboard, FileText, Users, ArrowLeft,CalendarDays } from 'lucide-react';
+
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -36,6 +37,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           >
             <FileText size={18} className="text-coal/60 group-hover:text-forest transition-colors" /> 
             Статьи
+          </Link>
+
+          <Link 
+            href="/admin/schedule" 
+            className="flex items-center gap-3 px-4 py-3 rounded-xl text-coal font-bold text-sm transition-colors hover:bg-snow hover:text-forest group"
+          >
+            <CalendarDays size={18} className="text-coal/60 group-hover:text-forest transition-colors" /> 
+            Расписание бесплатных консультаций
           </Link>
         </nav>
       </aside>

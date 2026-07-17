@@ -2,25 +2,20 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// Обновленный тип данных из БД
 export type FreeConsultationDay = {
-  dateId: string;
-  dayNumber: number;
-  isAvailable: boolean;
-  customMessage?: string;
-  slots: string[];
+  date_id: string;
+  day_number: number;
+  is_available: number; // 0 или 1 из SQLite
+  custom_message: string | null;
+  slots: string; // JSON строка из SQLite
 };
 
-const scheduleData: FreeConsultationDay[] = [
-  { dateId: '2026-08-01', dayNumber: 1, isAvailable: true, slots: ["10:00", "12:00", "15:30"] },
-  { dateId: '2026-08-02', dayNumber: 2, isAvailable: true, slots: ["11:00", "16:00"] },
-  { dateId: '2026-08-03', dayNumber: 3, isAvailable: true, slots: ["18:00"] },
-  { dateId: '2026-08-04', dayNumber: 4, isAvailable: false, customMessage: 'Нет мест', slots: [] },
-  { dateId: '2026-08-05', dayNumber: 5, isAvailable: true, slots: ["10:00", "12:00", "14:00", "17:00"] },
-  { dateId: '2026-08-06', dayNumber: 6, isAvailable: false, customMessage: 'Отменено', slots: [] },
-  { dateId: '2026-08-07', dayNumber: 7, isAvailable: true, slots: ["10:00", "13:00"] }
-];
+interface Props {
+  scheduleData: FreeConsultationDay[];
+}
 
-export function FreeConsultationsWidget() {
+export function FreeConsultationsWidget({ scheduleData }: Props) {
   const [selectedDayId, setSelectedDayId] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   
@@ -31,7 +26,9 @@ export function FreeConsultationsWidget() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const selectedDay = scheduleData.find(d => d.dateId === selectedDayId);
+  const selectedDay = scheduleData.find(d => d.date_id === selectedDayId);
+  // Парсим слоты безопасно
+  const availableSlots = selectedDay ? JSON.parse(selectedDay.slots) : [];
 
   // Кастомная маска для телефона +7 (XXX) XXX-XX-XX
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,8 +58,8 @@ export function FreeConsultationsWidget() {
   };
 
   const handleDaySelect = (day: FreeConsultationDay) => {
-    if (!day.isAvailable) return;
-    setSelectedDayId(day.dateId);
+    if (day.is_available === 0) return;
+    setSelectedDayId(day.date_id);
     setSelectedTime(null);
     setErrorMessage('');
   };
@@ -78,7 +75,7 @@ export function FreeConsultationsWidget() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          dateId: selectedDay.dateId,
+          dateId: selectedDay.date_id, // обновили поле[cite: 20]
           time: selectedTime,
           ...formData,
           confirmed
@@ -120,22 +117,23 @@ export function FreeConsultationsWidget() {
   // Проверка готовности формы (Имя не пустое, Телефон минимум 11 цифр)
   const isFormValid = formData.name.trim().length > 1 && formData.phone.replace(/\D/g, '').length >= 11 && confirmed;
 
-  return (
+return (
     <div className="mt-10 grid grid-cols-[1.2fr_0.8fr] gap-[34px] tablet:grid-cols-1 items-start">
       
-      {/* Сетка дней (ЦВЕТА ИНВЕРТИРОВАНЫ ДЛЯ СВЕТЛОГО ФОНА) */}
+      {/* Сетка дней */}
       <div className="grid grid-cols-7 gap-2.5 max-md:grid-cols-4 max-sm:grid-cols-2">
         {scheduleData.map((day) => {
-          const isSelected = selectedDayId === day.dateId;
-          const slotsCount = day.slots.length;
+          const isSelected = selectedDayId === day.date_id;
+          const parsedSlots = JSON.parse(day.slots);
+          const slotsCount = parsedSlots.length;
           
           return (
             <button
-              key={day.dateId}
+              key={day.date_id}
               onClick={() => handleDaySelect(day)}
-              disabled={!day.isAvailable || isSuccess}
+              disabled={day.is_available === 0 || isSuccess} // Обновили проверку[cite: 20]
               className={`group relative flex flex-col items-center p-4 rounded-[22px] border transition-all duration-300 outline-none
-                ${!day.isAvailable 
+                ${day.is_available === 0 
                   ? 'bg-snow border-forest/5 opacity-50 cursor-not-allowed' 
                   : 'bg-white border-forest/15 hover:border-forest/30 hover:shadow-sm cursor-pointer'}
                 ${isSelected ? 'border-transparent shadow-none' : ''}
@@ -151,10 +149,10 @@ export function FreeConsultationsWidget() {
               )}
               <div className="relative z-10 flex flex-col items-center">
                 <span className={`text-[32px] font-[900] leading-none mb-1 transition-colors ${isSelected ? 'text-white' : 'text-coal'}`}>
-                  {day.dayNumber}
+                  {day.day_number}
                 </span>
                 <b className={`text-[12px] font-[700] transition-colors text-center leading-tight ${isSelected ? 'text-white/90' : 'text-coal/60'}`}>
-                  {day.isAvailable ? `${slotsCount} мест` : day.customMessage}
+                  {day.is_available === 1 ? `${slotsCount} мест` : day.custom_message}
                 </b>
               </div>
             </button>
@@ -195,7 +193,7 @@ export function FreeConsultationsWidget() {
               <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                 <span className="kicker">ОФОРМЛЕНИЕ ЗАЯВКИ</span>
                 <h3 className="text-[26px] font-[800] mt-2 mb-2 leading-tight">
-                  {selectedDay ? `${selectedDay.dayNumber} числа` : 'Выберите дату'}
+                  {selectedDay ? `${selectedDay.day_number} числа` : 'Выберите дату'}
                 </h3>
                 
                 <div className="min-h-[90px] mt-6 mb-6">
@@ -203,7 +201,8 @@ export function FreeConsultationsWidget() {
                     <p className="text-coal/60 text-[15px]">Нажмите на любой доступный день в календаре слева.</p>
                   ) : (
                     <div className="grid grid-cols-3 gap-2.5 max-sm:grid-cols-2">
-                      {selectedDay.slots.map(time => (
+                      {/* Мапим распаршенные слоты */}
+                      {availableSlots.map((time: string) => (
                         <button
                           key={time}
                           onClick={() => setSelectedTime(time)}
@@ -305,7 +304,7 @@ export function FreeConsultationsWidget() {
                         disabled={!isFormValid || isSubmitting}
                         onClick={handleBook}
                       >
-                        {isSubmitting ? 'Отправка...' : `Записаться на ${selectedDay?.dayNumber} число, ${selectedTime}`}
+                        {isSubmitting ? 'Отправка...' : `Записаться на ${selectedDay?.day_number} число, ${selectedTime}`}
                       </button>
                     </motion.div>
                   )}

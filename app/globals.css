@@ -1,0 +1,133 @@
+@import "tailwindcss";
+@config "../tailwind.config.ts";
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-snow text-coal font-sans antialiased;
+    font-weight: 450;
+    line-height: 1.62;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-balance;
+  }
+
+  h1 {
+    font-weight: 750;
+    letter-spacing: -0.05em;
+    font-size: clamp(48px, 7vw, 86px);
+    line-height: 0.95;
+    @apply my-6 mobile:tracking-[-0.042em];
+  }
+
+  h2 {
+    font-weight: 720;
+    letter-spacing: -0.04em;
+    font-size: clamp(34px, 4.6vw, 58px);
+    line-height: 1;
+    @apply my-4 mobile:tracking-[-0.032em];
+  }
+
+  h3 {
+    font-weight: 690;
+    letter-spacing: -0.025em;
+    line-height: 1.13;
+  }
+
+  p, li, dd, dt {
+    font-weight: 450;
+  }
+
+  blockquote {
+    @apply font-medium leading-[1.48] tracking-[-0.012em];
+  }
+}
+
+@layer components {
+  /* Лейаут */
+  .container {
+    @apply mx-auto w-full max-w-[1180px] px-5 tablet:max-w-[1320px] mobile:px-3;
+  }
+  .container.narrow {
+    @apply max-w-[820px];
+  }
+
+  /* Кнопки */
+  .button {
+    @apply relative inline-flex items-center justify-center min-h-[50px] px-5 rounded-full border border-transparent font-[650] cursor-pointer transition-transform duration-200 overflow-hidden;
+  }
+  .button:hover {
+    @apply -translate-y-0.5;
+  }
+  
+  /* Анимация блика для кнопок */
+  .button::after {
+    content: "";
+    @apply absolute w-[80px] h-[220%] -top-[60%] -left-[110px] rotate-[18deg] bg-gradient-to-r from-transparent via-white/35 to-transparent transition-[left] duration-500 ease-out;
+  }
+  .button:hover::after {
+    left: calc(100% + 30px);
+  }
+
+  .button-primary {
+    @apply bg-gradient-to-br from-matcha to-forest text-white shadow-[0_14px_34px_rgba(47,63,23,0.24)];
+  }
+  .button-dark {
+    @apply bg-coal text-white;
+  }
+  .button-light {
+    @apply bg-white text-coal;
+  }
+  .button-ghost {
+    @apply bg-snow/80 border-forest/15;
+  }
+
+  /* Текстовые бейджи */
+  .eyebrow, .kicker, .micro, .tag {
+    @apply inline-block text-[12px] uppercase tracking-[0.14em] font-[650];
+  }
+  .eyebrow {
+    @apply bg-gradient-to-r from-snow/90 to-fog/70 border border-caramel/30 px-3 py-2 rounded-full shadow-[0_10px_30px_rgba(87,31,11,0.07)];
+  }
+  .kicker {
+    @apply text-forest;
+  }
+  .tag {
+    @apply bg-fog text-espresso px-2.5 py-1.5 rounded-full tracking-[0.06em];
+  }
+
+  /* Карточки */
+  .card {
+    @apply p-7 rounded-[28px] bg-white border border-forest/15 shadow-[0_16px_45px_rgba(20,20,20,0.05)];
+  }
+  .dark-card {
+    @apply p-6 rounded-3xl bg-white/5 border border-white/10 text-oat;
+  }
+  
+  /* Эффект перспективы (JS сам будет крутить матрицу) */
+  .tilt-card {
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+  .tilt-card > * {
+    transform: translateZ(1px);
+  }
+
+  /* Утилиты анимаций появления */
+  .reveal-ready {
+    @apply opacity-0 translate-y-[22px] transition-all duration-[650ms] ease-out;
+  }
+  .reveal-ready.revealed {
+    @apply opacity-100 translate-y-0;
+  }
+  
+  /* Уважение к системным настройкам */
+  @media (prefers-reduced-motion: reduce) {
+    .reveal-ready {
+      @apply opacity-100 translate-y-0 transition-none;
+    }
+  }
+}

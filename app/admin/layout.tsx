@@ -46,6 +46,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <CalendarDays size={18} className="text-coal/60 group-hover:text-forest transition-colors" /> 
             Расписание бесплатных консультаций
           </Link>
+          
         </nav>
       </aside>
       

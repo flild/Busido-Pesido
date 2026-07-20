@@ -17,6 +17,8 @@ import { FaqItem } from "@/components/FaqItem";
 
 import { db } from "@/lib/db";
 
+
+const dbReviews = db.prepare('SELECT * FROM reviews ORDER BY sort_order ASC').all() as any[];
 export const metadata: Metadata = {
   title: "Главная — Busido-Pesido",
   description: "Busido-Pesido — поведение, состояние и благополучие животных.",
@@ -465,7 +467,7 @@ export default function Home() {
       </section>
 
       {/* ОТЗЫВЫ */}
-      <section className="py-[92px] mobile:py-[64px]">
+            <section className="py-[92px] mobile:py-[64px]">
         <div className="container">
           <ScrollReveal className="max-w-[820px] mb-[42px]">
             <span className="kicker">ОТЗЫВЫ</span>
@@ -477,9 +479,9 @@ export default function Home() {
               и скриншоты отзывов.
             </p>
           </ScrollReveal>
-          <ReviewCarousel />
-        </div>
-      </section>
+    <ReviewCarousel initialReviews={dbReviews} />
+  </div>
+</section>
 
       {/* БЕСПЛАТНЫЕ КОНСУЛЬТАЦИИ */}
       <section className="py-[92px] mobile:py-[64px] relative overflow-hidden bg-[radial-gradient(circle_at_10%_12%,rgba(240,114,150,0.32),transparent_22rem),radial-gradient(circle_at_90%_90%,rgba(111,143,191,0.28),transparent_23rem),linear-gradient(120deg,theme(colors.forest),theme(colors.soldier))] text-white after:absolute after:w-[190px] after:h-[190px] after:right-[3%] after:-top-[80px] after:rounded-full after:bg-gradient-rose after:opacity-45">

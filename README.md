@@ -22,13 +22,12 @@
 - `/` — Главная страница с презентацией услуг и подходов.
 - `/about`, `/support`, `/complex-cases`, `/cats`, `/professionals`, `/library` — Информационные страницы услуг и форматов.
 - `/booking` — Страница записи с интерактивной формой.
-- `/free-consultations` — Страница записи на бесплатные консультации (1-7 числа каждого месяца).
+- `/free-consultations` — Страница записи на бесплатные консультации.
 - `/blog` — Блог со списком статей.
 - `/blog/[slug]` — Страница отдельной статьи блога (Markdown рендеринг).
-- `/admin` — Главная страница административной панели (дашборд и статистика).
-- `/admin/applications` — Управление заявками.
-- `/admin/articles` — Управление статьями блога (создание, редактирование, удаление).
-- `/api` — API-роуты для работы с базой данных (заявки, статьи, статистика).
+- `/admin` — Главная страница административной панели (дашборд и статистика). Построена на React Server Components.
+- `/admin/applications`, `/admin/articles`, `/admin/services`, `/admin/schedule` — Разделы управления контентом. Чтение данных происходит на сервере, а мутации выполняются через **Server Actions** без использования клиентских API-роутов.
+- `/api` — Оставлены только публичные API-роуты (например, `/api/free-booking` для записи клиентов со стороны фронтенда).
 
 ### `/components`
 Реиспользуемые React-компоненты:
@@ -45,30 +44,21 @@
 
 ## База данных (SQLite)
 
-В проекте используются две основные таблицы:
+В проекте используются следующие таблицы (режим WAL включен):
 
-1. **`articles`** — Статьи блога:
-   - `id` (INTEGER, PK)
-   - `title` (TEXT)
-   - `slug` (TEXT, UNIQUE) — URL-идентификатор
-   - `summary` (TEXT) — Краткое описание
-   - `content` (TEXT) — Текст статьи в формате Markdown
-   - `category` (TEXT) — Системная категория для фильтрации
-   - `tag` (TEXT) — Отображаемый тег на карточке
-   - `status` (TEXT) — Статус публикации ('published', 'draft')
-   - `created_at` (DATETIME)
+1. **`articles`** — Статьи блога и библиотеки (с поддержкой Markdown и уникальных slug-ссылок).
+2. **`applications`** — Заявки клиентов со статусами воронки ('new', 'contacted', 'completed', 'cancelled').
+3. **`services`** — Динамические настройки форматов работы, цен и шагов (JSON), выводимые на главной.
+4. **`free_schedule`** — Расписание слотов для бесплатных консультаций (с автоматическим списыванием мест).
+5. **`reviews`** — Отзывы клиентов для компонента `ReviewCarousel`.
+6. **`cases`** — Интерактивные кейсы (поведенческий разбор) для компонента `CaseInteractive`.
 
-2. **`applications`** — Заявки клиентов:
-   - `id` (INTEGER, PK)
-   - `service` (TEXT) — Выбранная услуга
-   - `date` (TEXT) — Дата записи
-   - `time` (TEXT) — Время записи
-   - `name` (TEXT) — Имя клиента
-   - `email` (TEXT) — Email
-   - `contact` (TEXT) — Контакт для связи (Telegram, телефон)
-   - `request_text` (TEXT) — Описание проблемы/запроса
-   - `status` (TEXT) — Статус обработки ('new', 'contacted', 'completed', 'cancelled')
-   - `created_at` (DATETIME)
+
+2. Бэкенд (Server Components, Actions & API)
+- **Архитектура Админки:** Полностью отказались от SPA-подхода (`useEffect` + `fetch`). Чтение данных происходит синхронно напрямую из БД в Server Components.
+- **Server Actions:** Все мутации (создание/редактирование статей, изменение статусов заявок, обновление расписания и услуг) выполняются через серверные экшены (RPC-вызовы) с мгновенной инвалидацией кэша (`revalidatePath`).
+- **Публичные API (`/api/free-booking`):** Оставлены только для приема заявок с фронтенда. Настроена жесткая валидация, защита от дублей (очистка телефонов от спецсимволов) и транзакционное вычитание слотов из таблицы `free_schedule` с автоматическим закрытием дня.
+
 
 ## Административная панель (`/admin`)
 
@@ -77,6 +67,10 @@
 - **Дашборд:** Показывает общую статистику: всего заявок, новые заявки, конверсия в работу (переход из 'Новая' в 'Завершена'), количество опубликованных статей. Отрисованы графики динамики заявок по дням и распределение по популярным услугам (через Recharts).
 - **Управление заявками:** Таблица со всеми поступившими заявками. Возможность изменения статуса (воронка) и удаления.
 - **Управление статьями (CMS):** Полноценный CRUD для блога. Создание новых статей, редактирование существующих, удаление. Поддержка Markdown.
+
+3. Клиентская часть (Островки интерактивности и Формы)
+- **Формы записи (`BookingForm`, `FreeConsultationsWidget`):** Блокировка кнопок при отправке, кастомная маска для телефонов, обработка ошибок. Динамический рендер доступного времени из серверных пропсов.
+- **Интерактивность в CMS:** Клиентские компоненты сведены к минимуму (микро-компоненты кнопок удаления, селекты статусов, формы редактирования). Используется нативный `action={}` и хук `useTransition` для неблокирующего UI при вызове Server Actions. Внедрен отлов SQL-ошибок (например, дублей slug) и вывод их в UI без падения приложения.
 
 ## Стилизация (`/app/globals.css`)
 
@@ -92,6 +86,8 @@
 ├── app/
 │   ├── admin/
 │   │   ├── applications/
+│   │   │   ├── actions.ts
+│   │   │   ├── ApplicationActions.tsx
 │   │   │   └── page.tsx
 │   │   ├── articles/
 │   │   │   ├── [id]/
@@ -99,17 +95,20 @@
 │   │   │   │       └── page.tsx
 │   │   │   ├── new/
 │   │   │   │   └── page.tsx
+│   │   │   ├── actions.ts
+│   │   │   ├── ArticleForm.tsx
+│   │   │   ├── DeleteButton.tsx
+│   │   │   └── page.tsx
+│   │   ├── schedule/
+│   │   │   ├── actions.ts
+│   │   │   └── page.tsx
+│   │   ├── services/
+│   │   │   ├── actions.ts
 │   │   │   └── page.tsx
 │   │   ├── layout.tsx
 │   │   └── page.tsx
 │   ├── api/
-│   │   ├── applications/
-│   │   │   ├── [id]/
-│   │   │   │   └── route.ts
-│   │   │   └── route.ts
-│   │   ├── articles/
-│   │   │   ├── [id]/
-│   │   │   │   └── route.ts
+│   │   ├── free-booking/
 │   │   │   └── route.ts
 │   │   └── stats/
 │   │       └── route.ts
@@ -133,23 +132,24 @@
 │   │   └── page.tsx
 │   ├── support/
 │   │   └── page.tsx
+│   ├── error.tsx
 │   ├── globals.css
 │   ├── layout.tsx
+│   ├── not-found.tsx
 │   ├── page.tsx
 │   ├── robots.ts
 │   └── sitemap.ts
-├── assets/
-│   └── .aistudio/
-│       └── .gitignore
 ├── components/
 │   ├── ApproachTabs.tsx
 │   ├── BlogList.tsx
 │   ├── BookingForm.tsx
 │   ├── CaseInteractive.tsx
+│   ├── ClinicalBehaviorChart.tsx
 │   ├── FactorCloud.tsx
+│   ├── FaqItem.tsx
 │   ├── Footer.tsx
 │   ├── FormatsSection.tsx
-│   ├── FreeConsultationsDemo.tsx
+│   ├── FreeConsultationsWidget.tsx
 │   ├── Header.tsx
 │   ├── IssueCard.tsx
 │   ├── LibraryInteractive.tsx
@@ -158,16 +158,30 @@
 │   ├── PaletteStripe.tsx
 │   ├── ReadingProgress.tsx
 │   ├── ReviewCarousel.tsx
+│   ├── ScrollReveal.tsx
 │   ├── ServiceInteractive.tsx
 │   ├── StateSlider.tsx
+│   ├── TiltCard.tsx
 │   ├── Toast.tsx
 │   └── UtilityBar.tsx
+├── data/
+│   ├── cases.ts
+│   ├── sqlite.db
+│   ├── sqlite.db-shm
+│   └── sqlite.db-wal
 ├── hooks/
 │   └── use-mobile.ts
 ├── lib/
 │   ├── db.ts
+│   ├── theme.ts
 │   └── utils.ts
-├── .env.example
+├── public/
+│   └── reviews/
+│       ├── placeholder-cat.png
+│       ├── placeholder-dog.png
+│       └── placeholder-support.png
+├── TEXT/
+│   └── CaseInteractive.json
 ├── .eslintrc.json
 ├── .gitignore
 ├── metadata.json
@@ -176,7 +190,9 @@
 ├── nextjs-tree.txt
 ├── package.json
 ├── README.md
+├── tailwind.config.ts
 └── tsconfig.json
+
 
 
 # Контекст проекта: Busido-Pesido (Next.js 15 App Router + SQLite)

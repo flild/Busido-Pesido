@@ -1,6 +1,8 @@
 ﻿├── app/
 │   ├── admin/
 │   │   ├── applications/
+│   │   │   ├── actions.ts
+│   │   │   ├── ApplicationActions.tsx
 │   │   │   └── page.tsx
 │   │   ├── articles/
 │   │   │   ├── [id]/
@@ -8,17 +10,20 @@
 │   │   │   │       └── page.tsx
 │   │   │   ├── new/
 │   │   │   │   └── page.tsx
+│   │   │   ├── actions.ts
+│   │   │   ├── ArticleForm.tsx
+│   │   │   ├── DeleteButton.tsx
+│   │   │   └── page.tsx
+│   │   ├── schedule/
+│   │   │   ├── actions.ts
+│   │   │   └── page.tsx
+│   │   ├── services/
+│   │   │   ├── actions.ts
 │   │   │   └── page.tsx
 │   │   ├── layout.tsx
 │   │   └── page.tsx
 │   ├── api/
-│   │   ├── applications/
-│   │   │   ├── [id]/
-│   │   │   │   └── route.ts
-│   │   │   └── route.ts
-│   │   ├── articles/
-│   │   │   ├── [id]/
-│   │   │   │   └── route.ts
+│   │   ├── free-booking/
 │   │   │   └── route.ts
 │   │   └── stats/
 │   │       └── route.ts
@@ -42,23 +47,24 @@
 │   │   └── page.tsx
 │   ├── support/
 │   │   └── page.tsx
+│   ├── error.tsx
 │   ├── globals.css
 │   ├── layout.tsx
+│   ├── not-found.tsx
 │   ├── page.tsx
 │   ├── robots.ts
 │   └── sitemap.ts
-├── assets/
-│   └── .aistudio/
-│       └── .gitignore
 ├── components/
 │   ├── ApproachTabs.tsx
 │   ├── BlogList.tsx
 │   ├── BookingForm.tsx
 │   ├── CaseInteractive.tsx
+│   ├── ClinicalBehaviorChart.tsx
 │   ├── FactorCloud.tsx
+│   ├── FaqItem.tsx
 │   ├── Footer.tsx
 │   ├── FormatsSection.tsx
-│   ├── FreeConsultationsDemo.tsx
+│   ├── FreeConsultationsWidget.tsx
 │   ├── Header.tsx
 │   ├── IssueCard.tsx
 │   ├── LibraryInteractive.tsx
@@ -67,16 +73,30 @@
 │   ├── PaletteStripe.tsx
 │   ├── ReadingProgress.tsx
 │   ├── ReviewCarousel.tsx
+│   ├── ScrollReveal.tsx
 │   ├── ServiceInteractive.tsx
 │   ├── StateSlider.tsx
+│   ├── TiltCard.tsx
 │   ├── Toast.tsx
 │   └── UtilityBar.tsx
+├── data/
+│   ├── cases.ts
+│   ├── sqlite.db
+│   ├── sqlite.db-shm
+│   └── sqlite.db-wal
 ├── hooks/
 │   └── use-mobile.ts
 ├── lib/
 │   ├── db.ts
+│   ├── theme.ts
 │   └── utils.ts
-├── .env.example
+├── public/
+│   └── reviews/
+│       ├── placeholder-cat.png
+│       ├── placeholder-dog.png
+│       └── placeholder-support.png
+├── TEXT/
+│   └── CaseInteractive.json
 ├── .eslintrc.json
 ├── .gitignore
 ├── metadata.json
@@ -85,4 +105,5 @@
 ├── nextjs-tree.txt
 ├── package.json
 ├── README.md
+├── tailwind.config.ts
 └── tsconfig.json

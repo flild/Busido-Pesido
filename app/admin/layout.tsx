@@ -46,6 +46,21 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <CalendarDays size={18} className="text-coal/60 group-hover:text-forest transition-colors" /> 
             Расписание бесплатных консультаций
           </Link>
+          <Link 
+            href="/admin/reviews" 
+            className="flex items-center gap-3 px-4 py-3 rounded-xl text-coal font-bold text-sm transition-colors hover:bg-snow hover:text-forest group"
+          >
+            <FileText size={18} className="text-coal/60 group-hover:text-forest transition-colors" /> 
+            Отзывы
+          </Link>
+
+          <Link 
+            href="/admin/Cases" 
+            className="flex items-center gap-3 px-4 py-3 rounded-xl text-coal font-bold text-sm transition-colors hover:bg-snow hover:text-forest group"
+          >
+            <FileText size={18} className="text-coal/60 group-hover:text-forest transition-colors" /> 
+            Кейсы
+          </Link>
           
         </nav>
       </aside>

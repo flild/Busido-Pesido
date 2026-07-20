@@ -18,6 +18,12 @@ import { FaqItem } from "@/components/FaqItem";
 import { db } from "@/lib/db";
 
 
+const dbCasesRaw = db.prepare('SELECT * FROM cases ORDER BY sort_order ASC').all() as any[];
+const dbCases = dbCasesRaw.map(c => ({
+  ...c,
+  steps: JSON.parse(c.steps)
+}));
+
 const dbReviews = db.prepare('SELECT * FROM reviews ORDER BY sort_order ASC').all() as any[];
 export const metadata: Metadata = {
   title: "Главная — Busido-Pesido",
@@ -451,20 +457,20 @@ export default function Home() {
 
       {/* КЕЙСЫ */}
       <section className="py-[92px] mobile:py-[64px]">
-        <div className="container">
-          <ScrollReveal className="max-w-[820px] mb-[42px]">
-            <span className="kicker">КЕЙСЫ</span>
-            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice">
-              История случая раскрывается по этапам анализа
-            </h2>
-            <p className="text-xl text-matcha">
-              Мы показываем не только результат, но и то, какие данные изменили
-              рабочую гипотезу.
-            </p>
-          </ScrollReveal>
-          <CaseInteractive />
-        </div>
-      </section>
+      <div className="container">
+        <ScrollReveal className="max-w-[820px] mb-[42px]">
+          <span className="kicker">КЕЙСЫ</span>
+                <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice">
+                  История случая раскрывается по этапам анализа
+                </h2>
+                <p className="text-xl text-matcha">
+                  Мы показываем не только результат, но и то, какие данные изменили
+                  рабочую гипотезу.
+                </p>
+              </ScrollReveal>
+        <CaseInteractive initialCases={dbCases} />
+      </div>
+    </section>
 
       {/* ОТЗЫВЫ */}
             <section className="py-[92px] mobile:py-[64px]">

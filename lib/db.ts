@@ -93,6 +93,11 @@ db.exec(`
     custom_message TEXT, -- 'Нет мест', 'Отменено'
     slots TEXT NOT NULL -- JSON массив ["10:00", "12:00"]
   );
+
+  CREATE TABLE IF NOT EXISTS settings (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL
+  );
 `);
 
 // Сид данных для услуг (выполняется только если таблица пустая)
@@ -128,6 +133,16 @@ if (scheduleCount.c === 0) {
   insertSchedule.run('2026-08-05', 5, 1, null, JSON.stringify(["10:00", "12:00", "14:00", "17:00"]));
   insertSchedule.run('2026-08-06', 6, 0, 'Отменено', JSON.stringify([]));
   insertSchedule.run('2026-08-07', 7, 1, null, JSON.stringify(["10:00", "13:00"]));
+}
+
+const navCount = db.prepare("SELECT COUNT(*) as c FROM settings WHERE key = 'navigator_steps'").get() as { c: number };
+if (navCount.c === 0) {
+  // Твой хардкодный JSON из Navigator.tsx
+  const defaultNavSteps = [
+    { key: "species", title: "С кем связан запрос?", options: [["dog", "Собака", "Щенок, подросток, взрослая или пожилая собака"], ["cat", "Кошка", "Одна кошка или несколько животных дома"]] },
+    // ... можешь закинуть весь массив сюда
+  ];
+  db.prepare("INSERT INTO settings (key, value) VALUES ('navigator_steps', ?)").run(JSON.stringify(defaultNavSteps));
 }
 
 // Демо-данные оставляю, как были, они для тестов сойдут

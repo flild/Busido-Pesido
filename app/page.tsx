@@ -25,6 +25,21 @@ const dbCases = dbCasesRaw.map(c => ({
 }));
 
 const dbReviews = db.prepare('SELECT * FROM reviews ORDER BY sort_order ASC').all() as any[];
+const dbArticles = db.prepare("SELECT id, slug, category, tag, title, summary FROM articles WHERE status = 'published' ORDER BY created_at DESC").all() as any[];
+
+const mappedArticles = dbArticles.map((art, index) => {
+  const colors = [
+    { accent: "bg-matcha", textAccent: "text-matcha" },
+    { accent: "bg-rose", textAccent: "text-rose" },
+    { accent: "bg-ice", textAccent: "text-ice" },
+    { accent: "bg-caramel", textAccent: "text-caramel" },
+  ];
+  return { ...art, ...colors[index % colors.length] };
+});
+
+const navRow = db.prepare("SELECT value FROM settings WHERE key = 'navigator_steps'").get() as { value: string } | undefined;
+const dbNavSteps = navRow ? JSON.parse(navRow.value) : [];
+
 export const metadata: Metadata = {
   title: "Главная — Busido-Pesido",
   description: "Busido-Pesido — поведение, состояние и благополучие животных.",
@@ -320,7 +335,7 @@ export default function Home() {
               или автоматическим поведенческим заключением.
             </p>
           </ScrollReveal>
-          <Navigator />
+          <Navigator initialSteps={dbNavSteps} />
         </div>
       </section>
 
@@ -532,7 +547,7 @@ export default function Home() {
           </ScrollReveal>
           
           <ScrollReveal delay={1}>
-            <LibraryInteractive />
+            <LibraryInteractive initialArticles={mappedArticles} />
           </ScrollReveal>
         </div>
       </section>

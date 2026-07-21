@@ -3,58 +3,11 @@ import { useState, useCallback, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 
-/*
- * ============================================================================
- * ПЛАН ДЛЯ АДМИНКИ (ДИНАМИЧЕСКИЙ ГРАФ НАВИГАТОРА)
- * ============================================================================
- * Чтобы уйти от хардкода, структуру нужно хранить в JSON (например, в файле 
- * navigator-config.json или в таблице БД).
- * * В админке это можно реализовать через Node-based UI (типа React Flow) 
- * или через конструктор правил (Rule Builder).
- *
- * Пример будущей структуры узла (Node):
- * {
- * "id": "step_species",
- * "title": "С кем связан запрос?",
- * "options": [
- * { 
- * "id": "opt_dog", 
- * "label": "Собака", 
- * "desc": "Щенок, подросток или взрослая", 
- * "nextStepId": "step_change" // Явный указатель на следующий шаг
- * },
- * { 
- * "id": "opt_cat", 
- * "label": "Кошка", 
- * "desc": "Одна или несколько", 
- * "nextStepId": "step_change" 
- * }
- * ]
- * }
- * * Результат (End Node):
- * {
- * "id": "result_vet",
- * "type": "result",
- * "title": "Ветеринарное второе мнение",
- * "price": "2 500 ₽",
- * "text": "...",
- * "serviceKey": "second"
- * }
- *
- * Логика: При выборе опции мы смотрим `nextStepId` и загружаем следующий узел. 
- * Если `type === "result"`, показываем финальную карточку. Это позволит ветвить 
- * логику как угодно без переписывания кода.
- * ============================================================================
- */
-
-const navSteps = [
-  { key: "species", title: "С кем связан запрос?", options: [["dog", "Собака", "Щенок, подросток, взрослая или пожилая собака"], ["cat", "Кошка", "Одна кошка или несколько животных дома"]] },
-  { key: "change", title: "Как развивалось поведение?", options: [["sudden", "Появилось внезапно", "Поведение резко изменилось"], ["gradual", "Развивалось постепенно", "Интенсивность росла со временем"], ["long", "Существует давно", "Есть длительная история"]] },
-  { key: "health", title: "Есть ли изменения здоровья или состояния?", options: [["yes", "Да", "Боль, зуд, ЖКТ, аппетит, сон, движение или туалет"], ["unknown", "Не уверены", "Нужна помощь в оценке данных"], ["no", "Явных изменений нет", "Медицинские данные стабильны"]] },
-  { key: "risk", title: "Есть ли риск укуса или другой угрозы безопасности?", options: [["high", "Высокий риск", "Укусы, нападения, трудности безопасного управления"], ["moderate", "Умеренный риск", "Рычание, выпады, попытки укуса"], ["low", "Риска нет", "Основной запрос связан со страхом, возбуждением или обучением"]] },
-  { key: "depth", title: "Какая глубина помощи нужна?", options: [["single", "Разовый полный разбор", "Гипотеза, рекомендации и первые шаги"], ["support", "Длительное сопровождение", "Проверка видео и домашних заданий"], ["unsure", "Пока не знаю", "Формат можно определить после анкеты"]] },
-  { key: "format", title: "Какой формат удобнее?", options: [["online", "Онлайн", "Подходит для большинства случаев"], ["offline", "Очный или выездной", "Важно увидеть среду или прогулку"], ["either", "Любой", "Главное — подходящий объём помощи"]] }
-];
+export interface NavStep {
+  key: string;
+  title: string;
+  options: [string, string, string][];
+}
 
 // Пустышки для обохода гидратации
 const emptySubscribe = () => () => {};
@@ -77,9 +30,10 @@ const slideVariants = {
   })
 };
 
-export function Navigator() {
+export function Navigator({ initialSteps }: { initialSteps: NavStep[] }) {
   const isClient = useSyncExternalStore(emptySubscribe, getClientSnapshot, getServerSnapshot);
-
+  const navSteps = initialSteps && initialSteps.length > 0 ? initialSteps : [];
+  
   const [navState, setNavState] = useState<{ index: number; answers: Record<string, string> }>(() => {
     if (typeof window === 'undefined') return { index: 0, answers: {} };
     const saved = window.localStorage.getItem("bpV11Navigator");
@@ -99,6 +53,7 @@ export function Navigator() {
     return { index: 0, answers: {} };
   });
 
+  
   const [showResult, setShowResult] = useState(false);
   // Состояние направления (1 - вперед, -1 - назад) для правильной анимации слайдов
   const [direction, setDirection] = useState(1);
@@ -109,7 +64,9 @@ export function Navigator() {
       window.localStorage.setItem("bpV11Navigator", JSON.stringify(newState));
     }
   }, []);
-
+  if (navSteps.length === 0) {
+      return <div className="p-10 text-center border rounded-3xl">Конфигурация навигатора не найдена</div>;
+    }
   const handleChoice = (val: string) => {
     const step = navSteps[navState.index];
     saveState({ ...navState, answers: { ...navState.answers, [step.key]: val } });

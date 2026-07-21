@@ -4,27 +4,18 @@ import Link from 'next/link';
 import { TiltCard } from './TiltCard';
 import { motion, AnimatePresence } from 'framer-motion';
 
-/*
- * ============================================================================
- * ПЛАН ДЛЯ АДМИНКИ (БД SQLite)
- * ============================================================================
- * Структура ниже полностью повторяет твою таблицу `articles` из db.ts.
- * В будущем ты просто сделаешь: 
- * const dbArticles = db.prepare("SELECT * FROM articles WHERE status = 'published' ORDER BY created_at DESC").all();
- * И передашь их сюда пропсами.
- * ============================================================================
- */
-
-const dbArticles = [
-  { id: 1, slug: "sreda-i-samoregulatsia", category: "subscription dogs", tag: "PDF · ПО ПОДПИСКЕ", title: "Среда, режим и саморегуляция собаки", summary: "Базовый документ о сне, восстановлении, домашней среде и первых двух неделях изменений.", accent: "bg-matcha", textAccent: "text-matcha" },
-  { id: 2, slug: "pesagogika", category: "subscription professionals dogs", tag: "РУКОВОДСТВО", title: "Пёсагогика", summary: "Расширенное руководство о том, как обучается собака и что должен понимать человек, который её учит.", accent: "bg-rose", textAccent: "text-rose" },
-  { id: 3, slug: "yazyk-i-signaly-sobak", category: "subscription dogs", tag: "АТЛАС", title: "Язык и сигналы собак", summary: "Справочник наблюдения за позой, дистанцией, движением, конфликтом и восстановлением.", accent: "bg-ice", textAccent: "text-ice" },
-  { id: 4, slug: "kratkiy-dnevnik-nablyudeniy", category: "free dogs cats", tag: "ДНЕВНИК · БЕСПЛАТНО", title: "Краткий дневник наблюдений", summary: "Контекст, состояние, предшествующие события, поведение и последствия.", accent: "bg-caramel", textAccent: "text-caramel" },
-  { id: 5, slug: "sreda-i-resursy-koshki", category: "subscription cats", tag: "КОШКИ", title: "Среда и ресурсы кошки", summary: "Практический документ о высоте, укрытиях, лотках, воде, маршрутах и контакте.", accent: "bg-berry", textAccent: "text-berry" },
-  { id: 6, slug: "podgotovka-sluchaya", category: "free professionals", tag: "ЧЕК-ЛИСТ · БЕСПЛАТНО", title: "Подготовка случая к разбору", summary: "Какие данные, видео и медицинские документы собрать до обсуждения случая.", accent: "bg-coal", textAccent: "text-coal" },
-  // 7-я статья для теста лимита (она не должна показаться на главной)
-  { id: 7, slug: "test-article", category: "free dogs", tag: "СТАТЬЯ", title: "Как правильно гулять", summary: "Текст, который мы не увидим, потому что стоит ограничение в 6 штук.", accent: "bg-matcha", textAccent: "text-matcha" },
-];
+// Типизируем, раз уж начали наводить порядок
+export interface ArticleData {
+  id: number;
+  slug: string;
+  category: string;
+  tag: string;
+  title: string;
+  summary: string;
+  // Добавляем акценты, если их нет в БД — сгенерим на лету или добавим позже
+  accent?: string; 
+  textAccent?: string;
+}
 
 const filterTabs = [
   { id: 'all', label: 'Все', activeClass: 'bg-coal text-white border-coal' },
@@ -35,13 +26,15 @@ const filterTabs = [
   { id: 'professionals', label: 'Специалистам', activeClass: 'bg-espresso text-white border-espresso' }
 ];
 
-export function LibraryInteractive() {
+export function LibraryInteractive({ initialArticles }: { initialArticles: ArticleData[] }) {
   const [filter, setFilter] = useState('all');
 
-  // 1. Сначала фильтруем по категории
-  const filteredMaterials = dbArticles.filter(m => filter === 'all' || m.category.includes(filter));
-  
-  // 2. Затем обрезаем массив до 6 элементов, чтобы не перегружать главную страницу
+  if (!initialArticles || initialArticles.length === 0) {
+    return <div className="p-10 text-center text-coal/50 border border-forest/15 rounded-3xl">Материалов пока нет</div>;
+  }
+
+  // Фильтруем. Считаем, что в category лежит строка с тегами через пробел
+  const filteredMaterials = initialArticles.filter(m => filter === 'all' || (m.category && m.category.includes(filter)));
   const displayMaterials = filteredMaterials.slice(0, 6);
 
   return (

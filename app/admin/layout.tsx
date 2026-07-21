@@ -55,7 +55,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </Link>
 
           <Link 
-            href="/admin/Cases" 
+            href="/admin/cases" 
             className="flex items-center gap-3 px-4 py-3 rounded-xl text-coal font-bold text-sm transition-colors hover:bg-snow hover:text-forest group"
           >
             <FileText size={18} className="text-coal/60 group-hover:text-forest transition-colors" /> 

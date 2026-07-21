@@ -36,17 +36,17 @@ db.exec(`
   );
 
   CREATE TABLE IF NOT EXISTS applications (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    service TEXT,
-    date TEXT,
-    time TEXT,
-    name TEXT,
-    email TEXT,
-    contact TEXT,
-    request_text TEXT,
-    status TEXT DEFAULT 'new',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    -- Таблица услуг и форматов (для FormatsSection и ServiceInteractive)
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  service TEXT,
+  date TEXT,
+  time TEXT,
+  name TEXT,
+  email TEXT,
+  contact TEXT,
+  request_text TEXT,
+  status TEXT DEFAULT 'new',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
 
   CREATE TABLE IF NOT EXISTS services (
     id TEXT PRIMARY KEY, -- 'online', 'offline', 'support', 'second'

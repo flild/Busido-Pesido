@@ -32,9 +32,16 @@ db.exec(`
     category TEXT,
     tag TEXT,
     status TEXT DEFAULT 'published',
+    is_premium INTEGER DEFAULT 0, -- НАША ГАЛОЧКА (1 или 0)
+    views INTEGER DEFAULT 0,      -- Кэшированное кол-во просмотров (для быстрой сортировки)
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
 
+  CREATE TABLE IF NOT EXISTS article_views_log (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    article_id INTEGER NOT NULL,
+    viewed_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
   CREATE TABLE IF NOT EXISTS applications (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   service TEXT,

@@ -1,14 +1,16 @@
+// app/admin/articles/[id]/edit/page.tsx
 import { db } from '@/lib/db';
 import { ArticleForm } from '../../ArticleForm';
 import { notFound } from 'next/navigation';
 
 export default async function EditArticlePage({ params }: { params: Promise<{ id: string }> }) {
-  // В Next 15+ params.id достается через await
-  const resolvedParams = await params; 
+  const { id } = await params;
   
-  const article = db.prepare('SELECT * FROM articles WHERE id = ?').get(resolvedParams.id);
+  const article = db.prepare('SELECT * FROM articles WHERE id = ?').get(id);
   
-  if (!article) return notFound();
+  if (!article) {
+    notFound();
+  }
 
   return <ArticleForm initialData={article} />;
 }

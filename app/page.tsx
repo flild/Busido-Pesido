@@ -17,29 +17,6 @@ import { FaqItem } from "@/components/FaqItem";
 
 import { db } from "@/lib/db";
 
-
-const dbCasesRaw = db.prepare('SELECT * FROM cases ORDER BY sort_order ASC').all() as any[];
-const dbCases = dbCasesRaw.map(c => ({
-  ...c,
-  steps: JSON.parse(c.steps)
-}));
-
-const dbReviews = db.prepare('SELECT * FROM reviews ORDER BY sort_order ASC').all() as any[];
-const dbArticles = db.prepare("SELECT id, slug, category, tag, title, summary FROM articles WHERE status = 'published' ORDER BY created_at DESC").all() as any[];
-
-const mappedArticles = dbArticles.map((art, index) => {
-  const colors = [
-    { accent: "bg-matcha", textAccent: "text-matcha" },
-    { accent: "bg-rose", textAccent: "text-rose" },
-    { accent: "bg-ice", textAccent: "text-ice" },
-    { accent: "bg-caramel", textAccent: "text-caramel" },
-  ];
-  return { ...art, ...colors[index % colors.length] };
-});
-
-const navRow = db.prepare("SELECT value FROM settings WHERE key = 'navigator_steps'").get() as { value: string } | undefined;
-const dbNavSteps = navRow ? JSON.parse(navRow.value) : [];
-
 export const metadata: Metadata = {
   title: "Главная — Busido-Pesido",
   description: "Busido-Pesido — поведение, состояние и благополучие животных.",
@@ -49,13 +26,49 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
+  // ============================================================================
+  // ЗАГРУЗКА ДАННЫХ (Выполняется при каждом рендере страницы на сервере)
+  // ============================================================================
+
+  // 1. Форматы и расписание
+  const dbFormats = db.prepare('SELECT * FROM services ORDER BY sort_order').all() as any[];
+  const dbSchedule = db.prepare('SELECT * FROM free_schedule ORDER BY day_number ASC').all() as any[];
+
+  // 2. Кейсы (с парсингом шагов)
+  const dbCasesRaw = db.prepare('SELECT * FROM cases ORDER BY sort_order ASC').all() as any[];
+  const dbCases = dbCasesRaw.map(c => ({
+    ...c,
+    steps: JSON.parse(c.steps)
+  }));
+
+  // 3. Отзывы
+  const dbReviews = db.prepare('SELECT * FROM reviews ORDER BY sort_order ASC').all() as any[];
+
+  // 4. Статьи для библиотеки (с назначением акцентных цветов)
+  const dbArticlesRaw = db.prepare("SELECT id, slug, category, tag, title, summary FROM articles WHERE status = 'published' ORDER BY created_at DESC").all() as any[];
+  const mappedArticles = dbArticlesRaw.map((art, index) => {
+    const colors = [
+      { accent: "bg-matcha", textAccent: "text-matcha" },
+      { accent: "bg-rose", textAccent: "text-rose" },
+      { accent: "bg-ice", textAccent: "text-ice" },
+      { accent: "bg-caramel", textAccent: "text-caramel" },
+    ];
+    return { ...art, ...colors[index % colors.length] };
+  });
+
+  // 5. Навигатор
+  const navRow = db.prepare("SELECT value FROM settings WHERE key = 'navigator_steps'").get() as { value: string } | undefined;
+  const dbNavSteps = navRow ? JSON.parse(navRow.value) : [];
+
+  // ============================================================================
+  // SEO И РАЗМЕТКА
+  // ============================================================================
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     name: "Busido-Pesido",
     image: "https://busidopesido.ru/og-image.jpg",
-    description:
-      "Помощь владельцам собак и кошек в решении проблем поведения. Анализ состояния, среды и истории обучения.",
+    description: "Помощь владельцам собак и кошек в решении проблем поведения. Анализ состояния, среды и истории обучения.",
     url: "https://busidopesido.ru",
     telephone: "",
     address: {
@@ -79,13 +92,11 @@ export default function Home() {
     priceRange: "$$",
   };
 
-  const dbFormats = db.prepare('SELECT * FROM services ORDER BY sort_order').all() as any[];
-  const dbSchedule = db.prepare('SELECT * FROM free_schedule ORDER BY day_number ASC').all() as any[];
-
   return (
     <main>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       
+      {/* ГЕРОЙ-БЛОК */}
       <section className="relative overflow-hidden pt-[108px] pb-[74px] bg-[radial-gradient(circle_at_8%_22%,rgba(240,114,150,0.18),transparent_21rem),radial-gradient(circle_at_88%_12%,rgba(111,143,191,0.22),transparent_24rem),radial-gradient(circle_at_72%_86%,rgba(198,142,107,0.18),transparent_22rem),linear-gradient(145deg,theme(colors.snow),rgba(230,218,207,0.72)_48%,theme(colors.snow))] before:absolute before:w-[170px] before:h-[170px] before:rounded-full before:bg-gradient-to-br before:from-rose/70 before:to-berry/20 before:blur-[1px] before:animate-float-blob before:-left-[55px] before:top-[90px] before:pointer-events-none after:absolute after:w-[120px] after:h-[120px] after:rounded-full after:bg-gradient-to-br after:from-ice/60 after:to-matcha/20 after:blur-[1px] after:animate-float-blob after:right-[5%] after:-bottom-[42px] after:pointer-events-none after:[animation-delay:-4s]">
         <div className="container grid grid-cols-[1.05fr_0.95fr] gap-[78px] items-center mobile:grid-cols-1 mobile:gap-6 relative z-10">
           <div>
@@ -132,6 +143,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ШАГИ ПОДХОДА */}
       <section className="pb-10">
         <div className="container grid grid-cols-3 gap-4 mobile:grid-cols-1">
           <ScrollReveal delay={0}>
@@ -158,6 +170,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ОБО МНЕ */}
       <section className="py-[92px] mobile:py-[64px]">
         <div className="container grid grid-cols-2 gap-16 items-center mobile:grid-cols-1">
           <div className="relative">
@@ -197,6 +210,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ПОДХОД */}
       <section className="bg-[radial-gradient(circle_at_88%_12%,rgba(225,77,117,0.16),transparent_25rem),radial-gradient(circle_at_10%_90%,rgba(111,143,191,0.14),transparent_24rem),linear-gradient(145deg,theme(colors.coal),theme(colors.soldier))] text-white py-[92px] mobile:py-[64px]">
         <div className="container">
           <ScrollReveal className="max-w-[820px] mb-[42px]">
@@ -282,42 +296,12 @@ export default function Home() {
             </h2>
           </ScrollReveal>
           <div className="grid grid-cols-3 gap-4 mobile:grid-cols-1">
-            <IssueCard
-              id="fear"
-              num="01"
-              title="Страхи и избегание"
-              text="Люди, дети, собаки, улица, звуки, транспорт, ветеринарные процедуры."
-            />
-            <IssueCard
-              id="reactivity"
-              num="02"
-              title="Реактивность и возбуждение"
-              text="Лай, рывки, фиксация, фрустрация и трудности восстановления."
-            />
-            <IssueCard
-              id="defense"
-              num="03"
-              title="Защитное поведение"
-              text="Рычание, выпады, укусы, охрана пространства или ресурсов."
-            />
-            <IssueCard
-              id="separation"
-              num="04"
-              title="Тревога одиночества"
-              text="Вокализация, разрушение, слюнотечение, невозможность оставаться без человека."
-            />
-            <IssueCard
-              id="puppy"
-              num="05"
-              title="Щенки и подростки"
-              text="Адаптация, прикусывание, туалет, прогулки, социализация и первые навыки."
-            />
-            <IssueCard
-              id="cats"
-              num="06"
-              title="Поведение кошек"
-              text="Лоток, агрессия, конфликты, контакт, переноска, среда и ресурсы."
-            />
+            <IssueCard id="fear" num="01" title="Страхи и избегание" text="Люди, дети, собаки, улица, звуки, транспорт, ветеринарные процедуры." />
+            <IssueCard id="reactivity" num="02" title="Реактивность и возбуждение" text="Лай, рывки, фиксация, фрустрация и трудности восстановления." />
+            <IssueCard id="defense" num="03" title="Защитное поведение" text="Рычание, выпады, укусы, охрана пространства или ресурсов." />
+            <IssueCard id="separation" num="04" title="Тревога одиночества" text="Вокализация, разрушение, слюнотечение, невозможность оставаться без человека." />
+            <IssueCard id="puppy" num="05" title="Щенки и подростки" text="Адаптация, прикусывание, туалет, прогулки, социализация и первые навыки." />
+            <IssueCard id="cats" num="06" title="Поведение кошек" text="Лоток, агрессия, конфликты, контакт, переноска, среда и ресурсы." />
           </div>
         </div>
       </section>
@@ -384,111 +368,99 @@ export default function Home() {
 
       <FormatsSection formats={dbFormats} />
 
-{/* ПОСЛЕ КОНСУЛЬТАЦИИ (RESULT) */}
-<section className="py-[92px] mobile:py-[64px] bg-white relative overflow-hidden">
-  <div className="container relative z-10">
-    <ScrollReveal className="max-w-[820px] mb-[52px]">
-      <span className="kicker">ПОСЛЕ КОНСУЛЬТАЦИИ</span>
-      <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice">
-        У вас остаётся рабочая система
-      </h2>
-    </ScrollReveal>
+      {/* ПОСЛЕ КОНСУЛЬТАЦИИ (RESULT) */}
+      <section className="py-[92px] mobile:py-[64px] bg-white relative overflow-hidden">
+        <div className="container relative z-10">
+          <ScrollReveal className="max-w-[820px] mb-[52px]">
+            <span className="kicker">ПОСЛЕ КОНСУЛЬТАЦИИ</span>
+            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice">
+              У вас остаётся рабочая система
+            </h2>
+          </ScrollReveal>
 
-    <div className="grid grid-cols-4 gap-5 tablet:grid-cols-2 mobile:grid-cols-1 items-stretch">
-      {[
-        {
-          num: '01',
-          title: 'Понятная гипотеза',
-          desc: 'Что запускает и поддерживает поведение.',
-          accentText: 'text-matcha',
-          accentBg: 'bg-matcha',
-          gradient: 'from-matcha/10',
-          watermark: 'group-hover:text-matcha/[0.07]'
-        },
-        {
-          num: '02',
-          title: 'План среды и режима',
-          desc: 'Что изменить дома и на прогулке.',
-          accentText: 'text-caramel',
-          accentBg: 'bg-caramel',
-          gradient: 'from-caramel/10',
-          watermark: 'group-hover:text-caramel/[0.07]'
-        },
-        {
-          num: '03',
-          title: 'Пошаговые упражнения',
-          desc: 'Последовательность, критерии и признаки остановки.',
-          accentText: 'text-rose',
-          accentBg: 'bg-rose',
-          gradient: 'from-rose/10',
-          watermark: 'group-hover:text-rose/[0.07]'
-        },
-        {
-          num: '04',
-          title: 'Маршрут помощи',
-          desc: 'Когда нужен ветеринарный врач или другой специалист.',
-          accentText: 'text-ice',
-          accentBg: 'bg-ice',
-          gradient: 'from-ice/10',
-          watermark: 'group-hover:text-ice/[0.07]'
-        }
-      ].map((step, i) => (
-        // flex h-full на обертке гарантирует, что карточки растянутся одинаково
-        <ScrollReveal key={step.num} delay={i} className="flex h-full">
-          <article className="group relative w-full flex flex-col p-8 mobile:p-6 rounded-[28px] bg-snow border border-forest/10 hover:border-forest/20 shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden cursor-default hover:-translate-y-1.5">
-            
-            {/* Анимированный градиент на фоне при наведении */}
-            <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-br ${step.gradient} to-transparent transition-opacity duration-700 pointer-events-none`} />
-
-            {/* Огромная цифра-водяной знак в углу */}
-            <span className={`absolute -bottom-8 -right-4 text-[140px] font-black leading-none text-coal/[0.02] ${step.watermark} transition-colors duration-500 pointer-events-none select-none`}>
-              {step.num}
-            </span>
-
-            {/* Индикаторная полоска, которая разъезжается */}
-            <div className={`absolute top-0 left-0 h-1.5 w-12 ${step.accentBg} rounded-br-full transition-all duration-500 group-hover:w-full`} />
-
-            {/* Контент */}
-            <div className="relative z-10 flex flex-col h-full mt-3">
-              <strong className={`text-[13px] font-[900] tracking-widest uppercase ${step.accentText} mb-6 block`}>
-                Шаг {step.num}
-              </strong>
-              
-              <h3 className="text-[22px] leading-tight mb-4 text-coal">
-                {step.title}
-              </h3>
-              
-              {/* mt-auto прибивает текст к низу, если заголовки разной длины */}
-              <p className="text-coal/65 leading-relaxed mt-auto">
-                {step.desc}
-              </p>
-            </div>
-          </article>
-        </ScrollReveal>
-      ))}
-    </div>
-  </div>
-</section>
+          <div className="grid grid-cols-4 gap-5 tablet:grid-cols-2 mobile:grid-cols-1 items-stretch">
+            {[
+              {
+                num: '01',
+                title: 'Понятная гипотеза',
+                desc: 'Что запускает и поддерживает поведение.',
+                accentText: 'text-matcha',
+                accentBg: 'bg-matcha',
+                gradient: 'from-matcha/10',
+                watermark: 'group-hover:text-matcha/[0.07]'
+              },
+              {
+                num: '02',
+                title: 'План среды и режима',
+                desc: 'Что изменить дома и на прогулке.',
+                accentText: 'text-caramel',
+                accentBg: 'bg-caramel',
+                gradient: 'from-caramel/10',
+                watermark: 'group-hover:text-caramel/[0.07]'
+              },
+              {
+                num: '03',
+                title: 'Пошаговые упражнения',
+                desc: 'Последовательность, критерии и признаки остановки.',
+                accentText: 'text-rose',
+                accentBg: 'bg-rose',
+                gradient: 'from-rose/10',
+                watermark: 'group-hover:text-rose/[0.07]'
+              },
+              {
+                num: '04',
+                title: 'Маршрут помощи',
+                desc: 'Когда нужен ветеринарный врач или другой специалист.',
+                accentText: 'text-ice',
+                accentBg: 'bg-ice',
+                gradient: 'from-ice/10',
+                watermark: 'group-hover:text-ice/[0.07]'
+              }
+            ].map((step, i) => (
+              <ScrollReveal key={step.num} delay={i} className="flex h-full">
+                <article className="group relative w-full flex flex-col p-8 mobile:p-6 rounded-[28px] bg-snow border border-forest/10 hover:border-forest/20 shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden cursor-default hover:-translate-y-1.5">
+                  <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-br ${step.gradient} to-transparent transition-opacity duration-700 pointer-events-none`} />
+                  <span className={`absolute -bottom-8 -right-4 text-[140px] font-black leading-none text-coal/[0.02] ${step.watermark} transition-colors duration-500 pointer-events-none select-none`}>
+                    {step.num}
+                  </span>
+                  <div className={`absolute top-0 left-0 h-1.5 w-12 ${step.accentBg} rounded-br-full transition-all duration-500 group-hover:w-full`} />
+                  <div className="relative z-10 flex flex-col h-full mt-3">
+                    <strong className={`text-[13px] font-[900] tracking-widest uppercase ${step.accentText} mb-6 block`}>
+                      Шаг {step.num}
+                    </strong>
+                    <h3 className="text-[22px] leading-tight mb-4 text-coal">
+                      {step.title}
+                    </h3>
+                    <p className="text-coal/65 leading-relaxed mt-auto">
+                      {step.desc}
+                    </p>
+                  </div>
+                </article>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* КЕЙСЫ */}
       <section className="py-[92px] mobile:py-[64px]">
-      <div className="container">
-        <ScrollReveal className="max-w-[820px] mb-[42px]">
-          <span className="kicker">КЕЙСЫ</span>
-                <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice">
-                  История случая раскрывается по этапам анализа
-                </h2>
-                <p className="text-xl text-matcha">
-                  Мы показываем не только результат, но и то, какие данные изменили
-                  рабочую гипотезу.
-                </p>
-              </ScrollReveal>
-        <CaseInteractive initialCases={dbCases} />
-      </div>
-    </section>
+        <div className="container">
+          <ScrollReveal className="max-w-[820px] mb-[42px]">
+            <span className="kicker">КЕЙСЫ</span>
+            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice">
+              История случая раскрывается по этапам анализа
+            </h2>
+            <p className="text-xl text-matcha">
+              Мы показываем не только результат, но и то, какие данные изменили
+              рабочую гипотезу.
+            </p>
+          </ScrollReveal>
+          <CaseInteractive initialCases={dbCases} />
+        </div>
+      </section>
 
       {/* ОТЗЫВЫ */}
-            <section className="py-[92px] mobile:py-[64px]">
+      <section className="py-[92px] mobile:py-[64px]">
         <div className="container">
           <ScrollReveal className="max-w-[820px] mb-[42px]">
             <span className="kicker">ОТЗЫВЫ</span>
@@ -500,9 +472,9 @@ export default function Home() {
               и скриншоты отзывов.
             </p>
           </ScrollReveal>
-    <ReviewCarousel initialReviews={dbReviews} />
-  </div>
-</section>
+          <ReviewCarousel initialReviews={dbReviews} />
+        </div>
+      </section>
 
       {/* БЕСПЛАТНЫЕ КОНСУЛЬТАЦИИ */}
       <section className="py-[92px] mobile:py-[64px] relative overflow-hidden bg-[radial-gradient(circle_at_10%_12%,rgba(240,114,150,0.32),transparent_22rem),radial-gradient(circle_at_90%_90%,rgba(111,143,191,0.28),transparent_23rem),linear-gradient(120deg,theme(colors.forest),theme(colors.soldier))] text-white after:absolute after:w-[190px] after:h-[190px] after:right-[3%] after:-top-[80px] after:rounded-full after:bg-gradient-rose after:opacity-45">
@@ -527,7 +499,6 @@ export default function Home() {
               Полные условия
             </Link>
           </div>
-          {/* Вставляем наш обновленный виджет */}
           <FreeConsultationsWidget scheduleData={dbSchedule} />
         </div>
       </section>

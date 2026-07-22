@@ -1,26 +1,19 @@
+// app/admin/articles/ArticleForm.tsx
 'use client';
 
 import { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { saveArticle } from './actions';
 
-interface ArticleFormProps {
-  initialData?: any;
-}
-
-export function ArticleForm({ initialData }: ArticleFormProps) {
+export function ArticleForm({ initialData }: { initialData?: any }) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
-  // Используем нативный action из React 18/19 для отправки FormData
   const formAction = (formData: FormData) => {
     setError(null);
     startTransition(async () => {
-      // Передаем ID, если это редактирование, или null для новой
       const res = await saveArticle(initialData?.id || null, formData);
-      if (res?.error) {
-        setError(res.error);
-      }
+      if (res?.error) setError(res.error);
     });
   };
 
@@ -57,10 +50,11 @@ export function ArticleForm({ initialData }: ArticleFormProps) {
               <label className="flex flex-col gap-2 font-bold text-coal">
                 Категория
                 <select name="category" defaultValue={initialData?.category || 'dogs'} className="p-4 border border-forest/15 rounded-xl bg-snow font-medium text-coal outline-none focus:border-forest/40 transition-colors cursor-pointer">
-                  <option value="dogs">Собаки</option>
-                  <option value="cats">Кошки</option>
-                  <option value="health">Здоровье</option>
-                  <option value="learning">Обучение</option>
+                  <option value="free dogs">Собаки (Бесплатно)</option>
+                  <option value="subscription dogs">Собаки (По подписке)</option>
+                  <option value="free cats">Кошки (Бесплатно)</option>
+                  <option value="subscription cats">Кошки (По подписке)</option>
+                  <option value="free professionals">Специалистам</option>
                 </select>
               </label>
               <label className="flex flex-col gap-2 font-bold text-coal">

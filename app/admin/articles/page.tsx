@@ -1,9 +1,12 @@
+// app/admin/articles/page.tsx
 import Link from 'next/link';
-import { Plus, Pencil } from 'lucide-react';
+import { Plus, Pencil, Trash2 } from 'lucide-react';
 import { db } from '@/lib/db';
 import { DeleteButton } from './DeleteButton';
+import { deleteArticle } from './actions';
 
-// Next.js выполнит этот компонент на сервере
+export const dynamic = 'force-dynamic';
+
 export default async function AdminArticles() {
   const articles = db.prepare('SELECT id, title, category, tag, status, created_at FROM articles ORDER BY created_at DESC').all() as any[];
 
@@ -35,9 +38,7 @@ export default async function AdminArticles() {
             <tbody>
               {articles.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="text-center p-10 text-coal/60 font-medium">
-                    Статей пока нет
-                  </td>
+                  <td colSpan={6} className="text-center p-10 text-coal/60 font-medium">Статей пока нет</td>
                 </tr>
               ) : (
                 articles.map(art => (
@@ -56,17 +57,17 @@ export default async function AdminArticles() {
                     </td>
                     <td className="p-4">
                       <div className="flex gap-1 justify-end">
-                        <Link 
-                          href={`/admin/articles/${art.id}/edit`} 
-                          className="p-2 rounded-xl text-coal/60 hover:bg-snow hover:text-forest transition-colors" 
-                          title="Редактировать"
-                        >
+                        <Link href={`/admin/articles/${art.id}/edit`} className="p-2 rounded-xl text-coal/60 hover:bg-snow hover:text-forest transition-colors" title="Редактировать">
                           <Pencil size={18} />
                         </Link>
-                        {/* Клиентская кнопка */}
-                        <DeleteButton id={art.id} />
-                      </div>
-                    </td>
+                        
+                        {/* Форма с серверным экшеном и клиентской кнопкой */}
+                      <form action={deleteArticle}>
+                        <input type="hidden" name="id" value={art.id} />
+                        <DeleteButton />
+                      </form>
+                    </div>
+                  </td>
                   </tr>
                 ))
               )}

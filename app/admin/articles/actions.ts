@@ -12,21 +12,22 @@ export async function saveArticle(id: number | null, formData: FormData) {
   const category = (formData.get('category') as string)?.trim();
   const tag = (formData.get('tag') as string)?.trim();
   const status = (formData.get('status') as string)?.trim();
+  const is_premium = formData.get('is_premium') ? 1 : 0;
 
   try {
     if (id) {
       const stmt = db.prepare(`
         UPDATE articles 
-        SET title = ?, slug = ?, summary = ?, content = ?, category = ?, tag = ?, status = ?
+        SET title = ?, slug = ?, summary = ?, content = ?, category = ?, tag = ?, status = ?, is_premium = ?
         WHERE id = ?
       `);
-      stmt.run(title, slug, summary, content, category, tag, status, id);
+      stmt.run(title, slug, summary, content, category, tag, status, is_premium, id);
     } else {
       const stmt = db.prepare(`
-        INSERT INTO articles (title, slug, summary, content, category, tag, status)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO articles (title, slug, summary, content, category, tag, status, is_premium)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
       `);
-      stmt.run(title, slug, summary, content, category, tag, status);
+      stmt.run(title, slug, summary, content, category, tag, status, is_premium);
     }
   } catch (error: any) {
     if (error?.code === 'SQLITE_CONSTRAINT_UNIQUE') {

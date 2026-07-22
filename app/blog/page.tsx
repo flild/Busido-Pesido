@@ -2,6 +2,8 @@ import { Metadata } from "next";
 import { BlogList } from "@/components/BlogList";
 import { db } from "@/lib/db";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: "Блог — Busido-Pesido",
   description: "Статьи о собаках и кошках, поведении, здоровье, обучении и благополучии животных.",
@@ -11,9 +13,10 @@ export const metadata: Metadata = {
 };
 
 export default function BlogPage() {
+  // Вытаскиваем views и is_premium
   const articles = db
     .prepare(
-      "SELECT id, title, slug, summary, category, tag, created_at FROM articles WHERE status = 'published' ORDER BY created_at DESC"
+      "SELECT id, title, slug, summary, category, tag, views, is_premium, created_at FROM articles WHERE status = 'published' ORDER BY created_at DESC"
     )
     .all() as any[];
 

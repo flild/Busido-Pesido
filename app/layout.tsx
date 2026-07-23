@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { ToastProvider } from "@/components/Toast";
 import { ModalProvider } from "@/components/Modal";
-import "./globals.css"; 
+import "./globals.css";
 import { ReadingProgress } from "@/components/ReadingProgress";
 import { UtilityBar } from "@/components/UtilityBar";
 import { PaletteStripe } from "@/components/PaletteStripe";

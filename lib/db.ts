@@ -32,8 +32,8 @@ db.exec(`
     category TEXT,
     tag TEXT,
     status TEXT DEFAULT 'published',
-    is_premium INTEGER DEFAULT 0, -- НАША ГАЛОЧКА (1 или 0)
-    views INTEGER DEFAULT 0,      -- Кэшированное кол-во просмотров (для быстрой сортировки)
+    is_premium INTEGER DEFAULT 0,
+    views INTEGER DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
 
@@ -42,21 +42,22 @@ db.exec(`
     article_id INTEGER NOT NULL,
     viewed_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
+
   CREATE TABLE IF NOT EXISTS applications (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  service TEXT,
-  date TEXT,
-  time TEXT,
-  name TEXT,
-  email TEXT,
-  contact TEXT,
-  request_text TEXT,
-  status TEXT DEFAULT 'new',
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    service TEXT,
+    date TEXT,
+    time TEXT,
+    name TEXT,
+    email TEXT,
+    contact TEXT,
+    request_text TEXT,
+    status TEXT DEFAULT 'new',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
 
   CREATE TABLE IF NOT EXISTS services (
-    id TEXT PRIMARY KEY, -- 'online', 'offline', 'support', 'second'
+    id TEXT PRIMARY KEY,
     title TEXT NOT NULL,
     price TEXT NOT NULL,
     description TEXT NOT NULL,
@@ -65,11 +66,10 @@ db.exec(`
     is_featured INTEGER DEFAULT 0,
     link TEXT NOT NULL,
     link_text TEXT NOT NULL,
-    steps TEXT NOT NULL, -- Будем хранить JSON-массив шагов
+    steps TEXT NOT NULL,
     sort_order INTEGER DEFAULT 0
   );
 
-  -- Таблица отзывов (для ReviewCarousel)
   CREATE TABLE IF NOT EXISTS reviews (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     category TEXT NOT NULL,
@@ -83,22 +83,21 @@ db.exec(`
     sort_order INTEGER DEFAULT 0
   );
 
-  -- Таблица кейсов (для CaseInteractive)
   CREATE TABLE IF NOT EXISTS cases (
     id TEXT PRIMARY KEY,
     theme TEXT NOT NULL,
     tab_title TEXT NOT NULL,
     main_title TEXT NOT NULL,
-    steps TEXT NOT NULL, -- JSON-массив объектов шагов
+    steps TEXT NOT NULL,
     sort_order INTEGER DEFAULT 0
   );
 
   CREATE TABLE IF NOT EXISTS free_schedule (
-    date_id TEXT PRIMARY KEY, -- '2026-08-01'
-    day_number INTEGER NOT NULL, -- 1-7
-    is_available INTEGER DEFAULT 1, -- 1 или 0
-    custom_message TEXT, -- 'Нет мест', 'Отменено'
-    slots TEXT NOT NULL -- JSON массив ["10:00", "12:00"]
+    date_id TEXT PRIMARY KEY,
+    day_number INTEGER NOT NULL,
+    is_available INTEGER DEFAULT 1,
+    custom_message TEXT,
+    slots TEXT NOT NULL
   );
 
   CREATE TABLE IF NOT EXISTS settings (
@@ -106,6 +105,17 @@ db.exec(`
     value TEXT NOT NULL
   );
 `);
+
+// --- БЕЗОПАСНАЯ МИГРАЦИЯ (Добавляем колонки для животных в заявки) ---
+try {
+  db.prepare('ALTER TABLE applications ADD COLUMN pet_type TEXT').run();
+  db.prepare('ALTER TABLE applications ADD COLUMN pet_name TEXT').run();
+} catch (e: any) {
+  // Ошибка "duplicate column name" ожидаема, если миграция уже прошла
+  if (!e.message.includes('duplicate column name')) {
+    console.error('Ошибка миграции applications:', e);
+  }
+}
 
 // Сид данных для услуг (выполняется только если таблица пустая)
 const servicesCount = db.prepare('SELECT COUNT(*) as c FROM services').get() as { c: number };
@@ -118,7 +128,7 @@ if (servicesCount.c === 0) {
   const defaultSteps = JSON.stringify([
     ["Кому подходит", "Владельцам собак и кошек..."], 
     ["Что подготовить", "Анкету, короткие видео..."]
-  ]); // Упрощенный JSON для старта
+  ]);
 
   insertService.run('online', 'Онлайн-консультация', '6 000 ₽', 'Полный разбор одного животного...', 'Основной формат', 'matcha', 1, '/booking?service=online', 'Записаться', defaultSteps, 1);
   insertService.run('offline', 'Очная / выездная', '8 000 ₽', 'Наблюдение в реальной среде...', null, 'caramel', 0, '/booking?service=offline', 'Выбрать дату', defaultSteps, 2);
@@ -144,24 +154,22 @@ if (scheduleCount.c === 0) {
 
 const navCount = db.prepare("SELECT COUNT(*) as c FROM settings WHERE key = 'navigator_steps'").get() as { c: number };
 if (navCount.c === 0) {
-  // Твой хардкодный JSON из Navigator.tsx
   const defaultNavSteps = [
     { key: "species", title: "С кем связан запрос?", options: [["dog", "Собака", "Щенок, подросток, взрослая или пожилая собака"], ["cat", "Кошка", "Одна кошка или несколько животных дома"]] },
-    // ... можешь закинуть весь массив сюда
   ];
   db.prepare("INSERT INTO settings (key, value) VALUES ('navigator_steps', ?)").run(JSON.stringify(defaultNavSteps));
 }
 
-// Демо-данные оставляю, как были, они для тестов сойдут
+// Демо-данные с учетом новых колонок
 const count = db.prepare('SELECT COUNT(*) as c FROM applications').get() as { c: number };
 if (count.c === 0) {
   const insertApp = db.prepare(`
-    INSERT INTO applications (service, date, time, name, email, contact, request_text, status, created_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now', ?))
+    INSERT INTO applications (service, date, time, name, email, contact, request_text, status, pet_type, pet_name, created_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now', ?))
   `);
   
-  insertApp.run('Онлайн-консультация', '12.11.2023', '15:30', 'Анна', 'anna@example.com', '@anna_tg', 'Собака тянет поводок', 'new', '-2 days');
-  insertApp.run('Очная / выездная', '15.11.2023', '12:00', 'Михаил', 'mike@example.com', '1234567890', 'Агрессия к собакам', 'contacted', '-5 days');
+  insertApp.run('Онлайн-консультация', '12.11.2023', '15:30', 'Анна', 'anna@example.com', '@anna_tg', 'Очень длинный текст запроса. Собака тянет поводок так сильно, что я уже не могу с ней гулять. Пробовали разные методы, ничего не помогает. Помогите, пожалуйста, разобраться с этой проблемой!', 'new', 'dog', 'Шарик', '-2 days');
+  insertApp.run('Очная / выездная', '15.11.2023', '12:00', 'Михаил', 'mike@example.com', '1234567890', 'Агрессия к собакам', 'contacted', 'dog', 'Рекс', '-5 days');
 }
 
 const articleCount = db.prepare('SELECT COUNT(*) as c FROM articles').get() as { c: number };
@@ -179,5 +187,3 @@ if (articleCount.c === 0) {
     'Собаки · обучение'
   );
 }
-
-// Заменяем export default db на export { db } для удобства импортов

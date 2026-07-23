@@ -3,14 +3,21 @@ import { BookingForm } from "@/components/BookingForm";
 
 export const metadata: Metadata = {
   title: "Запись на консультацию — Busido-Pesido",
-  description:
-    "Запись на консультацию зоопсихолога. Выберите удобное время для онлайн или очной встречи по поведению собак и кошек.",
-  alternates: {
-    canonical: "https://busidopesido.ru/booking",
-  },
+  description: "Запись на консультацию зоопсихолога. Выберите удобное время для онлайн или очной встречи по поведению собак и кошек.",
+  alternates: { canonical: "https://busidopesido.ru/booking" },
 };
 
-export default function BookingPage() {
+export default async function BookingPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
+  const resolvedParams = await searchParams;
+  
+  // Достаем параметры из URL (например: ?service=online&pet=cat)
+  const initialService = typeof resolvedParams.service === 'string' ? resolvedParams.service : null;
+  const initialPet = typeof resolvedParams.pet === 'string' ? resolvedParams.pet : null;
+
   return (
     <main>
       <section className="pt-[108px] pb-[74px] bg-[linear-gradient(135deg,rgba(111,143,191,0.24),theme(colors.snow)_52%,rgba(198,142,107,0.26))] relative overflow-hidden">
@@ -28,7 +35,8 @@ export default function BookingPage() {
 
       <section className="py-[92px] max-md:py-[64px]">
         <div className="container">
-          <BookingForm />
+          {/* Передаем параметры инициализации в клиентскую форму */}
+          <BookingForm initialService={initialService} initialPet={initialPet} />
         </div>
       </section>
 

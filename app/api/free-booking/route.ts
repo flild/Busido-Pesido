@@ -1,22 +1,19 @@
 // app/api/free-booking/route.ts
 import { NextResponse } from 'next/server';
-import { db } from '@/lib/db'; // Проверь правильность пути к твоему db.ts
+import { db } from '@/lib/db';
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { dateId, time, name, phone, petName, requestText, confirmed } = body;
+    // ДОБАВЛЕНО: petType
+    const { dateId, time, name, phone, petName, petType, requestText, confirmed } = body;
 
-    // Базовая валидация
     if (!dateId || !time || !name || !phone || !confirmed) {
       return NextResponse.json({ error: 'Заполните все обязательные поля' }, { status: 400 });
     }
 
-    // Очищаем телефон от спецсимволов для точной проверки (оставляем только цифры)
     const cleanPhone = phone.replace(/\D/g, '');
 
-    // Проверяем, есть ли уже запись с таким телефоном на бесплатную консультацию
-    // В SQLite нет встроенной функции RegEx, поэтому ищем совпадение по очищенному номеру через LIKE
     const existingApp = db.prepare(`
       SELECT id FROM applications 
       WHERE service = 'Бесплатная консультация' 
@@ -29,14 +26,11 @@ export async function POST(req: Request) {
       }, { status: 400 });
     }
 
-    // Сохраняем заявку в базу
+    // ДОБАВЛЕНО: pet_type и pet_name в запрос
     const insertStmt = db.prepare(`
-      INSERT INTO applications (service, date, time, name, contact, request_text, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO applications (service, date, time, name, contact, request_text, status, pet_type, pet_name)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
-
-    // Формируем текст запроса
-    const fullRequestText = `Питомец: ${petName || 'Не указано'}. Проблема: ${requestText || 'Не описана'}`;
 
     insertStmt.run(
       'Бесплатная консультация', 
@@ -44,24 +38,22 @@ export async function POST(req: Request) {
       time, 
       name, 
       phone, 
-      fullRequestText, 
-      'new'
+      requestText || 'Не описана', // Теперь request_text чистый, без склейки
+      'new',
+      petType || 'Не указан', // Пишем вид
+      petName || 'Не указано' // Пишем имя
     );
 
-
-    // Удаляем занятое время из слотов
     const scheduleStmt = db.prepare('SELECT slots FROM free_schedule WHERE date_id = ?');
     const scheduleRow = scheduleStmt.get(dateId) as { slots: string };
     
     if (scheduleRow) {
       let slots = JSON.parse(scheduleRow.slots);
-      // Убираем время, которое только что забронировали
       slots = slots.filter((s: string) => s !== time);
       
       const updateScheduleStmt = db.prepare('UPDATE free_schedule SET slots = ? WHERE date_id = ?');
       updateScheduleStmt.run(JSON.stringify(slots), dateId);
       
-      // Если слотов не осталось, автоматически закрываем день
       if (slots.length === 0) {
         db.prepare("UPDATE free_schedule SET is_available = 0, custom_message = 'Нет мест' WHERE date_id = ?").run(dateId);
       }

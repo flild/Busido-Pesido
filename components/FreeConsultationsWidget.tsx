@@ -19,7 +19,7 @@ export function FreeConsultationsWidget({ scheduleData }: Props) {
   const [selectedDayId, setSelectedDayId] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   
-  const [formData, setFormData] = useState({ name: '', phone: '', petName: '', requestText: '' });
+  const [formData, setFormData] = useState({ name: '', phone: '', petName: '', petType: '', requestText: '' });
   const [confirmed, setConfirmed] = useState(false);
   
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -115,7 +115,7 @@ export function FreeConsultationsWidget({ scheduleData }: Props) {
   };
 
   // Проверка готовности формы (Имя не пустое, Телефон минимум 11 цифр)
-  const isFormValid = formData.name.trim().length > 1 && formData.phone.replace(/\D/g, '').length >= 11 && confirmed;
+  const isFormValid = formData.name.trim().length > 1 && formData.phone.replace(/\D/g, '').length >= 11 && formData.petType !== '' && confirmed;
 
 return (
     <div className="mt-10 grid grid-cols-[1.2fr_0.8fr] gap-[34px] tablet:grid-cols-1 items-start">
@@ -249,27 +249,39 @@ return (
                           />
                         </div>
 
-                        <div className="grid grid-cols-2 gap-3">
-                          <div>
-                            <label className="block text-[11px] font-[800] text-coal/50 uppercase tracking-widest mb-1.5 ml-1">
-                              Питомец
-                            </label>
-                            <input 
-                              type="text" placeholder="Имя"
-                              className="w-full p-3.5 rounded-2xl bg-snow border border-forest/10 focus:border-forest/30 focus:bg-white focus:ring-4 focus:ring-forest/5 outline-none transition-all font-medium text-[15px]"
-                              value={formData.petName} onChange={e => setFormData({...formData, petName: e.target.value})}
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-[11px] font-[800] text-coal/50 uppercase tracking-widest mb-1.5 ml-1 opacity-0 pointer-events-none">
-                              Вид
-                            </label>
-                            <input 
-                              type="text" placeholder="Собака / Кошка"
-                              className="w-full p-3.5 rounded-2xl bg-snow border border-forest/10 focus:border-forest/30 focus:bg-white focus:ring-4 focus:ring-forest/5 outline-none transition-all font-medium text-[15px]"
-                            />
+                        <div className="grid grid-cols-2 gap-3 max-sm:grid-cols-1">
+                        <div>
+                          <label className="block text-[11px] font-[800] text-coal/50 uppercase tracking-widest mb-1.5 ml-1">
+                            Кличка
+                          </label>
+                          <input 
+                            type="text" placeholder="Шарик"
+                            className="w-full p-3.5 rounded-2xl bg-snow border border-forest/10 focus:border-forest/30 focus:bg-white focus:ring-4 focus:ring-forest/5 outline-none transition-all font-medium text-[15px]"
+                            value={formData.petName} onChange={e => setFormData({...formData, petName: e.target.value})}
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[11px] font-[800] text-coal/50 uppercase tracking-widest mb-1.5 ml-1">
+                            Вид <span className="text-rose text-[13px] leading-none">*</span>
+                          </label>
+                          <div className="flex gap-2 h-[54px]">
+                            <button 
+                              type="button"
+                              onClick={() => setFormData({...formData, petType: 'dog'})}
+                              className={`flex-1 rounded-xl border font-bold transition-colors ${formData.petType === 'dog' ? 'bg-coal text-white border-coal shadow-sm' : 'bg-snow text-coal border-forest/10 hover:bg-white hover:border-forest/30'}`}
+                            >
+                              Собака
+                            </button>
+                            <button 
+                              type="button"
+                              onClick={() => setFormData({...formData, petType: 'cat'})}
+                              className={`flex-1 rounded-xl border font-bold transition-colors ${formData.petType === 'cat' ? 'bg-coal text-white border-coal shadow-sm' : 'bg-snow text-coal border-forest/10 hover:bg-white hover:border-forest/30'}`}
+                            >
+                              Кошка
+                            </button>
                           </div>
                         </div>
+                      </div>
 
                         <div>
                           <label className="block text-[11px] font-[800] text-coal/50 uppercase tracking-widest mb-1.5 ml-1">

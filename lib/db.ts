@@ -106,15 +106,11 @@ db.exec(`
   );
 `);
 
-// --- БЕЗОПАСНАЯ МИГРАЦИЯ (Добавляем колонки для животных в заявки) ---
+
 try {
-  db.prepare('ALTER TABLE applications ADD COLUMN pet_type TEXT').run();
-  db.prepare('ALTER TABLE applications ADD COLUMN pet_name TEXT').run();
+  db.prepare('ALTER TABLE reviews ADD COLUMN status TEXT DEFAULT "published"').run();
 } catch (e: any) {
-  // Ошибка "duplicate column name" ожидаема, если миграция уже прошла
-  if (!e.message.includes('duplicate column name')) {
-    console.error('Ошибка миграции applications:', e);
-  }
+  if (!e.message.includes('duplicate column name')) console.error('Ошибка миграции reviews:', e);
 }
 
 // Сид данных для услуг (выполняется только если таблица пустая)

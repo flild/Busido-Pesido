@@ -1,3 +1,4 @@
+// app/admin/reviews/[id]/edit/page.tsx
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { db } from '@/lib/db';
@@ -5,13 +6,10 @@ import { notFound } from 'next/navigation';
 import { saveReview } from '../../actions';
 
 export default async function EditReviewPage({ params }: { params: Promise<{ id: string }> }) {
-  // Достаем ID из урла (в Next 15 params нужно await-ить)
   const { id } = await params;
   
-  // Ищем отзыв в базе
   const review = db.prepare('SELECT * FROM reviews WHERE id = ?').get(id) as any;
   
-  // Если кто-то ввел кривой ID — кидаем на страницу 404
   if (!review) {
     notFound();
   }
@@ -24,8 +22,7 @@ export default async function EditReviewPage({ params }: { params: Promise<{ id:
       
       <h1 className="text-[32px] font-bold text-coal mb-8 m-0">Редактировать отзыв</h1>
 
-      <form action={saveReview} className="bg-white border border-forest/15 rounded-[24px] p-8 shadow-sm flex flex-col gap-6">
-        {/* Скрытое поле с ID, чтобы action понял, что это обновление, а не создание */}
+      <form action={saveReview} encType="multipart/form-data" className="bg-white border border-forest/15 rounded-[24px] p-8 shadow-sm flex flex-col gap-6">
         <input type="hidden" name="id" value={review.id} />
 
         <div className="grid grid-cols-2 gap-6">
@@ -71,8 +68,10 @@ export default async function EditReviewPage({ params }: { params: Promise<{ id:
 
         <div className="grid grid-cols-2 gap-6">
           <label className="flex flex-col gap-2 text-sm font-bold text-coal">
-            URL изображения
-            <input name="image_url" type="text" defaultValue={review.image_url} className="p-3 border border-forest/15 rounded-xl outline-none focus:border-forest/50" />
+            Новое фото (если нужно заменить)
+            <input type="hidden" name="existing_image_url" value={review.image_url} /> 
+            <input name="image" type="file" accept="image/*" className="p-2 border border-forest/15 rounded-xl outline-none focus:border-forest/50 bg-snow cursor-pointer" />
+            <span className="text-xs text-coal/50">Текущее: {review.image_url.split('/').pop()}</span>
           </label>
 
           <label className="flex flex-col gap-2 text-sm font-bold text-coal">

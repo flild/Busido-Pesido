@@ -1,18 +1,40 @@
-// app/admin/cases/actions.ts
 'use server';
 
 import { db } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-export async function deleteCase(formData: FormData) {
-  const id = formData.get('id');
-  if (!id) throw new Error('ID не передан');
-  
+export async function deleteCase(id: string) {
   const stmt = db.prepare('DELETE FROM cases WHERE id = ?');
   const info = stmt.run(id);
   
   if (info.changes === 0) throw new Error('Кейс не найден');
+  
+  revalidatePath('/admin/cases');
+  revalidatePath('/');
+}
+
+// Умная сортировка кейсов
+export async function moveCase(id: string, direction: 'up' | 'down') {
+  const current = db.prepare('SELECT id, sort_order FROM cases WHERE id = ?').get(id) as { id: string, sort_order: number };
+  if (!current) return;
+
+  const op = direction === 'up' ? '<' : '>';
+  const order = direction === 'up' ? 'DESC' : 'ASC';
+
+  const adjacent = db.prepare(`
+    SELECT id, sort_order FROM cases 
+    WHERE sort_order ${op} ? 
+    ORDER BY sort_order ${order} LIMIT 1
+  `).get(current.sort_order) as { id: string, sort_order: number } | undefined;
+
+  if (adjacent) {
+    db.prepare('UPDATE cases SET sort_order = ? WHERE id = ?').run(adjacent.sort_order, current.id);
+    db.prepare('UPDATE cases SET sort_order = ? WHERE id = ?').run(current.sort_order, adjacent.id);
+  } else {
+    const newOrder = direction === 'up' ? current.sort_order - 1 : current.sort_order + 1;
+    db.prepare('UPDATE cases SET sort_order = ? WHERE id = ?').run(newOrder, current.id);
+  }
   
   revalidatePath('/admin/cases');
   revalidatePath('/');
@@ -31,7 +53,6 @@ export async function saveCase(formData: FormData) {
     throw new Error('Заполните обязательные поля');
   }
 
-  // Валидация JSON, чтобы не положить фронт кривыми данными
   try {
     JSON.parse(steps);
   } catch {
@@ -39,20 +60,16 @@ export async function saveCase(formData: FormData) {
   }
 
   if (oldId) {
-    const stmt = db.prepare(`
+    db.prepare(`
       UPDATE cases 
       SET id = ?, theme = ?, tab_title = ?, main_title = ?, steps = ?, sort_order = ?
       WHERE id = ?
-    `);
-    stmt.run(id, theme, tab_title, main_title, steps, sort_order, oldId);
+    `).run(id, theme, tab_title, main_title, steps, sort_order, oldId);
   } else {
-    // Защита от дублей Primary Key перехватится глобальным обработчиком, 
-    // но можно и тут обернуть в try/catch при желании
-    const stmt = db.prepare(`
+    db.prepare(`
       INSERT INTO cases (id, theme, tab_title, main_title, steps, sort_order)
       VALUES (?, ?, ?, ?, ?, ?)
-    `);
-    stmt.run(id, theme, tab_title, main_title, steps, sort_order);
+    `).run(id, theme, tab_title, main_title, steps, sort_order);
   }
 
   revalidatePath('/admin/cases');

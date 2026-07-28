@@ -319,7 +319,8 @@ export default function Home() {
               или автоматическим поведенческим заключением.
             </p>
           </ScrollReveal>
-          <Navigator initialSteps={dbNavSteps} />
+          {/* ДОБАВИЛИ formats={dbFormats} */}
+          <Navigator initialSteps={dbNavSteps} formats={dbFormats} />
         </div>
       </section>
 
@@ -361,7 +362,7 @@ export default function Home() {
           </div>
           
           <ScrollReveal delay={1} className="h-full">
-            <ClinicalBehaviorChart />
+            <ClinicalBehaviorChart />ClinicalBehaviorChart
           </ScrollReveal>
         </div>
       </section>

@@ -1,3 +1,4 @@
+//app\admin\navigator\actions.ts
 'use server';
 
 import { db } from '@/lib/db';
@@ -10,17 +11,24 @@ export async function saveNavigatorConfig(formData: FormData) {
     // Жесткая проверка валидности
     JSON.parse(stepsJson);
   } catch {
-    throw new Error('Ошибка формата (Invalid JSON)');
+    return { error: 'Ошибка формата (Invalid JSON)' };
   }
 
-  const stmt = db.prepare(`
-    INSERT INTO settings (key, value) 
-    VALUES ('navigator_steps', ?) 
-    ON CONFLICT(key) DO UPDATE SET value = excluded.value
-  `);
-  
-  stmt.run(stepsJson);
+  try {
+    const stmt = db.prepare(`
+      INSERT INTO settings (key, value) 
+      VALUES ('navigator_steps', ?) 
+      ON CONFLICT(key) DO UPDATE SET value = excluded.value
+    `);
+    
+    stmt.run(stepsJson);
 
-  revalidatePath('/admin/navigator');
-  revalidatePath('/');
+    revalidatePath('/admin/navigator');
+    revalidatePath('/');
+    
+    return { success: true };
+  } catch (error) {
+    console.error('Ошибка сохранения навигатора:', error);
+    return { error: 'Ошибка базы данных при сохранении' };
+  }
 }

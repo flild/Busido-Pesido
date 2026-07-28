@@ -1,3 +1,4 @@
+//app\admin\navigator\page.tsx
 import { db } from '@/lib/db';
 import NavigatorForm from './NavigatorForm';
 

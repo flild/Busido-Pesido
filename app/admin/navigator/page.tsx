@@ -1,18 +1,20 @@
-//app\admin\navigator\page.tsx
-import { db } from '@/lib/db';
-import NavigatorForm from './NavigatorForm';
+// app/admin/navigator/page.tsx
+import { db } from "@/lib/db";
+import NavigatorForm from "./NavigatorForm";
 
-export default async function AdminNavigator() {
-  const row = db.prepare("SELECT value FROM settings WHERE key = 'navigator_steps'").get() as { value: string } | undefined;
-  const steps = row ? JSON.parse(row.value) : [];
+export default function NavigatorAdminPage() {
+  // Достаем шаги (граф)
+  const navRow = db.prepare("SELECT value FROM settings WHERE key = 'navigator_steps'").get() as { value: string } | undefined;
+  const initialSteps = navRow ? JSON.parse(navRow.value) : { nodes: [], edges: [] };
+  
+  // ДОСТАЕМ ФОРМАТЫ ИЗ БД
+  const formats = db.prepare("SELECT * FROM services ORDER BY sort_order").all() as any[];
 
   return (
-    <>
-      <div className="mb-6">
-        <h1 className="text-[32px] font-bold text-coal m-0">Редактор Навигатора</h1>
-        <p className="text-coal/60 mt-2">Настройка графа вопросов для главной страницы.</p>
-      </div>
-      <NavigatorForm initialSteps={steps} />
-    </>
+    <div className="container py-8">
+      <h1 className="text-[32px] font-bold mb-6 text-coal">Настройка навигатора</h1>
+      {/* Прокидываем ОБА пропа, чтобы тайпскрипт не ругался */}
+      <NavigatorForm initialSteps={initialSteps} formats={formats} />
+    </div>
   );
 }

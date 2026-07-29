@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { BookingForm } from "@/components/BookingForm";
+import { db } from "@/lib/db";
 
 export const metadata: Metadata = {
   title: "Запись на консультацию — Busido-Pesido",
@@ -14,9 +15,16 @@ export default async function BookingPage({
 }) {
   const resolvedParams = await searchParams;
   
-  // Достаем параметры из URL (например: ?service=online&pet=cat)
   const initialService = typeof resolvedParams.service === 'string' ? resolvedParams.service : null;
   const initialPet = typeof resolvedParams.pet === 'string' ? resolvedParams.pet : null;
+
+  // Тянем реальные услуги из базы
+  const dbServices = db.prepare('SELECT id, title as name, price FROM services ORDER BY sort_order').all() as { id: string, name: string, price: string }[];
+
+  // Считаем завтрашнюю дату прямо на сервере (никаких useEffect на клиенте)
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const minDate = tomorrow.toISOString().split('T')[0];
 
   return (
     <main>
@@ -28,34 +36,19 @@ export default async function BookingPage({
           </h1>
           <p className="text-xl text-matcha max-w-[800px] mt-6 leading-relaxed">
             Полная анкета занимает около 10 минут благодаря ветвлению. Документы
-            и видео можно добавить сразу или дослать позднее.
+            и видео вы сможете загрузить в ней же, после подтверждения формата.
           </p>
         </div>
       </section>
 
       <section className="py-[92px] max-md:py-[64px]">
         <div className="container">
-          {/* Передаем параметры инициализации в клиентскую форму */}
-          <BookingForm initialService={initialService} initialPet={initialPet} />
-        </div>
-      </section>
-
-      <section className="pb-[92px] max-md:pb-[64px]">
-        <div className="container max-w-[820px]">
-          <div className="p-7 rounded-[28px] bg-white border border-forest/15 shadow-[0_16px_45px_rgba(20,20,20,0.05)]">
-            <span className="inline-block px-3 py-1.5 rounded-full bg-rose/15 text-rose text-[12px] font-bold uppercase tracking-wider mb-4">
-              Приоритетный запрос
-            </span>
-            <p className="text-coal/80 mb-4 leading-relaxed">
-              Запрос передан на приоритетное рассмотрение. Специалист
-              ознакомится с ним в ближайшее время и свяжется с вами для
-              согласования максимально близкого доступного времени.
-            </p>
-            <p className="text-coal/80 leading-relaxed">
-              <strong className="font-bold text-coal">Наценка +50%</strong> применяется только к разовым
-              форматам. Это не экстренная ветеринарная помощь.
-            </p>
-          </div>
+          <BookingForm 
+            initialService={initialService} 
+            initialPet={initialPet} 
+            services={dbServices} 
+            minDate={minDate} 
+          />
         </div>
       </section>
     </main>

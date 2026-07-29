@@ -22,9 +22,8 @@ import {
 } from '@xyflow/react';
 
 // @ts-expect-error
-import '@xyflow/react/dist/style.css';// Обязательные стили либы
+import '@xyflow/react/dist/style.css'; // Обязательные стили либы
 
-// Интерфейсы (дублируют те, что в публичном навигаторе)
 export interface ServiceFormat {
   id: string;
   title: string;
@@ -36,7 +35,8 @@ export interface ServiceFormat {
 
 // === КАСТОМНЫЙ УЗЕЛ: ВОПРОС ===
 const QuestionNode = ({ id, data }: { id: string; data: any }) => {
-  const { updateNodeData } = useReactFlow();
+  // Подключаем deleteElements для прямого удаления узла
+  const { updateNodeData, deleteElements } = useReactFlow();
 
   const updateField = (field: string, value: string) => updateNodeData(id, { [field]: value });
   
@@ -56,13 +56,26 @@ const QuestionNode = ({ id, data }: { id: string; data: any }) => {
     updateNodeData(id, { options: data.options.filter((opt: any) => opt.id !== optId) });
   };
 
+  const deleteNode = () => {
+    deleteElements({ nodes: [{ id }] });
+  };
+
   return (
-    <div className="bg-white border-2 border-forest/30 rounded-2xl w-[320px] shadow-lg relative overflow-visible">
-      {/* Входящий коннектор */}
+    <div className="bg-white border-2 border-forest/30 rounded-2xl w-[320px] shadow-lg relative overflow-visible group">
       <Handle type="target" position={Position.Top} className="w-4 h-4 bg-matcha border-2 border-white" />
       
       <div className="p-4 bg-snow rounded-t-xl border-b border-forest/10">
-        <div className="text-[10px] font-black text-coal/40 uppercase mb-2">Вопрос (Question)</div>
+        <div className="flex justify-between items-center mb-3">
+          <span className="text-[10px] font-black text-coal/40 uppercase">Вопрос</span>
+          <button 
+            type="button" 
+            onClick={deleteNode} 
+            className="text-coal/30 hover:text-rose transition-colors nodrag"
+            title="Удалить узел целиком"
+          >
+            <Trash2 size={16} />
+          </button>
+        </div>
         <input 
           type="text" 
           placeholder="Ключ (например: species)" 
@@ -82,7 +95,9 @@ const QuestionNode = ({ id, data }: { id: string; data: any }) => {
       <div className="p-4 flex flex-col gap-3">
         <div className="flex justify-between items-center">
           <span className="text-[10px] font-black text-coal/40 uppercase">Варианты ответа</span>
-          <button type="button" onClick={addOption} className="text-matcha hover:text-forest nodrag"><Plus size={16} /></button>
+          <button type="button" onClick={addOption} className="text-matcha hover:text-forest nodrag transition-colors">
+            <Plus size={16} />
+          </button>
         </div>
         
         {data.options?.map((opt: any) => (
@@ -109,16 +124,15 @@ const QuestionNode = ({ id, data }: { id: string; data: any }) => {
               className="text-xs p-1 border border-forest/10 rounded nodrag"
             />
             
-            <button type="button" onClick={() => removeOption(opt.id)} className="absolute right-2 top-2 text-coal/30 hover:text-rose nodrag">
+            <button type="button" onClick={() => removeOption(opt.id)} className="absolute right-2 top-2 text-coal/30 hover:text-rose nodrag transition-colors">
               <Trash2 size={14} />
             </button>
 
-            {/* Исходящий коннектор для конкретного ответа */}
             <Handle 
               type="source" 
               position={Position.Right} 
               id={opt.id} 
-              className="w-4 h-4 bg-caramel border-2 border-white absolute -right-2.5 top-1/2 -translate-y-1/2" 
+              className="w-4 h-4 bg-caramel border-2 border-white absolute -right-2.5 top-1/2 -translate-y-1/2 cursor-crosshair hover:scale-125 transition-transform" 
             />
           </div>
         ))}
@@ -130,15 +144,28 @@ const QuestionNode = ({ id, data }: { id: string; data: any }) => {
 
 // === КАСТОМНЫЙ УЗЕЛ: РЕЗУЛЬТАТ ===
 const ResultNode = ({ id, data }: { id: string; data: any }) => {
-  const { updateNodeData } = useReactFlow();
-  // Форматы прокидываем через data при создании узла
+  const { updateNodeData, deleteElements } = useReactFlow();
+
+  const deleteNode = () => {
+    deleteElements({ nodes: [{ id }] });
+  };
 
   return (
     <div className="bg-white border-2 border-rose/30 rounded-2xl w-[260px] shadow-lg relative">
       <Handle type="target" position={Position.Top} className="w-4 h-4 bg-rose border-2 border-white" />
       
       <div className="p-4 bg-rose/5 rounded-2xl flex flex-col gap-3">
-        <div className="text-[10px] font-black text-rose/70 uppercase">Финальный результат</div>
+        <div className="flex justify-between items-center">
+          <span className="text-[10px] font-black text-rose/70 uppercase">Финальный результат</span>
+          <button 
+            type="button" 
+            onClick={deleteNode} 
+            className="text-rose/40 hover:text-rose transition-colors nodrag"
+            title="Удалить узел"
+          >
+            <Trash2 size={16} />
+          </button>
+        </div>
         <select 
           value={data.serviceId || ''} 
           onChange={(e) => updateNodeData(id, { serviceId: e.target.value })}
@@ -161,7 +188,6 @@ const nodeTypes = {
 
 // === ОСНОВНОЙ КОМПОНЕНТ ФОРМЫ ===
 function NavigatorFlow({ initialData, formats }: { initialData: any, formats: ServiceFormat[] }) {
-  // Инициализация. Если данные старые (плоский массив), начинаем с чистого листа
   const isOldData = Array.isArray(initialData);
   
   const [nodes, setNodes] = useState<Node[]>(isOldData ? [] : initialData?.nodes || []);
@@ -172,7 +198,7 @@ function NavigatorFlow({ initialData, formats }: { initialData: any, formats: Se
 
   const onNodesChange = useCallback((changes: NodeChange[]) => setNodes((nds) => applyNodeChanges(changes, nds)), []);
   const onEdgesChange = useCallback((changes: EdgeChange[]) => setEdges((eds) => applyEdgeChanges(changes, eds)), []);
-  const onConnect = useCallback((params: Connection) => setEdges((eds) => addEdge({ ...params, animated: true }, eds)), []);
+  const onConnect = useCallback((params: Connection) => setEdges((eds) => addEdge({ ...params, animated: true, type: 'smoothstep' }, eds)), []);
 
   const addQuestionNode = () => {
     setNodes((nds) => [
@@ -189,7 +215,6 @@ function NavigatorFlow({ initialData, formats }: { initialData: any, formats: Se
   };
 
   const handleSubmit = (formData: FormData) => {
-    // Чистим форматы из узлов результата перед сохранением, чтобы не раздувать JSON в БД
     const cleanNodes = nodes.map(n => {
       if (n.type === 'result') {
         const { formats, ...restData } = n.data;
@@ -215,7 +240,6 @@ function NavigatorFlow({ initialData, formats }: { initialData: any, formats: Se
 
   return (
     <form action={handleSubmit} className="flex flex-col gap-6 w-full">
-      {/* Тулбар */}
       <div className="flex justify-between items-center bg-white p-4 rounded-[20px] border border-forest/15 shadow-sm sticky top-4 z-50">
         <div className="flex gap-4 items-center">
           <button type="button" onClick={addQuestionNode} className="px-4 py-2 text-sm font-bold bg-snow border border-forest/15 rounded-xl hover:bg-forest hover:text-white transition-colors">
@@ -241,8 +265,12 @@ function NavigatorFlow({ initialData, formats }: { initialData: any, formats: Se
         </div>
       </div>
 
-      {/* Канвас React Flow */}
-      <div className="h-[750px] w-full bg-snow border border-forest/15 rounded-[24px] overflow-hidden shadow-inner">
+      <div className="h-[750px] w-full bg-snow border border-forest/15 rounded-[24px] overflow-hidden shadow-inner relative">
+        {/* Подсказка для пользователя */}
+        <div className="absolute top-4 left-4 z-10 bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-forest/10 text-xs font-bold text-coal/60 pointer-events-none">
+          Удаление связей: выделите линию и нажмите Backspace / Delete
+        </div>
+
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -251,7 +279,16 @@ function NavigatorFlow({ initialData, formats }: { initialData: any, formats: Se
           onConnect={onConnect}
           nodeTypes={nodeTypes}
           fitView
-          className="bg-[radial-gradient(theme(colors.forest/5)_1px,transparent_1px)] [background-size:20px_20px]"
+          snapToGrid={true}
+          snapGrid={[20, 20]}
+          deleteKeyCode={['Backspace', 'Delete']}
+          defaultEdgeOptions={{ 
+            type: 'smoothstep', 
+            animated: true, 
+            style: { strokeWidth: 2, stroke: '#8c7d70' },
+            interactionWidth: 20 // Увеличивает зону клика по линии
+          }}
+          className="bg-[radial-gradient(theme(colors.forest/10)_1px,transparent_1px)] [background-size:20px_20px]"
         >
           <Background color="#ccc" gap={20} />
           <Controls className="bg-white border-forest/10 shadow-md rounded-xl overflow-hidden" />
@@ -261,16 +298,12 @@ function NavigatorFlow({ initialData, formats }: { initialData: any, formats: Se
   );
 }
 
-// Обертка для провайдера
 export default function NavigatorForm({ initialSteps, formats }: { initialSteps: any, formats: ServiceFormat[] }) {
-  // 1. Делаем глубокую копию, чтобы не мутировать пропсы напрямую (React этого терпеть не может)
-  // 2. Если пришел старый плоский массив из прошлой версии, сбрасываем в пустой граф
   const isOldFormat = Array.isArray(initialSteps);
   const parsedData = isOldFormat || !initialSteps 
     ? { nodes: [], edges: [] } 
     : JSON.parse(JSON.stringify(initialSteps));
 
-  // Теперь спокойно мутируем локальную копию
   if (parsedData.nodes && Array.isArray(parsedData.nodes)) {
     parsedData.nodes = parsedData.nodes.map((n: any) => {
       if (n.type === 'result') return { ...n, data: { ...n.data, formats } };

@@ -1,40 +1,76 @@
 'use client';
 import { useState, useRef } from 'react';
 import { useToast } from './Toast';
+import Link from 'next/link';
 
-const SERVICES = [
-  { id: 'online', name: "Онлайн-консультация", price: "6 000 ₽" },
-  { id: 'offline', name: "Очная / выездная", price: "8 000 ₽" },
-  { id: 'support', name: "Онлайн-сопровождение", price: "22 000 ₽" },
-  { id: 'support-offline', name: "Сопровождение с выездами", price: "30 000 ₽" },
-  { id: 'repeat', name: "Повторная онлайн-консультация", price: "3 000 ₽" },
-  { id: 'second', name: "Второе мнение", price: "2 500 ₽" },
-  { id: 'pro', name: "Профессиональный разбор", price: "3 000 ₽" }
-];
+interface ServiceType {
+  id: string;
+  name: string;
+  price: string;
+}
 
-export function BookingForm({ initialService, initialPet }: { initialService?: string | null, initialPet?: string | null }) {
+export function BookingForm({ 
+  initialService, 
+  initialPet, 
+  services,
+  minDate
+}: { 
+  initialService?: string | null, 
+  initialPet?: string | null,
+  services: ServiceType[],
+  minDate: string
+}) {
   const { say } = useToast();
   const formRef = useRef<HTMLFormElement>(null);
   
-  // Вычисляем начальные значения прямо во время первого рендера
-  const defaultService = initialService ? SERVICES.find(s => s.id === initialService) : null;
+  const defaultService = initialService ? services.find(s => s.id === initialService) : null;
   const defaultPet = (initialPet === 'dog' || initialPet === 'cat') ? initialPet : null;
   
-  // Инициализируем стейты сразу с нужными данными (избавляемся от useEffect)
   const [activeService, setActiveService] = useState<string | null>(defaultService?.name || null);
   const [activePrice, setActivePrice] = useState<string | null>(defaultService?.price || null);
   const [petType, setPetType] = useState<string | null>(defaultPet);
+  const [contactValue, setContactValue] = useState('');
   
-  const [activeDate, setActiveDate] = useState<string | null>(null);
-  const [activeTime, setActiveTime] = useState<string | null>(null);
+  // Флаг приоритетной записи
+  const [isPriority, setIsPriority] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // useEffect удален полностью!
+  const handleContactChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let val = e.target.value;
+    
+    if (val.startsWith('@')) {
+      setContactValue(val);
+      return;
+    }
+
+    let num = val.replace(/\D/g, '');
+    if (!num) {
+      setContactValue('');
+      return;
+    }
+
+    if (num[0] === '8' || num[0] === '7' || num[0] === '9') {
+      if (num[0] === '9') num = '7' + num;
+      else num = '7' + num.substring(1);
+    }
+
+    let formatted = '+7 ';
+    if (num.length > 1) formatted += '(' + num.substring(1, 4);
+    if (num.length > 4) formatted += ') ' + num.substring(4, 7);
+    if (num.length > 7) formatted += '-' + num.substring(7, 9);
+    if (num.length > 9) formatted += '-' + num.substring(9, 11);
+    
+    setContactValue(formatted);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmitting) return;
 
+    if (!activeService) {
+      say('Пожалуйста, выберите формат работы.');
+      return;
+    }
     if (!petType) {
       say('Пожалуйста, выберите вид питомца (Собака или Кошка).');
       return;
@@ -42,16 +78,23 @@ export function BookingForm({ initialService, initialPet }: { initialService?: s
 
     setIsSubmitting(true);
     const formData = new FormData(e.target as HTMLFormElement);
+    
+    const preferredDate = formData.get('prefDate');
+    const preferredTime = formData.get('prefTime');
+    const finalDate = preferredDate ? `${preferredDate}` : 'Не указана';
+    const finalTime = preferredTime ? `${preferredTime}` : 'Не указано';
+
     const data = {
-      service: activeService || 'Не выбран',
-      date: activeDate || null,
-      time: activeTime || null,
+      service: activeService,
+      date: finalDate,
+      time: finalTime,
       name: formData.get('name'),
       email: formData.get('email'),
-      contact: formData.get('contact'),
+      contact: contactValue,
       petName: formData.get('petName'),
       petType: petType,
-      request_text: formData.get('request')
+      request_text: formData.get('request'),
+      is_priority: isPriority // Отправляем статус приоритета на бэк
     };
 
     try {
@@ -66,13 +109,13 @@ export function BookingForm({ initialService, initialPet }: { initialService?: s
         throw new Error(errData.error || 'Ошибка при отправке на сервер');
       }
 
-      say('Заявка сформирована и отправлена в админку.');
+      say('Заявка успешно отправлена! Мы свяжемся с вами в ближайшее время.');
       formRef.current?.reset();
-      setActiveDate(null);
-      setActiveTime(null);
       setActiveService(null);
       setActivePrice(null);
       setPetType(null);
+      setContactValue('');
+      setIsPriority(false);
     } catch (err: any) {
       say(err.message || 'Ошибка при отправке заявки.');
     } finally {
@@ -80,35 +123,26 @@ export function BookingForm({ initialService, initialPet }: { initialService?: s
     }
   };
 
-  const dates = Array.from({ length: 14 }).map((_, i) => {
-    const d = new Date();
-    d.setDate(d.getDate() + i + 1);
-    return {
-      date: d.toLocaleDateString('ru-RU'),
-      day: d.getDate(),
-      weekday: new Intl.DateTimeFormat('ru-RU', { weekday: 'short' }).format(d),
-    };
-  });
-
   return (
     <div className="grid grid-cols-[1fr_340px] gap-7 items-start tablet:grid-cols-1">
       <div className="p-8 bg-white border border-forest/15 rounded-[34px] mobile:p-5">
+        
         <div className="flex gap-4 items-start mt-2 mb-5">
           <span className="grid place-items-center w-10 h-10 shrink-0 rounded-xl bg-coal text-white font-black">1</span>
           <div>
-            <h2 className="text-[28px] m-0">Выберите формат</h2>
-            <p className="text-coal/60">Стоимость и условия отображаются до подтверждения.</p>
+            <h2 className="text-[28px] m-0 leading-tight">Выберите формат</h2>
+            <p className="text-coal/60 mt-1">Окончательная стоимость обсуждается при подтверждении.</p>
           </div>
         </div>
         
         <div className="grid grid-cols-2 gap-2.5 mb-10 mobile:grid-cols-1">
-          {SERVICES.map(s => {
+          {services.map(s => {
             const isSelected = activeService === s.name;
             return (
               <button 
                 key={s.id}
                 type="button" 
-                className={`border rounded-2xl p-3.5 text-left font-[800] transition-colors ${isSelected ? 'bg-coal text-white border-coal shadow-md' : 'bg-paper text-coal border-forest/15 hover:bg-snow'}`} 
+                className={`border rounded-2xl p-4 text-left font-[800] transition-colors cursor-pointer ${isSelected ? 'bg-coal text-white border-coal shadow-md' : 'bg-paper text-coal border-forest/15 hover:bg-snow'}`} 
                 onClick={() => { setActiveService(s.name); setActivePrice(s.price); }}
               >
                 {s.name} <b className={`block mt-1 ${isSelected ? 'text-white/80' : 'text-forest'}`}>{s.price}</b>
@@ -117,66 +151,64 @@ export function BookingForm({ initialService, initialPet }: { initialService?: s
           })}
         </div>
 
-        <div className="flex gap-4 items-start mt-2 mb-5">
+        <div className="flex gap-4 items-start mt-2 mb-6">
           <span className="grid place-items-center w-10 h-10 shrink-0 rounded-xl bg-coal text-white font-black">2</span>
           <div>
-            <h2 className="text-[28px] m-0">Выберите дату и время</h2>
-            <p className="text-coal/60">Это демонстрационный календарь. Опциональный шаг.</p>
+            <h2 className="text-[28px] m-0 leading-tight">Ваши данные и пожелания</h2>
+            <p className="text-coal/60 mt-1">После проверки заявки вы получите ссылку на полную анкету.</p>
           </div>
         </div>
         
-        <div className="grid grid-cols-7 gap-2 mobile:grid-cols-4">
-          {dates.map((d, i) => (
-            <button 
-              key={i} 
-              type="button" 
-              className={`text-center p-[12px_6px] border rounded-2xl font-[800] transition-colors ${activeDate === d.date ? 'bg-coal text-white border-coal shadow-md' : 'bg-paper text-coal border-forest/15 hover:bg-snow'}`}
-              onClick={() => setActiveDate(d.date)}
-            >
-              {d.day}<small className="block font-medium mt-1">{d.weekday}</small>
-            </button>
-          ))}
-        </div>
-        
-        <div className="flex gap-2 flex-wrap my-3.5 mb-10">
-          {['10:00', '12:00', '15:30', '18:00'].map(t => (
-            <button 
-              key={t} 
-              type="button" 
-              className={`p-3.5 border rounded-2xl font-[800] transition-colors ${activeTime === t ? 'bg-coal text-white border-coal shadow-md' : 'bg-paper text-coal border-forest/15 hover:bg-snow'}`} 
-              onClick={() => setActiveTime(t)}
-            >
-              {t}
-            </button>
-          ))}
-        </div>
-
-        <div className="flex gap-4 items-start mt-2 mb-5">
-          <span className="grid place-items-center w-10 h-10 shrink-0 rounded-xl bg-coal text-white font-black">3</span>
-          <div>
-            <h2 className="text-[28px] m-0">Ваши данные и питомец</h2>
-            <p className="text-coal/60">После бронирования вы получите ссылку на полную анкету.</p>
-          </div>
-        </div>
-        
-        <form className="grid grid-cols-2 gap-3.5 mobile:grid-cols-1" id="bookingForm" ref={formRef} onSubmit={handleSubmit}>
-          <label className="grid gap-2 font-[850]">
-            Имя <span className="text-rose">*</span>
-            <input className="p-3.5 border border-forest/15 rounded-xl bg-paper font-normal outline-none focus:border-matcha" type="text" name="name" required placeholder="Как к вам обращаться" />
-          </label>
-          <label className="grid gap-2 font-[850]">
-            Телефон или Telegram <span className="text-rose">*</span>
-            <input className="p-3.5 border border-forest/15 rounded-xl bg-paper font-normal outline-none focus:border-matcha" type="text" name="contact" required placeholder="+7 (999) 000-00-00 или @tag" />
+        <form className="grid grid-cols-2 gap-4 mobile:grid-cols-1" id="bookingForm" ref={formRef} onSubmit={handleSubmit}>
+          
+          <label className="flex flex-col gap-2 font-[850] text-coal">
+            <span>Имя <span className="text-rose ml-0.5">*</span></span>
+            <input className="p-3.5 border border-forest/15 rounded-xl bg-paper font-normal outline-none focus:border-matcha" type="text" name="name" required placeholder="Как к вам обращаться" maxLength={50} />
           </label>
 
-          {/* НОВЫЙ БЛОК: Питомец */}
-          <div className="col-span-2 mobile:col-span-1 grid grid-cols-2 gap-3.5">
-            <label className="grid gap-2 font-[850]">
-              Кличка питомца
-              <input className="p-3.5 border border-forest/15 rounded-xl bg-paper font-normal outline-none focus:border-matcha" type="text" name="petName" placeholder="Например, Шарик" />
+          <label className="flex flex-col gap-2 font-[850] text-coal">
+            <span>Email <span className="text-rose ml-0.5">*</span></span>
+            <input className="p-3.5 border border-forest/15 rounded-xl bg-paper font-normal outline-none focus:border-matcha" type="email" name="email" required placeholder="your@email.com" />
+          </label>
+
+          <label className="flex flex-col gap-2 font-[850] text-coal col-span-2 mobile:col-span-1">
+            <span>Связь (Телефон или Telegram) <span className="text-rose ml-0.5">*</span></span>
+            <input 
+              className="p-3.5 border border-forest/15 rounded-xl bg-paper font-normal outline-none focus:border-matcha invalid:focus:border-rose" 
+              type="text" 
+              name="contact" 
+              value={contactValue}
+              onChange={handleContactChange}
+              required 
+              minLength={4}
+              maxLength={18}
+              placeholder="+7 (999) 000-00-00 или @username" 
+            />
+          </label>
+
+          <div className="col-span-2 mobile:col-span-1 grid grid-cols-2 gap-4 bg-snow/50 p-4 rounded-2xl border border-forest/10 my-2">
+            <label className="flex flex-col gap-2 font-[850] text-coal">
+              <span>Желаемая дата</span>
+              <input className="p-3 border border-forest/15 rounded-xl bg-white font-normal outline-none focus:border-matcha text-coal min-h-[50px]" type="date" name="prefDate" min={minDate} />
             </label>
-            <div className="grid gap-2 font-[850]">
-              Вид <span className="text-rose">*</span>
+            <label className="flex flex-col gap-2 font-[850] text-coal">
+              <span>Время суток</span>
+              <select className="p-3 border border-forest/15 rounded-xl bg-white font-normal outline-none focus:border-matcha text-coal min-h-[50px] appearance-none" name="prefTime">
+                <option value="">Любое время</option>
+                <option value="Утро (10:00 - 13:00)">Утро (10:00 - 13:00)</option>
+                <option value="День (13:00 - 17:00)">День (13:00 - 17:00)</option>
+                <option value="Вечер (17:00 - 20:00)">Вечер (17:00 - 20:00)</option>
+              </select>
+            </label>
+          </div>
+
+          <div className="col-span-2 mobile:col-span-1 grid grid-cols-2 gap-4">
+            <label className="flex flex-col gap-2 font-[850] text-coal">
+              <span>Кличка питомца</span>
+              <input className="p-3.5 border border-forest/15 rounded-xl bg-paper font-normal outline-none focus:border-matcha" type="text" name="petName" placeholder="Например, Шарик" maxLength={30} />
+            </label>
+            <div className="flex flex-col gap-2 font-[850] text-coal">
+              <span>Вид <span className="text-rose ml-0.5">*</span></span>
               <div className="flex gap-2 h-[54px]">
                 <button 
                   type="button"
@@ -196,38 +228,72 @@ export function BookingForm({ initialService, initialPet }: { initialService?: s
             </div>
           </div>
 
-          <label className="grid gap-2 font-[850] col-span-2 mobile:col-span-1">
-            Кратко опишите запрос
-            <textarea className="p-3.5 border border-forest/15 rounded-xl bg-paper font-normal outline-none focus:border-matcha resize-y" name="request" rows={3} placeholder="Одно животное и основной запрос"></textarea>
+          <label className="flex flex-col gap-2 font-[850] text-coal col-span-2 mobile:col-span-1">
+            <span>Кратко опишите запрос</span>
+            <textarea className="p-3.5 border border-forest/15 rounded-xl bg-paper font-normal outline-none focus:border-matcha resize-y" name="request" rows={3} placeholder="С чем нужна помощь? Основные проявления проблемы." maxLength={1000}></textarea>
+          </label>
+
+          {/* Опциональный чекбокс приоритета */}
+          <label className="col-span-2 mobile:col-span-1 flex gap-3 items-start font-[500] mt-2 p-4 rounded-xl border border-rose/20 bg-rose/5 cursor-pointer transition-colors hover:bg-rose/10">
+            <input 
+              type="checkbox" 
+              className="mt-1 w-5 h-5 accent-rose cursor-pointer shrink-0" 
+              checked={isPriority}
+              onChange={(e) => setIsPriority(e.target.checked)}
+            />
+            <span className="text-sm text-coal/90 leading-snug">
+              <strong className="text-rose block mb-0.5">Мне нужно срочно (Приоритет)</strong>
+              Заявка будет рассмотрена вне очереди. Применяется наценка +50% к стоимости разовых форматов.
+            </span>
           </label>
           
-          <label className="col-span-2 mobile:col-span-1 flex gap-2.5 items-start font-[600] mt-2">
-            <input type="checkbox" required className="mt-1 w-4 h-4 accent-matcha cursor-pointer" />
-            <span className="text-sm">Я согласен(на) с правилами обработки данных и условиями переноса.</span>
+          <label className="col-span-2 mobile:col-span-1 flex gap-3 items-start font-[500] mt-4 p-4 rounded-xl bg-snow/80 border border-forest/10 cursor-pointer hover:bg-snow transition-colors">
+            <input type="checkbox" required className="mt-1 w-5 h-5 accent-matcha cursor-pointer shrink-0 border-forest/20" />
+            <span className="text-sm text-coal/80 leading-snug">
+              Я даю согласие на обработку персональных данных в соответствии с <Link href="/privacy" className="text-matcha underline underline-offset-2 hover:text-forest">Политикой конфиденциальности</Link> и принимаю условия <Link href="/terms" className="text-matcha underline underline-offset-2 hover:text-forest">Оферты</Link>.
+            </span>
           </label>
           
           <button 
-            className="button button-primary col-span-2 mobile:col-span-1 mt-2 shadow-none" 
+            className="button button-primary col-span-2 mobile:col-span-1 mt-4 shadow-none h-[60px] text-lg disabled:bg-coal/40" 
             type="submit" 
             disabled={isSubmitting}
-            style={{ opacity: isSubmitting ? 0.7 : 1, cursor: isSubmitting ? 'not-allowed' : 'pointer' }}
           >
-            {isSubmitting ? 'Отправка...' : 'Сформировать заявку'}
+            {isSubmitting ? 'Отправка...' : 'Оставить заявку'}
           </button>
         </form>
       </div>
 
-      <aside className="sticky top-[100px] p-[30px] rounded-[30px] bg-coal text-white tablet:static">
+      <aside className="sticky top-[100px] p-[30px] rounded-[30px] bg-coal text-white tablet:static flex flex-col">
         <span className="micro text-forest">ВАША ЗАПИСЬ</span>
         <h3 className="text-[28px] mt-2 mb-1">{activeService || "Формат не выбран"}</h3>
         <div className="text-[40px] font-[950] text-oat leading-none mb-6">{activePrice || "—"}</div>
-        <dl>
-          <div className="flex justify-between py-3 border-b border-white/10"><dt>Дата</dt><dd className="m-0 font-[850]">{activeDate || "—"}</dd></div>
-          <div className="flex justify-between py-3 border-b border-white/10"><dt>Время</dt><dd className="m-0 font-[850]">{activeTime || "—"}</dd></div>
-          <div className="flex justify-between py-3 border-b border-white/10"><dt>Питомец</dt><dd className="m-0 font-[850]">{petType === 'dog' ? 'Собака' : petType === 'cat' ? 'Кошка' : '—'}</dd></div>
+        
+        <dl className="mb-6">
+          <div className="flex justify-between py-3 border-b border-white/10">
+            <dt>Питомец</dt>
+            <dd className="m-0 font-[850]">{petType === 'dog' ? 'Собака' : petType === 'cat' ? 'Кошка' : '—'}</dd>
+          </div>
         </dl>
-        <div className="p-3.5 rounded-2xl bg-white/10 text-[13px] text-fog my-6">После бронирования слота администратор вышлет вам анкету.</div>
-        <a className="text-link text-white hover:text-fog transition-colors" href="/services">Сравнить условия →</a>
+        
+        {/* Плашка появляется ТОЛЬКО если прожат чекбокс */}
+        {isPriority && (
+          <div className="p-4 rounded-2xl bg-rose/10 border border-rose/20 mb-4 animate-in fade-in slide-in-from-top-2 duration-300">
+            <span className="inline-block px-2.5 py-1 rounded-md bg-rose text-white text-[10px] font-black uppercase tracking-wider mb-2">
+              Приоритет активирован
+            </span>
+            <p className="text-sm text-white/80 leading-relaxed mb-3">
+              Специалист рассмотрит заявку вне очереди для согласования максимально близкого окна.
+            </p>
+            <div className="text-xs text-rose/80 font-bold border-t border-rose/20 pt-3">
+              Наценка +50% к стоимости разовых форматов.
+            </div>
+          </div>
+        )}
+
+        <div className="p-4 rounded-2xl bg-white/5 border border-white/10 text-[13px] text-fog leading-relaxed mt-auto">
+          После отправки заявки, администратор свяжется с вами для уточнения деталей, выбора точного времени и вышлет ссылку на полную поведенческую анкету.
+        </div>
       </aside>
     </div>
   );

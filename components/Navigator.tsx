@@ -1,16 +1,9 @@
 'use client';
-import { useState, useCallback, useSyncExternalStore } from 'react';
+import { useState, useCallback, useSyncExternalStore, useMemo } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { themeColors, type BrandTheme } from '@/lib/theme';
 
-export interface NavStep {
-  key: string;
-  title: string;
-  options: [string, string, string][];
-}
-
-// Интерфейс формата из базы данных
 export interface ServiceFormat {
   id: string;
   title: string;
@@ -18,6 +11,17 @@ export interface ServiceFormat {
   description: string;
   theme: string;
   link_text: string;
+}
+
+export interface GraphData {
+  nodes: any[];
+  edges: any[];
+}
+
+interface NavState {
+  currentNodeId: string | null;
+  history: string[]; // Для кнопки "Назад"
+  answers: Record<string, string>; // ID узла -> ID выбранного ответа
 }
 
 const emptySubscribe = () => () => {};
@@ -30,71 +34,49 @@ const slideVariants = {
   exit: (direction: number) => ({ x: direction < 0 ? 40 : -40, opacity: 0 })
 };
 
-export function Navigator({ initialSteps, formats }: { initialSteps: NavStep[], formats: ServiceFormat[] }) {
+export function Navigator({ initialSteps, formats }: { initialSteps: GraphData | any, formats: ServiceFormat[] }) {
   const isClient = useSyncExternalStore(emptySubscribe, getClientSnapshot, getServerSnapshot);
-  const navSteps = initialSteps && initialSteps.length > 0 ? initialSteps : [];
   
-  const [navState, setNavState] = useState<{ index: number; answers: Record<string, string> }>(() => {
-    if (typeof window === 'undefined') return { index: 0, answers: {} };
-    const saved = window.localStorage.getItem("bpV11Navigator");
+  // Нормализуем данные, так как в пропсы прилетает JSON из базы
+  const nodes = initialSteps?.nodes || [];
+  const edges = initialSteps?.edges || [];
+  
+  // Ищем корневой узел (тот, в который никто не входит)
+  const rootNodeId = useMemo(() => {
+    if (nodes.length === 0) return null;
+    const targetIds = new Set(edges.map((e: any) => e.target));
+    const root = nodes.find((n: any) => !targetIds.has(n.id) && n.type === 'question');
+    return root ? root.id : nodes.find((n: any) => n.type === 'question')?.id || null;
+  }, [nodes, edges]);
+
+  const [navState, setNavState] = useState<NavState>(() => {
+    if (typeof window === 'undefined') return { currentNodeId: rootNodeId, history: [], answers: {} };
+    
+    const saved = window.localStorage.getItem("bpV12NavigatorGraph");
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (typeof parsed === 'object' && parsed !== null && parsed.index < navSteps.length) {
-          return {
-            index: typeof parsed.index === 'number' ? parsed.index : 0,
-            answers: typeof parsed.answers === 'object' && parsed.answers !== null ? parsed.answers : {}
-          };
+        if (parsed && typeof parsed === 'object' && parsed.currentNodeId) {
+          // Защита от битых данных: проверяем, жив ли еще сохраненный узел в новой схеме
+          if (nodes.some((n: any) => n.id === parsed.currentNodeId)) {
+            return parsed;
+          }
         }
       } catch (e) {
-        window.localStorage.removeItem("bpV11Navigator");
+        window.localStorage.removeItem("bpV12NavigatorGraph");
       }
     }
-    return { index: 0, answers: {} };
+    return { currentNodeId: rootNodeId, history: [], answers: {} };
   });
 
-  const [showResult, setShowResult] = useState(false);
   const [direction, setDirection] = useState(1);
 
-  const saveState = useCallback((newState: { index: number; answers: Record<string, string> }) => {
+  const saveState = useCallback((newState: NavState) => {
     setNavState(newState);
     if (typeof window !== 'undefined') {
-      window.localStorage.setItem("bpV11Navigator", JSON.stringify(newState));
+      window.localStorage.setItem("bpV12NavigatorGraph", JSON.stringify(newState));
     }
   }, []);
-
-  if (navSteps.length === 0) {
-    return <div className="p-10 text-center border border-forest/15 rounded-3xl text-coal/50">Конфигурация навигатора не найдена</div>;
-  }
-
-  const handleChoice = (val: string) => {
-    const step = navSteps[navState.index];
-    saveState({ ...navState, answers: { ...navState.answers, [step.key]: val } });
-  };
-
-  const handleNext = () => {
-    setDirection(1);
-    if (navState.index < navSteps.length - 1) {
-      saveState({ ...navState, index: navState.index + 1 });
-    } else {
-      setShowResult(true);
-    }
-  };
-
-  const handleBack = () => {
-    setDirection(-1);
-    if (showResult) {
-      setShowResult(false);
-    } else if (navState.index > 0) {
-      saveState({ ...navState, index: navState.index - 1 });
-    }
-  };
-
-  const handleReset = () => {
-    setDirection(-1);
-    setShowResult(false);
-    saveState({ index: 0, answers: {} });
-  };
 
   if (!isClient) {
     return (
@@ -104,39 +86,76 @@ export function Navigator({ initialSteps, formats }: { initialSteps: NavStep[], 
     );
   }
 
-  const safeIndex = Math.min(navState.index, navSteps.length - 1);
-  const step = navSteps[safeIndex];
-  const progress = showResult ? 100 : ((safeIndex + 1) / navSteps.length) * 100;
-  const hasAnswer = !!navState.answers[step.key];
-
-  // ============================================================================
-  // ЛОГИКА ОПРЕДЕЛЕНИЯ ФОРМАТА (Эвристика)
-  // ============================================================================
-  const a = navState.answers;
-  let recommendedServiceId = 'online'; // Базовый формат по умолчанию
-
-  // 1. Проверяем маркеры здоровья (если есть ключи health, vet, внезапные изменения)
-  if (a.health === "yes" || a.vet === "yes" || a.change === "sudden" || a.symptoms === "yes") {
-    recommendedServiceId = 'second'; // Второе мнение
-  } 
-  // 2. Проверяем маркеры риска и агрессии (укусы, безопасность)
-  else if (a.risk === "high" || a.aggression === "yes" || a.bites === "yes") {
-    recommendedServiceId = 'offline'; // Очная встреча для безопасности
-  } 
-  // 3. Проверяем маркеры необходимости долгого контроля (тревога расставания, щенки)
-  else if (a.support === "yes" || a.duration === "long" || a.problem === "separation") {
-    recommendedServiceId = 'support'; // Онлайн-сопровождение
+  if (nodes.length === 0 || !rootNodeId) {
+    return <div className="p-10 text-center border border-forest/15 rounded-3xl text-coal/50">Конфигурация графа не найдена. Настройте навигатор в админке.</div>;
   }
 
-  // Находим реальные данные услуги из базы (если не найдено - берем первую попавшуюся как фоллбэк)
-  const resultFormat = formats?.find(f => f.id === recommendedServiceId) || formats?.[0];
+  const currentNode = nodes.find((n: any) => n.id === navState.currentNodeId);
+  const isResult = currentNode?.type === 'result';
+  const hasAnswer = !!navState.answers[currentNode?.id];
   
-  // Достаем цвета для оформления результата
+  // Эвристика прогресса (глубина графа неизвестна, опираемся на историю)
+  const currentStepNum = navState.history.length + 1;
+  const progress = isResult ? 100 : Math.min((currentStepNum / 5) * 100, 95); 
+
+  const handleChoice = (optionId: string) => {
+    if (!currentNode) return;
+    saveState({ ...navState, answers: { ...navState.answers, [currentNode.id]: optionId } });
+  };
+
+  const handleNext = () => {
+    if (!currentNode) return;
+    const selectedOptionId = navState.answers[currentNode.id];
+    
+    // Ищем связь, которая ведет от выбранного ответа к следующему узлу
+    const edge = edges.find((e: any) => e.source === currentNode.id && e.sourceHandle === selectedOptionId);
+    
+    if (edge) {
+      setDirection(1);
+      saveState({
+        ...navState,
+        currentNodeId: edge.target,
+        history: [...navState.history, currentNode.id]
+      });
+    } else {
+      console.warn("Тупик в графе: нет связи для этого варианта ответа");
+    }
+  };
+
+  const handleBack = () => {
+    if (navState.history.length === 0) return;
+    setDirection(-1);
+    
+    const newHistory = [...navState.history];
+    const prevNodeId = newHistory.pop()!;
+    
+    saveState({
+      ...navState,
+      currentNodeId: prevNodeId,
+      history: newHistory
+    });
+  };
+
+  const handleReset = () => {
+    setDirection(-1);
+    saveState({ currentNodeId: rootNodeId, history: [], answers: {} });
+  };
+
+  // ============================================================================
+  // ЛОГИКА РЕНДЕРА РЕЗУЛЬТАТА
+  // ============================================================================
+  const resultFormat = isResult 
+    ? formats?.find(f => f.id === currentNode?.data?.serviceId) || formats?.[0]
+    : null;
+
   const theme = resultFormat ? themeColors[resultFormat.theme as BrandTheme] : themeColors.matcha;
 
-  // Формируем умную ссылку на бронирование с передачей параметров
-  // Ищем ответ на вопрос о питомце (обычно ключ 'species' со значениями 'dog' или 'cat')
-  const petParam = a.species === 'cat' ? 'cat' : (a.species === 'dog' ? 'dog' : '');
+  // Ищем ответ на вопрос о виде животного (по ключу 'species' в data.questionKey)
+  // Чтобы прокинуть параметр ?pet=dog/cat в бронирование
+  const speciesAnswerNode = nodes.find((n: any) => n.data?.questionKey === 'species');
+  const speciesValue = speciesAnswerNode ? navState.answers[speciesAnswerNode.id] : '';
+  const petParam = speciesValue === 'cat' ? 'cat' : (speciesValue === 'dog' ? 'dog' : '');
+  
   const bookingUrl = resultFormat ? `/booking?service=${resultFormat.id}${petParam ? `&pet=${petParam}` : ''}` : '/booking';
 
   return (
@@ -147,12 +166,12 @@ export function Navigator({ initialSteps, formats }: { initialSteps: NavStep[], 
           <i className="block h-full bg-gradient-dopamine transition-all duration-500 ease-out" style={{ width: `${progress}%` }}></i>
         </div>
         <small className="block mt-4 text-oat font-semibold text-sm shrink-0">
-          {showResult ? "Готово" : `Шаг ${safeIndex + 1} из ${navSteps.length}`}
+          {isResult ? "Готово" : `Шаг ${currentStepNum}`}
         </small>
         <h3 className="text-[30px] my-7 leading-tight font-bold shrink-0">Подбор формата</h3>
         <p className="text-white/70 text-sm flex-grow">Ответы сохраняются в браузере до завершения маршрута.</p>
         
-        {safeIndex > 0 && !showResult && (
+        {navState.history.length > 0 && !isResult && (
           <button onClick={handleReset} className="mt-6 text-sm text-white/50 hover:text-white transition-colors underline underline-offset-4 self-start">
             Начать заново
           </button>
@@ -162,7 +181,7 @@ export function Navigator({ initialSteps, formats }: { initialSteps: NavStep[], 
       <div className="min-h-[470px] p-[42px] max-md:p-[27px] flex flex-col relative overflow-hidden">
         <div className="flex-1 relative">
           <AnimatePresence mode="wait" custom={direction} initial={false}>
-            {showResult ? (
+            {isResult ? (
               <motion.div 
                 key="result"
                 custom={direction}
@@ -173,7 +192,6 @@ export function Navigator({ initialSteps, formats }: { initialSteps: NavStep[], 
                 transition={{ duration: 0.3, ease: "easeOut" }}
                 className={`p-8 rounded-[28px] border relative overflow-hidden bg-white shadow-xl ${theme.ring} ring-2`}
               >
-                {/* Декоративный фон на основе темы результата */}
                 <div className={`absolute inset-0 opacity-10 ${theme.bg} pointer-events-none`} />
                 
                 <div className="relative z-10">
@@ -200,9 +218,9 @@ export function Navigator({ initialSteps, formats }: { initialSteps: NavStep[], 
                   </div>
                 </div>
               </motion.div>
-            ) : (
+            ) : currentNode ? (
               <motion.div
-                key={safeIndex}
+                key={currentNode.id}
                 custom={direction}
                 variants={slideVariants}
                 initial="enter"
@@ -210,31 +228,35 @@ export function Navigator({ initialSteps, formats }: { initialSteps: NavStep[], 
                 exit="exit"
                 transition={{ duration: 0.25, ease: "easeOut" }}
               >
-                <h3 className="text-[36px] max-md:text-[28px] mb-[26px] leading-tight font-bold text-coal">{step.title}</h3>
+                <h3 className="text-[36px] max-md:text-[28px] mb-[26px] leading-tight font-bold text-coal">
+                  {currentNode.data?.title || 'Без заголовка'}
+                </h3>
                 <div className="grid grid-cols-2 max-md:grid-cols-1 gap-[14px]">
-                  {step.options.map((o) => {
-                    const isSelected = navState.answers[step.key] === o[0];
+                  {currentNode.data?.options?.map((opt: any) => {
+                    const isSelected = navState.answers[currentNode.id] === opt.id;
                     const activeClass = isSelected 
                       ? "bg-forest text-white border-forest shadow-[0_8px_20px_rgba(47,63,23,0.15)] ring-2 ring-forest/20 scale-[0.98]" 
                       : "bg-snow text-coal border-forest/10 hover:border-forest/30 hover:bg-fog/30";
 
                     return (
                       <button 
-                        key={o[0]}
+                        key={opt.id}
                         className={`min-h-[96px] p-5 border rounded-[22px] text-left font-[850] cursor-pointer transition-all duration-200 ${activeClass}`}
-                        onClick={() => handleChoice(o[0])}
+                        onClick={() => handleChoice(opt.id)}
                         aria-pressed={isSelected}
                       >
-                        <span className="block text-lg mb-1">{o[1]}</span>
-                        <small className={`block font-medium text-sm leading-snug ${isSelected ? "text-white/80" : "text-coal/60"}`}>
-                          {o[2]}
-                        </small>
+                        <span className="block text-lg mb-1">{opt.title}</span>
+                        {opt.desc && (
+                          <small className={`block font-medium text-sm leading-snug ${isSelected ? "text-white/80" : "text-coal/60"}`}>
+                            {opt.desc}
+                          </small>
+                        )}
                       </button>
                     );
                   })}
                 </div>
               </motion.div>
-            )}
+            ) : null}
           </AnimatePresence>
         </div>
         
@@ -242,17 +264,17 @@ export function Navigator({ initialSteps, formats }: { initialSteps: NavStep[], 
           <button 
             className="button button-ghost disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0" 
             onClick={handleBack} 
-            disabled={safeIndex === 0 && !showResult}
+            disabled={navState.history.length === 0 && !isResult}
           >
             Назад
           </button>
-          {!showResult && (
+          {!isResult && (
             <button 
               className="button button-primary disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0" 
               onClick={handleNext} 
               disabled={!hasAnswer}
             >
-              {safeIndex === navSteps.length - 1 ? "Показать результат" : "Продолжить"}
+              Продолжить
             </button>
           )}
         </div>

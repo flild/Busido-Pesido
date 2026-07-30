@@ -97,4 +97,7 @@ evals/.tarballs/
 evals/experiments/
 evals/results/
 evals/agent-results.json
-.db
+# SQLite
+*.db
+*.sqlite*
+*.db-*

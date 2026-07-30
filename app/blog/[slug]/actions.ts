@@ -10,9 +10,9 @@ export async function recordView(slug: string) {
     // 1. Плюсуем общий счетчик статьи
     db.prepare('UPDATE articles SET views = views + 1 WHERE id = ?').run(article.id);
     
-    // 2. Пишем лог (для графика просмотров по дням)
+    // 2. Пишем лог (для дашборда админки)
     db.prepare('INSERT INTO article_views_log (article_id) VALUES (?)').run(article.id);
   } catch (error) {
-    console.error('Ошибка записи просмотра:', error);
+    console.error(`Ошибка записи просмотра для статьи ${slug}:`, error);
   }
 }

@@ -7,12 +7,12 @@ export function ViewTracker({ slug }: { slug: string }) {
   const hasTracked = useRef(false);
 
   useEffect(() => {
-    // useRef защищает от двойного срабатывания в React Strict Mode (в режиме разработки)
+    // useRef надежно защищает от двойного вызова (особенно в Strict Mode)
     if (!hasTracked.current) {
       recordView(slug);
       hasTracked.current = true;
     }
   }, [slug]);
 
-  return null; // Компонент невидимый
+  return null;
 }

@@ -1,19 +1,59 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { db } from '@/lib/db';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { FreeConsultationsWidget } from '@/components/FreeConsultationsWidget';
+import { CheckCircle2, Clock, ShieldAlert, CreditCard, Scale } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Бесплатные поведенческие консультации — Busido-Pesido',
+  title: 'Бесплатные поведенческие консультации',
   description: 'Бесплатная онлайн-помощь специалиста по поведению животных (собак и кошек). 1–7 числа каждого месяца, разбор сложных случаев и рекомендации.',
   alternates: {
     canonical: "https://busidopesido.ru/free-consultations",
   },
+  openGraph: {
+    title: 'Бесплатные поведенческие консультации',
+    description: '1–7 числа каждого месяца. Бесплатная онлайн-помощь специалиста по поведению животных.',
+    url: 'https://busidopesido.ru/free-consultations',
+    type: 'website',
+  }
 };
 
 export default function FreeConsultationsPage() {
+  // ============================================================================
+  // ЗАГРУЗКА ДАННЫХ (SSR)
+  // ============================================================================
+  const dbSchedule = db.prepare('SELECT * FROM free_schedule ORDER BY day_number ASC').all() as any[];
+
+  // ============================================================================
+  // SEO И МИКРОРАЗМЕТКА (JSON-LD)
+  // ============================================================================
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "EventSeries",
+    "name": "Бесплатные поведенческие консультации зоопсихолога",
+    "description": "Бесплатная онлайн-помощь специалиста по поведению животных. Проходит ежемесячно с 1 по 7 число.",
+    "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "organizer": {
+      "@type": "Organization",
+      "name": "Busido-Pesido"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "RUB",
+      "availability": "https://schema.org/InStock"
+    }
+  };
+
   return (
     <main>
+      <script 
+        type="application/ld+json" 
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} 
+      />
+
       {/* ХЕДЕР СТРАНИЦЫ */}
       <section className="pt-[140px] pb-[74px] max-md:pt-[110px] max-md:pb-[54px] relative overflow-hidden bg-[radial-gradient(circle_at_10%_12%,rgba(240,114,150,0.32),transparent_22rem),radial-gradient(circle_at_90%_90%,rgba(111,143,191,0.28),transparent_23rem),linear-gradient(120deg,theme(colors.forest),theme(colors.soldier))] text-white after:absolute after:w-[190px] after:h-[190px] after:right-[3%] after:-top-[80px] after:rounded-full after:bg-gradient-to-br after:from-berry after:to-rose after:opacity-45">
         <div className="container relative z-10">
@@ -36,7 +76,7 @@ export default function FreeConsultationsPage() {
 
       {/* ЧТО ВХОДИТ */}
       <section className="py-[92px] max-md:py-[64px]">
-        <div className="container grid grid-cols-2 max-lg:grid-cols-1 gap-16 items-center">
+        <div className="container grid grid-cols-[1fr_0.9fr] max-lg:grid-cols-1 gap-16 items-center">
           <div>
             <ScrollReveal className="max-w-[820px] mb-[32px]">
               <span className="kicker">ФОРМАТ</span>
@@ -44,7 +84,7 @@ export default function FreeConsultationsPage() {
                 Что входит
               </h2>
             </ScrollReveal>
-            <div className="grid gap-2.5">
+            <div className="grid gap-3">
               {[
                 'Одно животное и один основной запрос',
                 'Предварительная анкета',
@@ -54,30 +94,31 @@ export default function FreeConsultationsPage() {
                 'Небольшая подборка материалов или книг'
               ].map((item, i) => (
                 <ScrollReveal key={i} delay={i}>
-                  <span className="block px-4 py-3.5 pl-[48px] bg-snow/80 rounded-2xl font-[780] text-coal/80 relative before:content-['✓'] before:absolute before:left-4 before:text-forest before:font-black shadow-sm">
-                    {item}
-                  </span>
+                  <div className="flex items-center gap-4 px-5 py-4 bg-snow/80 rounded-2xl shadow-sm border border-forest/5">
+                    <CheckCircle2 className="text-forest shrink-0" size={24} strokeWidth={2.5} />
+                    <span className="font-[750] text-coal/85 leading-snug">
+                      {item}
+                    </span>
+                  </div>
                 </ScrollReveal>
               ))}
             </div>
           </div>
           
-          <ScrollReveal delay={2}>
-            <div className="p-10 max-md:p-8 rounded-[36px] bg-white shadow-[0_35px_80px_rgba(30,43,14,0.08)] border border-forest/10 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-matcha/10 to-transparent rounded-bl-full pointer-events-none" />
+          <ScrollReveal delay={2} className="h-full">
+            <div className="h-full p-10 max-md:p-8 rounded-[36px] bg-white shadow-[0_35px_80px_rgba(30,43,14,0.08)] border border-forest/10 relative overflow-hidden flex flex-col justify-center">
+              <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-matcha/15 to-transparent rounded-bl-full pointer-events-none" />
               <span className="block text-[11px] font-black tracking-[0.14em] text-forest mb-4 relative z-10">ЕЖЕМЕСЯЧНЫЙ НАБОР</span>
               <strong className="block text-[86px] max-md:text-[64px] leading-none font-black text-coal mb-2 relative z-10">28–35</strong>
               <p className="text-xl text-coal/80 font-bold mb-8 relative z-10">бесплатных мест в месяц</p>
               
-              {/* Полоску-градиент отсюда убрали */}
-              
-              <p className="text-[14px] text-coal/60 mb-8 font-medium leading-relaxed relative z-10">
+              <p className="text-[15px] text-coal/65 mb-8 font-medium leading-relaxed relative z-10">
                 Количество мест зависит от календарных выходных и нагрузки. Данные синхронизируются с базой автоматически.
               </p>
               
               <a 
                 href="#booking-widget"
-                className="button button-primary w-full relative z-10 flex items-center justify-center"
+                className="button button-primary w-full relative z-10 flex items-center justify-center mt-auto"
               >
                 Выбрать свободную дату
               </a>
@@ -98,15 +139,34 @@ export default function FreeConsultationsPage() {
           
           <div className="grid grid-cols-4 max-lg:grid-cols-2 max-md:grid-cols-1 gap-5">
             {[
-              { num: '01', color: 'border-t-matcha', title: 'Кто успел записаться', text: 'Места распределяются по факту свободной записи, без конкурса и случайного отбора.' },
-              { num: '02', color: 'border-t-caramel', title: 'Один раз для одного', text: 'Повторное участие одного и того же владельца строго не допускается. Система блокирует дубли.' },
-              { num: '03', color: 'border-t-rose', title: 'Без доплаты', text: 'Формат не переводится в платный через доплату и не создаёт обязательств купить услугу.' },
-              { num: '04', color: 'border-t-ice', title: 'Честные границы', text: 'При глубоком запросе я даю доступную помощь, объясняю причины и дальнейший маршрут.' }
+              { 
+                num: '01', color: 'border-t-matcha', icon: Clock,
+                title: 'Кто успел записаться', 
+                text: 'Места распределяются по факту свободной записи, без конкурса и случайного отбора.' 
+              },
+              { 
+                num: '02', color: 'border-t-caramel', icon: ShieldAlert,
+                title: 'Один раз для одного', 
+                text: 'Повторное участие одного и того же владельца строго не допускается. Система блокирует дубли.' 
+              },
+              { 
+                num: '03', color: 'border-t-rose', icon: CreditCard,
+                title: 'Без доплаты', 
+                text: 'Формат не переводится в платный через доплату и не создаёт обязательств купить услугу.' 
+              },
+              { 
+                num: '04', color: 'border-t-ice', icon: Scale,
+                title: 'Честные границы', 
+                text: 'При глубоком запросе я даю доступную помощь, объясняю причины и дальнейший маршрут.' 
+              }
             ].map((rule, i) => (
               <ScrollReveal key={i} delay={i} className="h-full">
-                <article className={`h-full p-7 rounded-[28px] bg-white/5 border border-white/10 text-oat border-t-4 ${rule.color} hover:bg-white/10 transition-colors`}>
-                  <span className="text-white/40 font-black text-2xl tracking-tighter">{rule.num}</span>
-                  <h3 className="text-[22px] mt-4 mb-3 text-white font-bold leading-tight">{rule.title}</h3>
+                <article className={`h-full p-7 rounded-[28px] bg-white/5 border border-white/10 text-oat border-t-4 ${rule.color} hover:bg-white/10 transition-colors flex flex-col group`}>
+                  <div className="flex justify-between items-center mb-5">
+                    <span className="text-white/20 font-black text-2xl tracking-tighter">{rule.num}</span>
+                    <rule.icon className="text-white/40 group-hover:text-white/80 transition-colors" size={28} strokeWidth={1.5} />
+                  </div>
+                  <h3 className="text-[22px] mb-3 text-white font-bold leading-tight">{rule.title}</h3>
                   <p className="text-oat/80 leading-relaxed text-[15px]">{rule.text}</p>
                 </article>
               </ScrollReveal>
@@ -116,20 +176,21 @@ export default function FreeConsultationsPage() {
       </section>
 
       {/* ЗАПИСЬ (ВИДЖЕТ) */}
-      <section id="booking-widget" className="py-[92px] max-md:py-[64px] scroll-mt-10">
+      <section id="booking-widget" className="py-[92px] max-md:py-[64px] scroll-mt-10 bg-snow/30">
         <div className="container">
-          <ScrollReveal className="max-w-[820px] mb-[12px]">
+          <ScrollReveal className="max-w-[820px] mb-[42px] text-center mx-auto flex flex-col items-center">
             <span className="kicker">ЗАПИСЬ</span>
-            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice text-coal">
+            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice text-coal flex flex-col items-center">
               Онлайн-бронирование
             </h2>
-            <p className="text-xl text-matcha mt-4">
-              Выберите дату с 1 по 7 число, укажите телефон и кратко опишите проблему.
+            <p className="text-xl text-matcha mt-4 max-w-[600px]">
+              Выберите дату с 1 по 7 число, укажите контактные данные и кратко опишите суть запроса.
             </p>
           </ScrollReveal>
           
           <ScrollReveal delay={1}>
-            <FreeConsultationsWidget />
+            {/* Прокидываем данные расписания из БД в клиентский виджет */}
+            <FreeConsultationsWidget scheduleData={dbSchedule} />
           </ScrollReveal>
           
         </div>

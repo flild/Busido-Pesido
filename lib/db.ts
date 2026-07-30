@@ -60,6 +60,7 @@ db.exec(`
     id TEXT PRIMARY KEY,
     title TEXT NOT NULL,
     price TEXT NOT NULL,
+    price_int INTEGER NOT NULL DEFAULT 0,
     description TEXT NOT NULL,
     tag TEXT,
     theme TEXT NOT NULL,
@@ -107,12 +108,6 @@ db.exec(`
 `);
 
 
-try {
-  db.prepare('ALTER TABLE reviews ADD COLUMN status TEXT DEFAULT "published"').run();
-} catch (e: any) {
-  if (!e.message.includes('duplicate column name')) console.error('Ошибка миграции reviews:', e);
-}
-
 // Сид данных для услуг (выполняется только если таблица пустая)
 const servicesCount = db.prepare('SELECT COUNT(*) as c FROM services').get() as { c: number };
 if (servicesCount.c === 0) {
@@ -125,11 +120,6 @@ if (servicesCount.c === 0) {
     ["Кому подходит", "Владельцам собак и кошек..."], 
     ["Что подготовить", "Анкету, короткие видео..."]
   ]);
-
-  insertService.run('online', 'Онлайн-консультация', '6 000 ₽', 'Полный разбор одного животного...', 'Основной формат', 'matcha', 1, '/booking?service=online', 'Записаться', defaultSteps, 1);
-  insertService.run('offline', 'Очная / выездная', '8 000 ₽', 'Наблюдение в реальной среде...', null, 'caramel', 0, '/booking?service=offline', 'Выбрать дату', defaultSteps, 2);
-  insertService.run('support', 'Онлайн-сопровождение', '22 000 ₽', 'Регулярная проверка ДЗ...', null, 'rose', 0, '/support', 'Подробнее', defaultSteps, 3);
-  insertService.run('second', 'Второе мнение', '2 500 ₽', 'Детальный разбор медицинских документов...', null, 'ice', 0, '/complex-cases', 'Как проходит', defaultSteps, 4);
 }
 
 const scheduleCount = db.prepare('SELECT COUNT(*) as c FROM free_schedule').get() as { c: number };

@@ -2,10 +2,10 @@
 │   ├── admin/
 │   │   ├── applications/
 │   │   │   ├── actions.ts
-│   │   │   ├── ApplicationActions.tsx
+│   │   │   ├── ApplicationRow.tsx
 │   │   │   └── page.tsx
 │   │   ├── articles/
-│   │   │   ├── [id]/
+│   │   │   ├── [slug]/
 │   │   │   │   └── edit/
 │   │   │   │       └── page.tsx
 │   │   │   ├── new/
@@ -13,23 +13,61 @@
 │   │   │   ├── actions.ts
 │   │   │   ├── ArticleForm.tsx
 │   │   │   ├── DeleteButton.tsx
+│   │   │   ├── page.tsx
+│   │   │   └── uploadAction.ts
+│   │   ├── cases/
+│   │   │   ├── [id]/
+│   │   │   │   └── edit/
+│   │   │   │       └── page.tsx
+│   │   │   ├── new/
+│   │   │   │   └── page.tsx
+│   │   │   ├── actions.ts
+│   │   │   ├── CaseForm.tsx
+│   │   │   ├── CaseRow.tsx
 │   │   │   └── page.tsx
+│   │   ├── navigator/
+│   │   │   ├── actions.ts
+│   │   │   ├── NavigatorForm.tsx
+│   │   │   └── page.tsx
+│   │   ├── reviews/
+│   │   │   ├── [id]/
+│   │   │   │   └── edit/
+│   │   │   │       └── page.tsx
+│   │   │   ├── new/
+│   │   │   │   └── page.tsx
+│   │   │   ├── actions.ts
+│   │   │   ├── DeleteReviewButton.tsx
+│   │   │   ├── page.tsx
+│   │   │   └── ReviewRow.tsx
 │   │   ├── schedule/
 │   │   │   ├── actions.ts
-│   │   │   └── page.tsx
+│   │   │   ├── page.tsx
+│   │   │   └── ScheduleClient.tsx
 │   │   ├── services/
+│   │   │   ├── [id]/
+│   │   │   │   └── edit/
+│   │   │   │       └── page.tsx
+│   │   │   ├── new/
+│   │   │   │   └── page.tsx
 │   │   │   ├── actions.ts
-│   │   │   └── page.tsx
+│   │   │   ├── page.tsx
+│   │   │   ├── ServiceForm.tsx
+│   │   │   └── ServiceRow.tsx
+│   │   ├── DashboardCharts.tsx
 │   │   ├── layout.tsx
 │   │   └── page.tsx
 │   ├── api/
+│   │   ├── applications/
+│   │   │   └── route.ts
 │   │   ├── free-booking/
 │   │   │   └── route.ts
 │   │   └── stats/
 │   │       └── route.ts
 │   ├── blog/
 │   │   ├── [slug]/
-│   │   │   └── page.tsx
+│   │   │   ├── actions.ts
+│   │   │   ├── page.tsx
+│   │   │   └── ViewTracker.tsx
 │   │   └── page.tsx
 │   ├── booking/
 │   │   └── page.tsx
@@ -37,9 +75,9 @@
 │   │   └── page.tsx
 │   ├── complex-cases/
 │   │   └── page.tsx
-│   ├── free-consultations/
+│   ├── dogs/
 │   │   └── page.tsx
-│   ├── library/
+│   ├── free-consultations/
 │   │   └── page.tsx
 │   ├── professionals/
 │   │   └── page.tsx
@@ -54,6 +92,9 @@
 │   ├── page.tsx
 │   ├── robots.ts
 │   └── sitemap.ts
+├── assets/
+│   └── .aistudio/
+│       └── .gitignore
 ├── components/
 │   ├── ApproachTabs.tsx
 │   ├── BlogList.tsx
@@ -91,12 +132,17 @@
 │   ├── theme.ts
 │   └── utils.ts
 ├── public/
-│   └── reviews/
-│       ├── placeholder-cat.png
-│       ├── placeholder-dog.png
-│       └── placeholder-support.png
+│   ├── reviews/
+│   │   ├── placeholder-cat.png
+│   │   ├── placeholder-dog.png
+│   │   └── placeholder-support.png
+│   └── uploads/
+│       ├── 1784754934251-Dark_green___brass_kitchen.png
+│       └── 1785088109125-Gemini_Generated_Image_aw5l7aaw5l7aaw5l.png
 ├── TEXT/
 │   └── CaseInteractive.json
+├── .env
+├── .env.example
 ├── .eslintrc.json
 ├── .gitignore
 ├── metadata.json

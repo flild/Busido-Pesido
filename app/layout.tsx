@@ -5,7 +5,7 @@ import "./globals.css";
 import { ReadingProgress } from "@/components/ReadingProgress";
 import { UtilityBar } from "@/components/UtilityBar";
 import { PaletteStripe } from "@/components/PaletteStripe";
-import { Header } from "@/compone nts/Header";
+import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 
 export const viewport: Viewport = {

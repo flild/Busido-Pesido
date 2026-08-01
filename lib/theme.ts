@@ -1,9 +1,7 @@
 // src/lib/theme.ts
 
-// Единый тип для всех брендовых цветов проекта
-export type BrandTheme = 'matcha' | 'rose' | 'ice' | 'caramel';
+export type BrandTheme = 'matcha' | 'rose' | 'ice' | 'caramel' | 'berry' | 'forest' | 'oat';
 
-// Словарь со всеми готовыми Tailwind-классами
 export const themeColors: Record<BrandTheme, {
   text: string;
   bg: string;
@@ -11,7 +9,6 @@ export const themeColors: Record<BrandTheme, {
   gradient: string;
   borderTop: string;
   borderFull: string;
-  // Специфичные составные стили (например, для табов или карточек)
   tabActive: string;
   tabInactive: string;
   softBg: string;
@@ -56,8 +53,41 @@ export const themeColors: Record<BrandTheme, {
     gradient: 'from-caramel',
     borderTop: 'border-t-caramel',
     borderFull: 'border-caramel',
-    tabActive: 'bg-caramel text-espresso border-caramel', // у карамели темный текст для контраста
+    tabActive: 'bg-caramel text-espresso border-caramel',
     tabInactive: 'bg-white text-coal border-forest/15 hover:bg-snow',
     softBg: 'bg-caramel/[0.04]',
+  },
+  berry: {
+    text: 'text-berry',
+    bg: 'bg-berry',
+    ring: 'ring-berry/30',
+    gradient: 'from-berry',
+    borderTop: 'border-t-berry',
+    borderFull: 'border-berry',
+    tabActive: 'bg-berry text-white border-berry',
+    tabInactive: 'bg-white text-coal border-forest/15 hover:bg-snow',
+    softBg: 'bg-berry/[0.04]',
+  },
+  forest: {
+    text: 'text-forest',
+    bg: 'bg-forest',
+    ring: 'ring-forest/30',
+    gradient: 'from-forest',
+    borderTop: 'border-t-forest',
+    borderFull: 'border-forest',
+    tabActive: 'bg-forest text-white border-forest',
+    tabInactive: 'bg-white text-coal border-forest/15 hover:bg-snow',
+    softBg: 'bg-forest/[0.04]',
+  },
+  oat: {
+    text: 'text-oat',
+    bg: 'bg-oat',
+    ring: 'ring-oat/30',
+    gradient: 'from-oat',
+    borderTop: 'border-t-oat',
+    borderFull: 'border-oat',
+    tabActive: 'bg-oat text-espresso border-oat',
+    tabInactive: 'bg-white text-coal border-forest/15 hover:bg-snow',
+    softBg: 'bg-oat/[0.04]',
   }
 };

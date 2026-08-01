@@ -90,10 +90,10 @@
 │   ├── admin/
 │   │   ├── applications/
 │   │   │   ├── actions.ts
-│   │   │   ├── ApplicationActions.tsx
+│   │   │   ├── ApplicationRow.tsx
 │   │   │   └── page.tsx
 │   │   ├── articles/
-│   │   │   ├── [id]/
+│   │   │   ├── [slug]/
 │   │   │   │   └── edit/
 │   │   │   │       └── page.tsx
 │   │   │   ├── new/
@@ -101,23 +101,61 @@
 │   │   │   ├── actions.ts
 │   │   │   ├── ArticleForm.tsx
 │   │   │   ├── DeleteButton.tsx
+│   │   │   ├── page.tsx
+│   │   │   └── uploadAction.ts
+│   │   ├── cases/
+│   │   │   ├── [id]/
+│   │   │   │   └── edit/
+│   │   │   │       └── page.tsx
+│   │   │   ├── new/
+│   │   │   │   └── page.tsx
+│   │   │   ├── actions.ts
+│   │   │   ├── CaseForm.tsx
+│   │   │   ├── CaseRow.tsx
 │   │   │   └── page.tsx
+│   │   ├── navigator/
+│   │   │   ├── actions.ts
+│   │   │   ├── NavigatorForm.tsx
+│   │   │   └── page.tsx
+│   │   ├── reviews/
+│   │   │   ├── [id]/
+│   │   │   │   └── edit/
+│   │   │   │       └── page.tsx
+│   │   │   ├── new/
+│   │   │   │   └── page.tsx
+│   │   │   ├── actions.ts
+│   │   │   ├── DeleteReviewButton.tsx
+│   │   │   ├── page.tsx
+│   │   │   └── ReviewRow.tsx
 │   │   ├── schedule/
 │   │   │   ├── actions.ts
-│   │   │   └── page.tsx
+│   │   │   ├── page.tsx
+│   │   │   └── ScheduleClient.tsx
 │   │   ├── services/
+│   │   │   ├── [id]/
+│   │   │   │   └── edit/
+│   │   │   │       └── page.tsx
+│   │   │   ├── new/
+│   │   │   │   └── page.tsx
 │   │   │   ├── actions.ts
-│   │   │   └── page.tsx
+│   │   │   ├── page.tsx
+│   │   │   ├── ServiceForm.tsx
+│   │   │   └── ServiceRow.tsx
+│   │   ├── DashboardCharts.tsx
 │   │   ├── layout.tsx
 │   │   └── page.tsx
 │   ├── api/
+│   │   ├── applications/
+│   │   │   └── route.ts
 │   │   ├── free-booking/
 │   │   │   └── route.ts
 │   │   └── stats/
 │   │       └── route.ts
 │   ├── blog/
 │   │   ├── [slug]/
-│   │   │   └── page.tsx
+│   │   │   ├── actions.ts
+│   │   │   ├── page.tsx
+│   │   │   └── ViewTracker.tsx
 │   │   └── page.tsx
 │   ├── booking/
 │   │   └── page.tsx
@@ -125,9 +163,9 @@
 │   │   └── page.tsx
 │   ├── complex-cases/
 │   │   └── page.tsx
-│   ├── free-consultations/
+│   ├── dogs/
 │   │   └── page.tsx
-│   ├── library/
+│   ├── free-consultations/
 │   │   └── page.tsx
 │   ├── professionals/
 │   │   └── page.tsx
@@ -179,12 +217,17 @@
 │   ├── theme.ts
 │   └── utils.ts
 ├── public/
-│   └── reviews/
-│       ├── placeholder-cat.png
-│       ├── placeholder-dog.png
-│       └── placeholder-support.png
+│   ├── reviews/
+│   │   ├── placeholder-cat.png
+│   │   ├── placeholder-dog.png
+│   │   └── placeholder-support.png
+│   └── uploads/
+│       ├── 1784754934251-Dark_green___brass_kitchen.png
+│       └── 1785088109125-Gemini_Generated_Image_aw5l7aaw5l7aaw5l.png
 ├── TEXT/
 │   └── CaseInteractive.json
+├── .env
+├── .env.example
 ├── .eslintrc.json
 ├── .gitignore
 ├── metadata.json
@@ -195,6 +238,7 @@
 ├── README.md
 ├── tailwind.config.ts
 └── tsconfig.json
+
 
 
 
@@ -314,3 +358,19 @@ SEO: sitemap.ts генерируется динамически из базы. r
 
 * **Оптимизация навигации:** Боковое меню переведено на использование конфигурационного массива (DRY).
 * **Активные стейты:** Внедрен хук `usePathname` для точной подсветки активного раздела (включая вложенные страницы редактирования). Сайдбар зафиксирован (`sticky top-0 h-screen`), добавлены семантичные иконки из `lucide-react`.
+
+### 13. Полная интеграция SSR, SEO и модернизация публичных страниц (Завершено)
+* **Отказ от хардкода:** Все публичные информационные страницы (`/services`, `/support`, `/complex-cases`, `/free-consultations`, `/cats`, `/dogs`, `/professionals`) окончательно переведены на серверный рендеринг (SSR). Базовые цены, описания и массивы шагов услуг теперь тянутся напрямую из БД (SQLite) синхронными запросами внутри Server Components.
+* **Продвинутое SEO и Микроразметка:** 
+  * Внедрена динамическая микроразметка **JSON-LD**. Для поисковых систем настроены релевантные схемы: `Service` и `OfferCatalog` (для услуг), `EventSeries` (для виджета бесплатных консультаций) и `Article` (для блога).
+  * Настроены метатеги `OpenGraph` для корректного отображения ссылок в соцсетях и мессенджерах. Из `title` убраны дублирующиеся названия сайта, так как они подтягиваются из глобального `layout`.
+* **Модернизация UI и Компонентов:** 
+  * Устаревшие CSS-классы (`.tilt-card`, `.reveal-ready`) полностью заменены на изолированные интерактивные компоненты `<ScrollReveal>` (появление при скролле) и `<TiltCard>` (3D-эффект).
+  * Внедрена семантичная векторная графика через библиотеку `lucide-react` вместо громоздких псевдоэлементов (`before:content-['✓']`).
+* **Умная навигация (`Header.tsx`):** 
+  * Главное меню получило поддержку Dropdown-списков (например, раздел "Питомцы" -> "Для собак" / "Для кошек"). 
+  * На десктопе меню работает плавно через нативный CSS (`group-hover`), а на мобильных устройствах элементы раскрываются внутри общего списка без лишних состояний.
+  * Кнопки записи на профильных страницах (кошки/собаки) теперь автоматически прокидывают параметры в форму бронирования (например, `?service=online&pet=cat`).
+* **Строгая типизация и Архитектура (Блог):**
+  * Полностью устранён тип `any` на страницах рендеринга статей блога. Внедрены строгие интерфейсы `ArticleRow` и `ArticleFull`.
+  * Интегрирован клиентский компонент `ViewTracker` для подсчета просмотров статей. Использован паттерн блокировки двойного рендера через `useRef` для корректной работы с React Strict Mode в Next.js.

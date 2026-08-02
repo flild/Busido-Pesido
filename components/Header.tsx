@@ -15,6 +15,7 @@ export function Header() {
   const navLinks = [
     { path: '/', label: 'Главная' },
     { path: '/services', label: 'Услуги и цены' },
+    { path: '/specialists', label: 'Специалисты' }, 
     { path: '/support', label: 'Сопровождение' },
     { path: '/complex-cases', label: 'Сложные случаи' },
     { path: '/free-consultations', label: 'Бесплатные' },

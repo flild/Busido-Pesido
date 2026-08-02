@@ -12,6 +12,7 @@ import {
   MessageSquare,
   FolderKanban,
   Map,
+  BadgeCheck,
   Layers
 } from 'lucide-react';
 
@@ -24,6 +25,7 @@ const NAV_ITEMS = [
   { href: '/admin/cases', label: 'Кейсы', icon: FolderKanban },
   { href: '/admin/reviews', label: 'Отзывы', icon: MessageSquare },
   { href: '/admin/navigator', label: 'Навигатор', icon: Map },
+  { href: '/admin/specialists', label: 'Специалисты', icon: BadgeCheck },
   { href: '/admin/services', label: 'Услуги и Цены', icon: Layers }, // Заодно добавил услуги, которые есть в базе
 ];
 

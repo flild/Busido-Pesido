@@ -22,7 +22,7 @@ export function Footer() {
           <h3 className="text-lg mb-2 text-white">Навигация</h3>
           <Link className="text-oat hover:text-white transition-colors" href="/services">Услуги и цены</Link>
           <Link className="text-oat hover:text-white transition-colors" href="/booking">Запись</Link>
-          <Link className="text-oat hover:text-white transition-colors" href="/library">Библиотека</Link>
+          <Link className="text-oat hover:text-white transition-colors" href="/blog">Блог</Link>
           <Link className="text-oat hover:text-white transition-colors" href="/free-consultations">Бесплатные консультации</Link>
         </div>
         

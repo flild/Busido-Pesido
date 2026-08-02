@@ -138,7 +138,7 @@ export default function ComplexCasesPage() {
                 <FileText size={200} strokeWidth={1} />
               </div>
               <div className="relative z-10">
-                <span className="block text-[10px] font-black tracking-[0.14em] text-forest mb-4">SECOND OPINION</span>
+                <span className="block text-[10px] font-black tracking-[0.14em] text-forest mb-4">ВТОРОЕ МНЕНИЕ</span>
                 <h3 className="text-[42px] max-md:text-[34px] font-bold text-coal leading-tight mb-4">
                   Ветеринарное второе мнение
                 </h3>

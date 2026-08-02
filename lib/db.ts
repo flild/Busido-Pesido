@@ -37,6 +37,17 @@ db.exec(`
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
 
+  CREATE TABLE IF NOT EXISTS specialists (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    role TEXT NOT NULL,
+    short_bio TEXT NOT NULL,
+    full_bio TEXT NOT NULL,
+    image_url TEXT,
+    is_main INTEGER DEFAULT 0,
+    sort_order INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
   CREATE TABLE IF NOT EXISTS article_views_log (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     article_id INTEGER NOT NULL,
@@ -120,6 +131,24 @@ if (servicesCount.c === 0) {
     ["Кому подходит", "Владельцам собак и кошек..."], 
     ["Что подготовить", "Анкету, короткие видео..."]
   ]);
+}
+
+// Сид данных для специалистов
+const specCount = db.prepare('SELECT COUNT(*) as c FROM specialists').get() as { c: number };
+if (specCount.c === 0) {
+  const insertSpec = db.prepare(`
+    INSERT INTO specialists (name, role, short_bio, full_bio, image_url, is_main, sort_order)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `);
+  insertSpec.run(
+    'Ярослава Ковалевская',
+    'Ветеринарный врач · зоотехник-кинолог · специалист по поведению животных',
+    'Я работаю на стыке поведения, здоровья и среды',
+    'Я окончила ВГАВМ по специальности ветеринарный врач и РГУНХ по квалификации зоотехник-кинолог. Работала в ветеринарных клиниках, Минском государственном зоопарке, с животными экзотариума и крупными хищниками, затем перешла в частную практику.\n\nВ каждом случае я собираю анамнез, анализирую состояние животного, условия жизни, режим, нагрузку, предшествующий опыт и последствия поведения. Это помогает отличить задачу обучения от проблемы состояния и вовремя направить животное на дополнительную диагностику.',
+    null, // Пока без фото
+    1,
+    0
+  );
 }
 
 const scheduleCount = db.prepare('SELECT COUNT(*) as c FROM free_schedule').get() as { c: number };

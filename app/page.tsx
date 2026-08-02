@@ -29,7 +29,8 @@ export default function Home() {
   // ============================================================================
   // ЗАГРУЗКА ДАННЫХ (Выполняется при каждом рендере страницы на сервере)
   // ============================================================================
-
+  // 1. Главный специалист
+  const dbMainSpecialist = db.prepare('SELECT * FROM specialists WHERE is_main = 1 LIMIT 1').get() as any;
   // 1. Форматы и расписание
   const dbFormats = db.prepare('SELECT * FROM services ORDER BY sort_order').all() as any[];
   const dbSchedule = db.prepare('SELECT * FROM free_schedule ORDER BY day_number ASC').all() as any[];
@@ -168,47 +169,58 @@ export default function Home() {
             </article>
           </ScrollReveal>
         </div>
-      </section>
+      </section>кщ
 
-      {/* ОБО МНЕ */}
-      <section className="py-[92px] mobile:py-[64px]">
-        <div className="container grid grid-cols-2 gap-16 items-center mobile:grid-cols-1">
-          <div className="relative">
-            <div className="min-h-[560px] mobile:min-h-[430px] rounded-[42px] p-8 flex items-end shadow-2xl relative overflow-hidden bg-[radial-gradient(circle_at_18%_16%,rgba(111,143,191,0.63),transparent_26%),radial-gradient(circle_at_82%_25%,rgba(240,114,150,0.48),transparent_25%),radial-gradient(circle_at_72%_82%,rgba(198,142,107,0.58),transparent_30%),linear-gradient(145deg,theme(colors.fog),theme(colors.snow))] after:absolute after:inset-[22px] after:rounded-[34px] after:border after:border-forest/10 after:pointer-events-none">
-              <strong className="text-[30px] max-w-[13ch] relative z-10">Место для фотографии Ярославы в работе</strong>
+  {/* ОБО МНЕ (ДИНАМИКА) */}
+      {dbMainSpecialist && (
+        <section className="py-[92px] mobile:py-[64px]">
+          <div className="container grid grid-cols-2 gap-16 items-center mobile:grid-cols-1">
+            <div className="relative">
+              <div className="min-h-[560px] mobile:min-h-[430px] rounded-[42px] p-8 flex items-end shadow-2xl relative overflow-hidden bg-[radial-gradient(circle_at_18%_16%,rgba(111,143,191,0.63),transparent_26%),radial-gradient(circle_at_82%_25%,rgba(240,114,150,0.48),transparent_25%),radial-gradient(circle_at_72%_82%,rgba(198,142,107,0.58),transparent_30%),linear-gradient(145deg,theme(colors.fog),theme(colors.snow))] after:absolute after:inset-[22px] after:rounded-[34px] after:border after:border-forest/10 after:pointer-events-none">
+                {dbMainSpecialist.image_url ? (
+                  <img src={dbMainSpecialist.image_url} alt={dbMainSpecialist.name} className="absolute inset-0 w-full h-full object-cover z-10" />
+                ) : (
+                  <strong className="text-[30px] max-w-[13ch] relative z-10 text-coal/50">
+                    Место для фотографии {dbMainSpecialist.name.split(' ')[0]} в работе
+                  </strong>
+                )}
+              </div>
+              <div className="absolute right-[-18px] bottom-8 p-4 bg-white rounded-2xl shadow-xl font-[850] max-w-[285px] mobile:relative mobile:right-auto mobile:bottom-auto mobile:-mt-5 mobile:mx-3.5 z-20">
+                {dbMainSpecialist.role}
+              </div>
             </div>
-            <div className="absolute right-[-18px] bottom-8 p-4 bg-white rounded-2xl shadow-xl font-[850] max-w-[285px] mobile:relative mobile:right-auto mobile:bottom-auto mobile:-mt-5 mobile:mx-3.5">
-              Ветеринарный врач · зоотехник-кинолог · специалист по поведению животных
+            <div>
+              <ScrollReveal className="max-w-[820px] mb-[42px]">
+                <span className="kicker">СПЕЦИАЛИСТ</span>
+                <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice">
+                  {dbMainSpecialist.short_bio}
+                </h2>
+              </ScrollReveal>
+              <div className="text-xl text-matcha mb-4">
+                Меня зовут {dbMainSpecialist.name}.
+              </div>
+              
+              {/* Разбиваем full_bio на параграфы */}
+              {dbMainSpecialist.full_bio.split('\n\n').map((paragraph: string, i: number) => (
+                <p key={i} className="mb-6">{paragraph}</p>
+              ))}
+
+              <div className="flex flex-wrap gap-2.5 mb-8">
+                {dbMainSpecialist.role.split('·').map((tag: string, i: number) => (
+                  <span key={i} className="px-3 py-2 border border-forest/15 rounded-full text-[13px] font-[800] bg-oat/40">
+                    {tag.trim()}
+                  </span>
+                ))}
+              </div>
+              <p>
+                <Link className="font-[950] text-forest hover:text-espresso transition-colors" href="/specialists">
+                  Посмотреть всех специалистов →
+                </Link>
+              </p>
             </div>
           </div>
-          <div>
-            <ScrollReveal className="max-w-[820px] mb-[42px]">
-              <span className="kicker">ОБО МНЕ</span>
-              <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice">
-                Я работаю на стыке поведения, здоровья и среды
-              </h2>
-            </ScrollReveal>
-            <p className="text-xl text-matcha mb-4">
-              Меня зовут Ярослава Ковалевская. Я окончила ВГАВМ по специальности ветеринарный врач и РГУНХ по квалификации зоотехник-кинолог. Работала в ветеринарных клиниках, Минском государственном зоопарке, с животными экзотариума и крупными хищниками, затем перешла в частную практику.
-            </p>
-            <p className="mb-6">
-              В каждом случае я собираю анамнез, анализирую состояние животного, условия жизни, режим, нагрузку, предшествующий опыт и последствия поведения. Это помогает отличить задачу обучения от проблемы состояния и вовремя направить животное на дополнительную диагностику.
-            </p>
-            <div className="flex flex-wrap gap-2.5 mb-6">
-              <span className="px-3 py-2 border border-forest/15 rounded-full text-[13px] font-[800] bg-oat/60">Ветеринарный врач</span>
-              <span className="px-3 py-2 border border-forest/15 rounded-full text-[13px] font-[800] bg-caramel/20">Зоотехник-кинолог</span>
-              <span className="px-3 py-2 border border-forest/15 rounded-full text-[13px] font-[800] bg-ice/20">Член RVBA</span>
-              <span className="px-3 py-2 border border-forest/15 rounded-full text-[13px] font-[800] bg-rose/15">Преподавание и лекции</span>
-              <span className="px-3 py-2 border border-forest/15 rounded-full text-[13px] font-[800] bg-oat/60">Авторские материалы</span>
-            </div>
-            <p>
-              <Link className="font-[950] text-forest hover:text-espresso transition-colors" href="/complex-cases">
-                Как я разбираю сложные случаи →
-              </Link>
-            </p>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ПОДХОД */}
       <section className="bg-[radial-gradient(circle_at_88%_12%,rgba(225,77,117,0.16),transparent_25rem),radial-gradient(circle_at_10%_90%,rgba(111,143,191,0.14),transparent_24rem),linear-gradient(145deg,theme(colors.coal),theme(colors.soldier))] text-white py-[92px] mobile:py-[64px]">
@@ -362,7 +374,7 @@ export default function Home() {
           </div>
           
           <ScrollReveal delay={1} className="h-full">
-            <ClinicalBehaviorChart />ClinicalBehaviorChart
+            <ClinicalBehaviorChart />
           </ScrollReveal>
         </div>
       </section>

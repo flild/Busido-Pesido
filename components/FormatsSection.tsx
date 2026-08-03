@@ -25,7 +25,6 @@ interface FormatsSectionProps {
   formats: ServiceFormat[];
 }
 
-// Сколько форматов показываем по умолчанию
 const INITIAL_COUNT = 4;
 
 export function FormatsSection({ formats }: FormatsSectionProps) {
@@ -38,7 +37,6 @@ export function FormatsSection({ formats }: FormatsSectionProps) {
 
   const handleToggleShowAll = () => {
     if (showAll) {
-      // Если скрываем карточки, проверяем, не открыта ли деталка формата, который сейчас исчезнет
       const activeIndex = formats.findIndex(f => f.id === activeService);
       if (activeIndex >= INITIAL_COUNT) {
         setActiveService(null);
@@ -61,7 +59,7 @@ export function FormatsSection({ formats }: FormatsSectionProps) {
   };
   
   return (
-    <section className="py-[92px] mobile:py-[64px] bg-[linear-gradient(180deg,theme(colors.snow),rgba(255,255,255,0))]">
+    <section className="py-[92px] mobile:py-[64px] bg-[linear-gradient(180deg,theme(colors.snow),rgba(255,255,255,0))] overflow-hidden">
       <div className="container">
         <ScrollReveal className="max-w-[820px] mb-[42px]">
           <span className="kicker">ФОРМАТЫ РАБОТЫ</span>
@@ -73,8 +71,8 @@ export function FormatsSection({ formats }: FormatsSectionProps) {
           </p>
         </ScrollReveal>
         
-        {/* Добавлен motion.div с layout для плавного изменения высоты сетки */}
-        <motion.div layout className="grid grid-cols-4 gap-4 tablet:grid-cols-2 mobile:grid-cols-1 items-stretch">
+        {/* Горизонтальный свайп на мобилках */}
+        <motion.div layout className="grid grid-cols-4 gap-4 tablet:grid-cols-2 max-md:flex max-md:flex-nowrap max-md:overflow-x-auto max-md:snap-x max-md:snap-mandatory max-md:-mx-5 max-md:px-5 max-md:pb-6 custom-scrollbar items-stretch">
           <AnimatePresence mode="popLayout">
             {visibleFormats.map((format, index) => {
               const isActive = activeService === format.id;
@@ -89,7 +87,7 @@ export function FormatsSection({ formats }: FormatsSectionProps) {
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.9, y: 20 }}
                   transition={{ duration: 0.3 }}
-                  className="flex h-full"
+                  className="flex h-full max-md:min-w-[85vw] max-md:shrink-0 max-md:snap-center"
                 >
                   <TiltCard 
                     className={`group flex flex-col w-full h-full p-8 max-md:p-6 rounded-[32px] border relative overflow-hidden transition-all duration-300 ${format.is_featured ? 'bg-[linear-gradient(155deg,theme(colors.snow),theme(colors.white)_65%)] border-forest/20 shadow-md' : 'bg-white border-forest/10 hover:border-forest/20 hover:shadow-xl'} ${isActive ? `ring-2 ${theme.ring} ${theme.softBg} shadow-2xl scale-[1.02] md:scale-[1.03] z-10` : ''}`}
@@ -133,9 +131,8 @@ export function FormatsSection({ formats }: FormatsSectionProps) {
           </AnimatePresence>
         </motion.div>
         
-        {/* Кнопка "Показать все", если форматов больше 4 */}
         {hasMore && (
-          <motion.div layout className="flex justify-center mt-8">
+          <motion.div layout className="flex justify-center mt-8 max-md:mt-2">
             <button 
               onClick={handleToggleShowAll}
               className="px-6 py-3 rounded-full border border-forest/20 bg-white text-[14px] font-[800] text-coal shadow-sm hover:shadow-md hover:border-forest/40 transition-all duration-300"

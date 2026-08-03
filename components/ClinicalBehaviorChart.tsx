@@ -57,7 +57,6 @@ export function ClinicalBehaviorChart() {
   
   const activeFactor = FACTORS[activeIndex];
 
-  // Автоматическое переключение, пока мышь не на карточке
   useEffect(() => {
     if (isPaused) return;
     
@@ -69,7 +68,7 @@ export function ClinicalBehaviorChart() {
   }, [isPaused]);
 
   return (
-    <TiltCard className="p-10 max-md:p-7 rounded-[42px] bg-white shadow-2xl bg-[radial-gradient(circle_at_82%_10%,rgba(240,114,150,0.12),transparent_35%),linear-gradient(145deg,theme(colors.white),rgba(111,143,191,0.08))] flex flex-col h-full min-h-[460px]">
+    <TiltCard className="p-10 max-md:p-6 rounded-[42px] bg-white shadow-2xl bg-[radial-gradient(circle_at_82%_10%,rgba(240,114,150,0.12),transparent_35%),linear-gradient(145deg,theme(colors.white),rgba(111,143,191,0.08))] flex flex-col h-full min-h-[460px] max-md:min-h-[380px]">
       <div 
         className="flex flex-col h-full"
         onMouseEnter={() => setIsPaused(true)}
@@ -77,16 +76,12 @@ export function ClinicalBehaviorChart() {
         onTouchStart={() => setIsPaused(true)}
         onTouchEnd={() => setIsPaused(false)}
       >
-        {/* Заголовок теперь не отрывается от карточки */}
         <div className="shrink-0 mb-2">
-          <span className="block text-[10px] font-black tracking-[0.14em] text-forest mb-2">CLINICAL BEHAVIOR</span>
-          <h3 className="text-[32px] max-md:text-[28px] leading-tight font-bold text-coal max-w-[12ch]">Поведение — это симптомы</h3>
+          <span className="block text-[10px] max-md:text-[9px] font-black tracking-[0.14em] text-forest mb-2">КЛИНИЧЕСКОЕ ПОВЕДЕНИЕ</span>
+          <h3 className="text-[32px] max-md:text-[24px] leading-tight font-bold text-coal max-w-[12ch]">Поведение — это симптомы</h3>
         </div>
 
-        {/* Область графика: занимает всё пустое место (flex-1) */}
-        <div className="relative flex-1 flex flex-col justify-end mt-4 mb-8">
-          
-          {/* Декоративная фоновая сетка осей (убивает "белое бельмо") */}
+        <div className="relative flex-1 flex flex-col justify-end mt-4 mb-8 max-md:mb-5">
           <div className="absolute inset-0 flex flex-col justify-between pointer-events-none z-0 py-2">
             <i className="w-full border-b border-forest/10 border-dashed opacity-60"></i>
             <i className="w-full border-b border-forest/10 border-dashed opacity-60"></i>
@@ -94,8 +89,7 @@ export function ClinicalBehaviorChart() {
             <i className="w-full border-b border-forest/10 border-solid opacity-60"></i>
           </div>
 
-          {/* Интерактивные столбцы (сделали стройнее и аккуратнее) */}
-          <div className="h-[300px] w-full max-w-[520px] mx-auto flex items-end gap-3 max-md:gap-2 relative z-10 group pt-6">
+          <div className="h-[300px] max-md:h-[160px] w-full max-w-[520px] mx-auto flex items-end gap-3 max-md:gap-1.5 relative z-10 group pt-6 max-md:pt-4">
             {FACTORS.map((factor, index) => {
               const isActive = index === activeIndex;
               return (
@@ -105,18 +99,17 @@ export function ClinicalBehaviorChart() {
                     setActiveIndex(index);
                     setIsPaused(true);
                   }}
-                  className={`relative flex-1 rounded-t-xl rounded-b-[4px] transition-all duration-300 cursor-pointer border-none outline-none overflow-hidden ${factor.color} ${isActive ? 'shadow-[0_-5px_15px_rgba(0,0,0,0.1)] scale-y-110 origin-bottom' : 'opacity-25 hover:opacity-60 group-hover:opacity-40 hover:scale-y-100 origin-bottom'}`}
+                  className={`relative flex-1 rounded-t-xl max-md:rounded-t-lg rounded-b-[4px] transition-all duration-300 cursor-pointer border-none outline-none overflow-hidden ${factor.color} ${isActive ? 'shadow-[0_-5px_15px_rgba(0,0,0,0.1)] scale-y-110 origin-bottom' : 'opacity-25 hover:opacity-60 group-hover:opacity-40 hover:scale-y-100 origin-bottom'}`}
                   style={{ height: `${factor.height}%` }}
                   aria-pressed={isActive}
                 >
-                  {/* Блик активности */}
                   {isActive && (
                     <motion.div 
                       layoutId="chartHighlight"
                       className="absolute inset-0 bg-gradient-to-t from-transparent to-white/40"
                     />
                   )}
-                  <span className={`absolute -top-7 left-1/2 -translate-x-1/2 text-[10px] font-bold uppercase tracking-wider transition-opacity duration-200 ${isActive ? 'opacity-100 text-coal' : 'opacity-0'}`}>
+                  <span className={`absolute -top-7 max-md:-top-5 left-1/2 -translate-x-1/2 text-[10px] max-md:text-[8px] font-bold uppercase tracking-wider max-md:tracking-normal transition-opacity duration-200 ${isActive ? 'opacity-100 text-coal' : 'opacity-0'}`}>
                     {factor.label}
                   </span>
                 </button>
@@ -125,8 +118,7 @@ export function ClinicalBehaviorChart() {
           </div>
         </div>
 
-        {/* Динамическое описание (зафиксировали минимальную высоту, чтобы контент центрировался) */}
-        <div className="min-h-[115px] rounded-[20px] bg-snow p-5 border border-forest/5 relative overflow-hidden shrink-0 flex items-center">
+        <div className="min-h-[115px] max-md:min-h-[130px] rounded-[20px] bg-snow p-5 max-md:p-4 border border-forest/5 relative overflow-hidden shrink-0 flex items-center">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeFactor.id}
@@ -136,10 +128,10 @@ export function ClinicalBehaviorChart() {
               transition={{ duration: 0.2 }}
               className="w-full"
             >
-              <h4 className={`text-[16px] font-[850] mb-1.5 ${activeFactor.textColor}`}>
+              <h4 className={`text-[16px] max-md:text-[15px] font-[850] mb-1.5 ${activeFactor.textColor}`}>
                 {activeFactor.title}
               </h4>
-              <p className="text-coal/80 text-[14px] leading-snug">
+              <p className="text-coal/80 text-[14px] max-md:text-[13px] leading-snug">
                 {activeFactor.desc}
               </p>
             </motion.div>

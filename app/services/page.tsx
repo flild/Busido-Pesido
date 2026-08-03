@@ -190,7 +190,7 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* Выделенный блок: Сопровождение */}
+{/* Выделенный блок: Сопровождение */}
       {supportService && (
         <section className="py-[100px] max-md:py-[72px] bg-[radial-gradient(circle_at_90%_10%,rgba(198,142,107,0.15),transparent_30rem),linear-gradient(120deg,theme(colors.forest),theme(colors.soldier))] text-white relative overflow-hidden">
           <div className="container grid grid-cols-2 max-lg:grid-cols-1 gap-16 items-center relative z-10">
@@ -203,12 +203,17 @@ export default function ServicesPage() {
               </h2>
             </div>
             <div>
-              <p className="text-[19px] text-white/90 mb-8 leading-relaxed">
-                Онлайн — {supportService.price}. С выездами — 30 000 ₽. Оплату можно разделить
-                на 2, 4 или более частые платежи вплоть до двух раз в неделю по
-                согласованному графику.
+              {/* Выводим основную цену динамически из базы */}
+              <div className="text-[36px] max-md:text-[30px] font-black text-white mb-4">
+                {supportService.price}
+              </div>
+              
+              {/* Выводим описание динамически из базы */}
+              <p className="text-[19px] max-md:text-[17px] text-white/90 mb-8 leading-relaxed whitespace-pre-wrap">
+                {supportService.description}
               </p>
-              <Link className="button button-light px-8 py-4 text-[16px]" href={supportService.link}>
+              
+              <Link className="button button-light px-8 py-4 text-[16px] max-md:w-full max-md:text-center" href={supportService.link}>
                 {supportService.link_text}
               </Link>
             </div>

@@ -40,8 +40,8 @@ export function CaseInteractive({ initialCases }: { initialCases: CaseData[] }) 
 
   return (
     <div className="mt-10 overflow-hidden">
-      {/* Навигация по кейсам (Горизонтальный скролл на мобилках) */}
-      <div className="flex flex-wrap max-md:flex-nowrap max-md:overflow-x-auto max-md:pb-4 max-md:-mx-5 max-md:px-5 max-md:snap-x custom-scrollbar gap-2.5 mb-8">
+      {/* Навигация по кейсам: Убрали отрицательные маржины, чтобы не обрезалось на мобилках */}
+      <div className="flex flex-wrap max-md:flex-nowrap max-md:overflow-x-auto max-md:pb-4 gap-2.5 mb-8 custom-scrollbar">
         {initialCases.map((c: CaseData) => {
           const isActive = activeCaseId === c.id;
           const themeKey = c.theme as keyof typeof themeColors;
@@ -51,7 +51,7 @@ export function CaseInteractive({ initialCases }: { initialCases: CaseData[] }) 
             <button 
               key={c.id}
               onClick={() => handleTabChange(c.id)}
-              className={`px-4 py-2.5 rounded-full font-[820] text-[15px] border cursor-pointer transition-all duration-300 whitespace-nowrap max-md:shrink-0 max-md:snap-start ${isActive ? tMap.tabActive : tMap.tabInactive}`}
+              className={`px-4 py-2.5 rounded-full font-[820] text-[15px] border cursor-pointer transition-all duration-300 whitespace-nowrap max-md:shrink-0 ${isActive ? tMap.tabActive : tMap.tabInactive}`}
             >
               {c.tab_title}
             </button>
@@ -63,7 +63,7 @@ export function CaseInteractive({ initialCases }: { initialCases: CaseData[] }) 
         
         {/* Боковой Таймлайн */}
         <div className="bg-snow/60 p-8 border-r border-forest/10 tablet:border-r-0 tablet:border-b tablet:overflow-x-auto tablet:p-6 custom-scrollbar tablet:snap-x">
-          <div className="tablet:flex tablet:gap-6 tablet:min-w-max tablet:px-2">
+          <div className="tablet:flex tablet:gap-6 tablet:min-w-max tablet:px-1">
             {activeCase.steps.map((step: CaseStep, i: number) => {
               const isActive = i === activeStepIndex;
               const isPast = i < activeStepIndex;
@@ -115,7 +115,6 @@ export function CaseInteractive({ initialCases }: { initialCases: CaseData[] }) 
           <div className="relative z-10 flex-grow">
             {activeStep ? (
               <AnimatePresence mode="wait">
-                {/* Убрали absolute inset-0, теперь высота блока подстраивается под текст автоматически */}
                 <motion.div
                   key={`${activeCase.id}-${activeStepIndex}`}
                   initial={{ opacity: 0, y: 15, filter: 'blur(4px)' }}

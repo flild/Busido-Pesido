@@ -169,7 +169,7 @@ export default function Home() {
             </article>
           </ScrollReveal>
         </div>
-      </section>кщ
+      </section>
 
   {/* ОБО МНЕ (ДИНАМИКА) */}
       {dbMainSpecialist && (

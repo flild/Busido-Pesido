@@ -44,6 +44,8 @@ export async function saveService(formData: FormData) {
   const oldId = (formData.get('old_id') as string)?.trim(); 
   const title = (formData.get('title') as string)?.trim();
   const price = (formData.get('price') as string)?.trim();
+  // Парсим инт
+  const price_int = parseInt(formData.get('price_int')?.toString() || '0', 10);
   const description = (formData.get('description') as string)?.trim();
   const tag = (formData.get('tag') as string)?.trim() || null;
   const theme = (formData.get('theme') as string)?.trim();
@@ -66,14 +68,14 @@ export async function saveService(formData: FormData) {
   if (oldId) {
     db.prepare(`
       UPDATE services 
-      SET id = ?, title = ?, price = ?, description = ?, tag = ?, theme = ?, is_featured = ?, link = ?, link_text = ?, steps = ?, sort_order = ?
+      SET id = ?, title = ?, price = ?, price_int = ?, description = ?, tag = ?, theme = ?, is_featured = ?, link = ?, link_text = ?, steps = ?, sort_order = ?
       WHERE id = ?
-    `).run(id, title, price, description, tag, theme, is_featured, link, link_text, steps, sort_order, oldId);
+    `).run(id, title, price, price_int, description, tag, theme, is_featured, link, link_text, steps, sort_order, oldId);
   } else {
     db.prepare(`
-      INSERT INTO services (id, title, price, description, tag, theme, is_featured, link, link_text, steps, sort_order)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(id, title, price, description, tag, theme, is_featured, link, link_text, steps, sort_order);
+      INSERT INTO services (id, title, price, price_int, description, tag, theme, is_featured, link, link_text, steps, sort_order)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(id, title, price, price_int, description, tag, theme, is_featured, link, link_text, steps, sort_order);
   }
 
   revalidatePath('/admin/services');

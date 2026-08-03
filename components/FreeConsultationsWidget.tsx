@@ -198,7 +198,7 @@ return (
                 
                 <div className="min-h-[90px] mt-6 mb-6">
                   {!selectedDay ? (
-                    <p className="text-coal/60 text-[15px]">Нажмите на любой доступный день в календаре слева.</p>
+                    <p className="text-coal/60 text-[15px]">Нажмите на любой доступный день в календаре.</p>
                   ) : (
                     <div className="grid grid-cols-3 gap-2.5 max-sm:grid-cols-2">
                       {/* Мапим распаршенные слоты */}

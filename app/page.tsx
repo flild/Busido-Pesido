@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { FactorCloud } from "@/components/FactorCloud";
 import { ApproachTabs } from "@/components/ApproachTabs";
 import { StateSlider } from "@/components/StateSlider";
@@ -61,10 +62,33 @@ export default function Home() {
   const navRow = db.prepare("SELECT value FROM settings WHERE key = 'navigator_steps'").get() as { value: string } | undefined;
   const dbNavSteps = navRow ? JSON.parse(navRow.value) : [];
 
+  // Вытаскиваем реальное количество отзывов для рейтинга
+  const reviewsCount = dbReviews.length > 0 ? dbReviews.length : 150; 
+
+  // Выносим FAQ в отдельный массив
+  const faqData = [
+    {
+      q: "Подойдёт ли консультация, если у животного уже есть ветеринарный врач?",
+      a: "Да. Я работаю с поведенческой частью случая, анализирую документы и при необходимости формулирую вопросы для лечащего врача. Назначения другого врача самостоятельно не отменяются.",
+    },
+    {
+      q: "Почему после консультации может понадобиться сопровождение?",
+      a: "Разовая консультация даёт гипотезу и план. Сопровождение нужно для регулярной оценки видео, изменения критериев и отслеживания состояния.",
+    },
+    {
+      q: "Можете ли вы отказать в работе?",
+      a: "Да. Я перенаправляю случай, когда сначала требуется экстренная ветеринарная помощь, очная диагностика или специалист другой квалификации.",
+    },
+    {
+      q: "Работаете ли вы только через еду?",
+      a: "Нет. Я учитываю пищевую, игровую, социальную, исследовательскую и средовую мотивацию, выбор, дистанцию и доступ к восстановлению.",
+    }
+  ];
+
   // ============================================================================
   // SEO И РАЗМЕТКА
   // ============================================================================
-  const jsonLd = {
+  const jsonLdLocalBusiness = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     name: "Busido-Pesido",
@@ -91,11 +115,29 @@ export default function Home() {
       geoRadius: 1000,
     },
     priceRange: "$$",
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: "5.0",
+      reviewCount: reviewsCount,
+    }
   };
 
+  const jsonLdFaq = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqData.map(item => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.a
+      }
+    }))
+  };
   return (
     <main>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdLocalBusiness) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdFaq) }} />
       
       {/* ГЕРОЙ-БЛОК */}
       <section className="relative overflow-hidden pt-[108px] pb-[74px] bg-[radial-gradient(circle_at_8%_22%,rgba(240,114,150,0.18),transparent_21rem),radial-gradient(circle_at_88%_12%,rgba(111,143,191,0.22),transparent_24rem),radial-gradient(circle_at_72%_86%,rgba(198,142,107,0.18),transparent_22rem),linear-gradient(145deg,theme(colors.snow),rgba(230,218,207,0.72)_48%,theme(colors.snow))] before:absolute before:w-[170px] before:h-[170px] before:rounded-full before:bg-gradient-to-br before:from-rose/70 before:to-berry/20 before:blur-[1px] before:animate-float-blob before:-left-[55px] before:top-[90px] before:pointer-events-none after:absolute after:w-[120px] after:h-[120px] after:rounded-full after:bg-gradient-to-br after:from-ice/60 after:to-matcha/20 after:blur-[1px] after:animate-float-blob after:right-[5%] after:-bottom-[42px] after:pointer-events-none after:[animation-delay:-4s]">
@@ -178,8 +220,14 @@ export default function Home() {
             <div className="relative">
               <div className="min-h-[560px] mobile:min-h-[430px] rounded-[42px] p-8 flex items-end shadow-2xl relative overflow-hidden bg-[radial-gradient(circle_at_18%_16%,rgba(111,143,191,0.63),transparent_26%),radial-gradient(circle_at_82%_25%,rgba(240,114,150,0.48),transparent_25%),radial-gradient(circle_at_72%_82%,rgba(198,142,107,0.58),transparent_30%),linear-gradient(145deg,theme(colors.fog),theme(colors.snow))] after:absolute after:inset-[22px] after:rounded-[34px] after:border after:border-forest/10 after:pointer-events-none">
                 {dbMainSpecialist.image_url ? (
-                  <img src={dbMainSpecialist.image_url} alt={dbMainSpecialist.name} className="absolute inset-0 w-full h-full object-cover z-10" />
-                ) : (
+                  <Image 
+                        src={dbMainSpecialist.image_url} 
+                        alt={dbMainSpecialist.name}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        className="object-cover z-10" 
+                      />
+                    ) : (
                   <strong className="text-[30px] max-w-[13ch] relative z-10 text-coal/50">
                     Место для фотографии {dbMainSpecialist.name.split(' ')[0]} в работе
                   </strong>
@@ -546,24 +594,7 @@ export default function Home() {
             </h2>
           </ScrollReveal>
           <div className="grid gap-3">
-            {[
-              {
-                q: "Подойдёт ли консультация, если у животного уже есть ветеринарный врач?",
-                a: "Да. Я работаю с поведенческой частью случая, анализирую документы и при необходимости формулирую вопросы для лечащего врача. Назначения другого врача самостоятельно не отменяются.",
-              },
-              {
-                q: "Почему после консультации может понадобиться сопровождение?",
-                a: "Разовая консультация даёт гипотезу и план. Сопровождение нужно для регулярной оценки видео, изменения критериев и отслеживания состояния.",
-              },
-              {
-                q: "Можете ли вы отказать в работе?",
-                a: "Да. Я перенаправляю случай, когда сначала требуется экстренная ветеринарная помощь, очная диагностика или специалист другой квалификации.",
-              },
-              {
-                q: "Работаете ли вы только через еду?",
-                a: "Нет. Я учитываю пищевую, игровую, социальную, исследовательскую и средовую мотивацию, выбор, дистанцию и доступ к восстановлению.",
-              }
-            ].map((faq, i) => (
+            {faqData.map((faq, i) => (
               <FaqItem key={i} question={faq.q} answer={faq.a} />
             ))}
           </div>

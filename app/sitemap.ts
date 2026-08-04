@@ -29,7 +29,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/blog",
   ].map((route) => ({
     url: `${baseUrl}${route}`,
-    lastModified: new Date(),
     changeFrequency:
       route === "" || route === "/blog"
         ? ("weekly" as const)

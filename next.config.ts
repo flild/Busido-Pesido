@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
       bodySizeLimit: '50mb', 
     },
   },
+  trailingSlash: false,
   reactStrictMode: true,
   eslint: {
     ignoreDuringBuilds: true,

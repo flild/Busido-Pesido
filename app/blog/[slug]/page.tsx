@@ -6,6 +6,7 @@ import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Calendar, Eye, Clock, Star, ArrowLeft } from 'lucide-react';
 import { ViewTracker } from "./ViewTracker";
+import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 
 // Функция расчета времени чтения (примерно 1500 символов в минуту)
 const getReadTime = (text: string) => Math.max(1, Math.ceil(text.length / 1500));
@@ -97,6 +98,15 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   return (
     <main>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      
+      {/* ДОБАВЛЯЕМ КРОШКИ С ТРЕМЯ УРОВНЯМИ */}
+      <BreadcrumbJsonLd 
+        items={[
+          { name: "Главная", url: "https://busidopesido.ru" },
+          { name: "Блог", url: "https://busidopesido.ru/blog" },
+          { name: article.title, url: `https://busidopesido.ru/blog/${slug}` }
+        ]} 
+      />
       <ViewTracker slug={slug} />
       
       {/* ШАПКА СТАТЬИ */}

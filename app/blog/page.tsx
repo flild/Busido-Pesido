@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { BlogList } from "@/components/BlogList";
 import { db } from "@/lib/db";
 import { ScrollReveal } from "@/components/ScrollReveal";
+import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 
 export const dynamic = 'force-dynamic';
 
@@ -39,8 +40,30 @@ export default function BlogPage() {
     )
     .all() as ArticleRow[];
 
+    // СХЕМА БЛОГА
+  const jsonLdBlog = {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "name": "Блог зоопсихолога",
+    "description": "Статьи о собаках и кошках, поведении, здоровье, обучении и благополучии животных.",
+    "url": "https://busidopesido.ru/blog",
+    "blogPost": articles.slice(0, 5).map(article => ({
+      "@type": "BlogPosting",
+      "headline": article.title,
+      "url": `https://busidopesido.ru/blog/${article.slug}`,
+      "datePublished": article.created_at
+    }))
+  };
+
   return (
     <main>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdBlog) }} />
+      <BreadcrumbJsonLd 
+        items={[
+          { name: "Главная", url: "https://busidopesido.ru" },
+          { name: "Блог", url: "https://busidopesido.ru/blog" }
+        ]} 
+      />
       <section className="pt-[108px] pb-[74px] bg-[linear-gradient(135deg,rgba(111,143,191,0.24),theme(colors.snow)_52%,rgba(198,142,107,0.26))] relative overflow-hidden">
         <div className="container relative z-10">
           <ScrollReveal>

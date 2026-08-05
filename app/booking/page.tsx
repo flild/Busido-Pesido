@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { BookingForm } from "@/components/BookingForm";
 import { db } from "@/lib/db";
+import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 
 export const metadata: Metadata = {
   title: "Запись на консультацию — Busido-Pesido",
@@ -18,16 +19,29 @@ export default async function BookingPage({
   const initialService = typeof resolvedParams.service === 'string' ? resolvedParams.service : null;
   const initialPet = typeof resolvedParams.pet === 'string' ? resolvedParams.pet : null;
 
-  // Тянем реальные услуги из базы
   const dbServices = db.prepare('SELECT id, title as name, price FROM services ORDER BY sort_order').all() as { id: string, name: string, price: string }[];
 
-  // Считаем завтрашнюю дату прямо на сервере (никаких useEffect на клиенте)
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
   const minDate = tomorrow.toISOString().split('T')[0];
 
+  const jsonLdContact = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": "Запись на консультацию",
+    "description": "Форма бронирования времени для консультации со специалистом по поведению животных.",
+    "url": "https://busidopesido.ru/booking"
+  };
+
   return (
     <main>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdContact) }} />
+      <BreadcrumbJsonLd 
+        items={[
+          { name: "Главная", url: "https://busidopesido.ru" },
+          { name: "Запись на консультацию", url: "https://busidopesido.ru/booking" }
+        ]} 
+      />
       <section className="pt-[108px] pb-[74px] bg-[linear-gradient(135deg,rgba(111,143,191,0.24),theme(colors.snow)_52%,rgba(198,142,107,0.26))] relative overflow-hidden">
         <div className="container relative z-10">
           <span className="eyebrow mb-4">ЗАПИСЬ</span>

@@ -109,10 +109,10 @@ export default function Home() {
       "@type": "GeoCircle",
       geoMidpoint: {
         "@type": "GeoCoordinates",
-        latitude: 55.7558,
-        longitude: 37.6173,
+        latitude: 59.895438, 
+        longitude: 30.327196,
       },
-      geoRadius: 1000,
+      geoRadius: 30000,
     },
     priceRange: "$$",
     aggregateRating: {

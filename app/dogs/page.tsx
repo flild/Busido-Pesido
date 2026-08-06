@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { TiltCard } from '@/components/TiltCard';
+import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 import { 
   Activity, 
   ShieldAlert, 
@@ -60,6 +61,12 @@ export default function DogsPage() {
         type="application/ld+json" 
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} 
       />
+            <BreadcrumbJsonLd 
+              items={[
+                { name: "Главная", url: "https://busidopesido.ru" },
+                { name: "О собаках", url: "https://busidopesido.ru/dogs" }
+              ]} 
+            />
 
       <section className="pt-[108px] pb-[74px] bg-[linear-gradient(135deg,theme(colors.fog),theme(colors.snow)_52%,rgba(111,143,191,0.18))] relative overflow-hidden">
         <div className="container relative z-10">

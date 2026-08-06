@@ -4,6 +4,7 @@ import { db } from '@/lib/db';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { TiltCard } from '@/components/TiltCard';
 import { CheckCircle2, Video, MapPin, Eye, Brain, Wrench, Route } from 'lucide-react';
+import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 
 export const metadata: Metadata = {
   title: 'Сопровождение зоопсихолога',
@@ -77,7 +78,12 @@ export default function SupportPage() {
         type="application/ld+json" 
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} 
       />
-
+      <BreadcrumbJsonLd 
+        items={[
+          { name: "Главная", url: "https://busidopesido.ru" },
+          { name: "Поддержка", url: "https://busidopesido.ru/support" }
+        ]} 
+      />
       <section className="pt-[108px] pb-[74px] bg-[linear-gradient(135deg,theme(colors.oat),theme(colors.snow)_62%,rgba(111,143,191,0.22))] relative overflow-hidden">
         <div className="container relative z-10">
           <ScrollReveal>

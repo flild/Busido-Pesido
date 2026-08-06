@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { db } from "@/lib/db";
+import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 
 export const metadata: Metadata = {
   title: "Специалисты",
@@ -13,6 +14,12 @@ export default function SpecialistsPage() {
 
   return (
     <main className="pt-[108px] pb-[92px] bg-[linear-gradient(180deg,theme(colors.snow),rgba(255,255,255,0))] min-h-screen">
+    <BreadcrumbJsonLd 
+        items={[
+          { name: "Главная", url: "https://busidopesido.ru" },
+          { name: "Специалисты", url: "https://busidopesido.ru/specialists" }
+        ]} 
+      />
       <div className="container">
         <ScrollReveal className="max-w-[820px] mb-[64px]">
           <span className="kicker">КОМАНДА</span>

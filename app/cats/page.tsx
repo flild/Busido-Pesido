@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { TiltCard } from '@/components/TiltCard';
+import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 import { 
   Box, 
   Swords, 
@@ -60,6 +61,12 @@ export default function CatsPage() {
         type="application/ld+json" 
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} 
       />
+      <BreadcrumbJsonLd 
+              items={[
+                { name: "Главная", url: "https://busidopesido.ru" },
+                { name: "О котах", url: "https://busidopesido.ru/cats" }
+              ]} 
+            />
 
       <section className="pt-[108px] pb-[74px] bg-[linear-gradient(135deg,theme(colors.oat),theme(colors.snow)_52%,rgba(198,142,107,0.28))] relative overflow-hidden">
         <div className="container relative z-10">

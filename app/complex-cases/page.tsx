@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { db } from '@/lib/db';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { TiltCard } from '@/components/TiltCard';
+import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 import { 
   ShieldAlert, 
   Stethoscope, 
@@ -64,6 +65,12 @@ export default function ComplexCasesPage() {
         type="application/ld+json" 
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} 
       />
+      <BreadcrumbJsonLd 
+              items={[
+                { name: "Главная", url: "https://busidopesido.ru" },
+                { name: "сложные случаи", url: "https://busidopesido.ru/complex-cases" }
+              ]} 
+            />
 
       {/* HERO СЕКЦИЯ */}
       <section className="pt-[108px] pb-[74px] bg-[linear-gradient(135deg,theme(colors.coal),theme(colors.soldier))] text-white relative overflow-hidden">

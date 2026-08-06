@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { db } from "@/lib/db";
 import { themeColors, type BrandTheme } from "@/lib/theme";
+import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 
 export const metadata: Metadata = {
   title: "Услуги и цены зоопсихолога",
@@ -75,7 +76,12 @@ export default function ServicesPage() {
         type="application/ld+json" 
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} 
       />
-
+      <BreadcrumbJsonLd 
+        items={[
+          { name: "Главная", url: "https://busidopesido.ru" },
+          { name: "Форматы работы, цены", url: "https://busidopesido.ru/sevices" }
+        ]} 
+      />
       {/* Улучшенный Герой-блок с декоративными градиентами */}
       <section className="pt-[108px] pb-[74px] bg-[radial-gradient(circle_at_15%_50%,rgba(198,142,107,0.12),transparent_25rem),radial-gradient(circle_at_85%_30%,rgba(111,143,191,0.15),transparent_25rem),linear-gradient(135deg,theme(colors.snow),theme(colors.fog)_75%)] relative overflow-hidden">
         <div className="container relative z-10">

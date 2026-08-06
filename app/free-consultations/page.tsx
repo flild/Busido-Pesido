@@ -4,6 +4,7 @@ import { db } from '@/lib/db';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { FreeConsultationsWidget } from '@/components/FreeConsultationsWidget';
 import { CheckCircle2, Clock, ShieldAlert, CreditCard, Scale } from 'lucide-react';
+import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 
 export const metadata: Metadata = {
   title: 'Бесплатные поведенческие консультации',
@@ -53,7 +54,12 @@ export default function FreeConsultationsPage() {
         type="application/ld+json" 
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} 
       />
-
+            <BreadcrumbJsonLd 
+        items={[
+          { name: "Главная", url: "https://busidopesido.ru" },
+          { name: "Бесплатные консультации", url: "https://busidopesido.ru/free-consultations" }
+        ]} 
+      />
       {/* ХЕДЕР СТРАНИЦЫ */}
       <section className="pt-[140px] pb-[74px] max-md:pt-[110px] max-md:pb-[54px] relative overflow-hidden bg-[radial-gradient(circle_at_10%_12%,rgba(240,114,150,0.32),transparent_22rem),radial-gradient(circle_at_90%_90%,rgba(111,143,191,0.28),transparent_23rem),linear-gradient(120deg,theme(colors.forest),theme(colors.soldier))] text-white after:absolute after:w-[190px] after:h-[190px] after:right-[3%] after:-top-[80px] after:rounded-full after:bg-gradient-to-br after:from-berry after:to-rose after:opacity-45">
         <div className="container relative z-10">

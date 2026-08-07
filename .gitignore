@@ -101,3 +101,4 @@ evals/agent-results.json
 *.db
 *.sqlite*
 *.db-*
+code.txt

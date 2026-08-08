@@ -46,8 +46,42 @@ export default function Home() {
   // 3. Отзывы
   const dbReviews = db.prepare('SELECT * FROM reviews ORDER BY sort_order ASC').all() as any[];
 
-  // 4. Статьи для библиотеки (с назначением акцентных цветов)
-  const dbArticlesRaw = db.prepare("SELECT id, slug, category, tag, title, summary FROM articles WHERE status = 'published' ORDER BY created_at DESC").all() as any[];
+  // 4. Статьи для библиотеки (Умная ротация: 3 свежие + 1 популярная из старых)
+const freshArticles = db.prepare(`
+    SELECT id, slug, category, tag, title, summary, main_image 
+    FROM articles 
+    WHERE status = 'published' 
+    ORDER BY created_at DESC 
+    LIMIT 2
+  `).all() as any[];
+
+  const freshIds = freshArticles.map(a => a.id);
+  let popularArticles: any[] = [];
+
+  if (freshIds.length > 0) {
+    const placeholders = freshIds.map(() => '?').join(',');
+    // Берем 1 самую популярную статью, которой нет в "свежем"
+    popularArticles = db.prepare(`
+      SELECT id, slug, category, tag, title, summary, main_image 
+      FROM articles 
+      WHERE status = 'published' AND id NOT IN (${placeholders})
+      ORDER BY (reads_count * 2 + views) DESC 
+      LIMIT 1
+    `).all(...freshIds) as any[];
+  } else {
+    // Страховка: если свежих вообще нет, просто тянем 3 популярные
+    popularArticles = db.prepare(`
+      SELECT id, slug, category, tag, title, summary, main_image 
+      FROM articles 
+      WHERE status = 'published'
+      ORDER BY (reads_count * 2 + views) DESC 
+      LIMIT 3
+    `).all() as any[];
+  }
+
+  // Объединяем и жестко страхуем лимит в 3 карточки
+  const dbArticlesRaw = [...freshArticles, ...popularArticles].slice(0, 3);
+
   const mappedArticles = dbArticlesRaw.map((art, index) => {
     const colors = [
       { accent: "bg-matcha", textAccent: "text-matcha" },

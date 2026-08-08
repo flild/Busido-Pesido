@@ -38,6 +38,12 @@ export async function saveArticle(id: number | null, formData: FormData) {
     return { error: 'Ошибка базы данных при сохранении.' };
   }
 
+  if (status === 'published') {
+    const articleUrl = `https://busidopesido.ru/blog/${slug}`;
+    // Бросаем пинг поисковикам в фоновом режиме (без await)
+    notifyIndexNow(articleUrl).catch(console.error);
+  }
+
   revalidatePath('/admin/articles');
   revalidatePath('/blog');
   revalidatePath('/');
@@ -53,4 +59,19 @@ export async function deleteArticle(formData: FormData) {
   revalidatePath('/admin/articles');
   revalidatePath('/blog');
   revalidatePath('/');
+}
+
+async function notifyIndexNow(url: string) {
+  const host = 'busidopesido.ru'; 
+  const key = 'busido-pesido-indexnow-key-2026'; // Замени на свой ключ
+  const endpoint = 'https://yandex.com/indexnow'; 
+  // Яндекс и Bing обмениваются ссылками друг с другом, так что достаточно слать в Яндекс
+  
+  try {
+    const fetchUrl = `${endpoint}?url=${encodeURIComponent(url)}&key=${key}`;
+    await fetch(fetchUrl, { method: 'GET' });
+    console.log(`IndexNow ping sent for: ${url}`);
+  } catch (error) {
+    console.error('IndexNow ping failed:', error);
+  }
 }

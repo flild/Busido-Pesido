@@ -13,21 +13,23 @@ export async function saveArticle(id: number | null, formData: FormData) {
   const tag = (formData.get('tag') as string)?.trim();
   const status = (formData.get('status') as string)?.trim();
   const is_premium = formData.get('is_premium') ? 1 : 0;
+  // Новое поле для главной картинки:
+  const main_image = (formData.get('main_image') as string)?.trim() || null; 
 
   try {
     if (id) {
       const stmt = db.prepare(`
         UPDATE articles 
-        SET title = ?, slug = ?, summary = ?, content = ?, category = ?, tag = ?, status = ?, is_premium = ?
+        SET title = ?, slug = ?, summary = ?, content = ?, category = ?, tag = ?, status = ?, is_premium = ?, main_image = ?
         WHERE id = ?
       `);
-      stmt.run(title, slug, summary, content, category, tag, status, is_premium, id);
+      stmt.run(title, slug, summary, content, category, tag, status, is_premium, main_image, id);
     } else {
       const stmt = db.prepare(`
-        INSERT INTO articles (title, slug, summary, content, category, tag, status, is_premium)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO articles (title, slug, summary, content, category, tag, status, is_premium, main_image)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `);
-      stmt.run(title, slug, summary, content, category, tag, status, is_premium);
+      stmt.run(title, slug, summary, content, category, tag, status, is_premium, main_image);
     }
   } catch (error: any) {
     if (error?.code === 'SQLITE_CONSTRAINT_UNIQUE') {

@@ -7,6 +7,8 @@ import remarkGfm from "remark-gfm";
 import { Calendar, Eye, Clock, Star, ArrowLeft } from 'lucide-react';
 import { ViewTracker } from "./ViewTracker";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
+import { ArticleFeedback } from "./ArticleFeedback";
+import Image from "next/image";
 
 // Функция расчета времени чтения (примерно 1500 символов в минуту)
 const getReadTime = (text: string) => Math.max(1, Math.ceil(text.length / 1500));
@@ -18,6 +20,7 @@ type ArticleFull = {
   summary: string;
   content: string;
   category: string;
+  main_image: string | null;
   tag: string;
   status: string;
   is_premium: number;
@@ -147,6 +150,26 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         </div>
       </section>
       
+
+      {/* НОВЫЙ БЛОК: Обложка статьи */}
+      {article.main_image && (
+        <section className="relative -mt-10 mb-10 z-20">
+          <div className="container max-w-[1000px]">
+            {/* Важно: добавил класс relative в конец строки */}
+            <div className="w-full aspect-[21/9] max-md:aspect-[16/9] rounded-[32px] overflow-hidden shadow-lg border border-white/20 bg-snow relative">
+              <Image 
+                src={article.main_image} 
+                alt={article.title} 
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 1000px"
+                className="object-cover"
+              />
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* ТЕЛО СТАТЬИ */}
       <section className="py-[92px] max-md:py-[64px] bg-white">
         <div className="w-[min(820px,100%)] mx-auto px-5 mobile:px-3">
@@ -168,6 +191,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           >
             <Markdown remarkPlugins={[remarkGfm]}>{article.content}</Markdown>
           </div>
+          
+          {/* НОВЫЙ БЛОК: Сбор фидбека и трекинг дочитывания */}
+          <ArticleFeedback slug={slug} />
+          
         </div>
       </section>
     </main>

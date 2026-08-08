@@ -7,9 +7,15 @@ export function ViewTracker({ slug }: { slug: string }) {
   const hasTracked = useRef(false);
 
   useEffect(() => {
-    // useRef надежно защищает от двойного вызова (особенно в Strict Mode)
     if (!hasTracked.current) {
-      recordView(slug);
+      const sessionKey = `viewed_${slug}`;
+      
+      // Если в текущей сессии статью не открывали — засчитываем просмотр
+      if (!sessionStorage.getItem(sessionKey)) {
+        recordView(slug);
+        sessionStorage.setItem(sessionKey, 'true');
+      }
+      
       hasTracked.current = true;
     }
   }, [slug]);

@@ -30,6 +30,11 @@ export function ArticleForm({ initialData }: { initialData?: any }) {
   const [summary, setSummary] = useState(initialData?.summary || '');
   const [content, setContent] = useState(initialData?.content || '');
   const [isSlugEdited, setIsSlugEdited] = useState(!!initialData?.slug);
+
+  // Стейт главной фотки
+  const [mainImage, setMainImage] = useState(initialData?.main_image || '');
+  const [isUploadingMain, setIsUploadingMain] = useState(false);
+  const mainImageRef = useRef<HTMLInputElement>(null);
   
   // Галерея: при загрузке вытаскиваем все уникальные картинки прямо из Markdown-текста
   const [gallery, setGallery] = useState<string[]>(() => {
@@ -77,11 +82,11 @@ export function ArticleForm({ initialData }: { initialData?: any }) {
 
     const timer = setTimeout(() => {
       if (title || content || summary || gallery.length > 0) {
-        localStorage.setItem(DRAFT_KEY, JSON.stringify({ title, slug, summary, content, gallery }));
+        localStorage.setItem(DRAFT_KEY, JSON.stringify({ title, slug, summary, content, gallery, mainImage }));
       }
     }, 1000);
     return () => clearTimeout(timer);
-  }, [title, slug, summary, content, gallery, DRAFT_KEY, draftData]);
+  }, [title, slug, summary, content, gallery,mainImage, DRAFT_KEY, draftData]);
 
   // Действия с черновиком
   const restoreDraft = () => {
@@ -92,6 +97,7 @@ export function ArticleForm({ initialData }: { initialData?: any }) {
     setGallery(draftData.gallery || []);
     setIsSlugEdited(true);
     setDraftData(null);
+    setMainImage(draftData.mainImage || '');
   };
 
   const discardDraft = () => {
@@ -209,6 +215,29 @@ export function ArticleForm({ initialData }: { initialData?: any }) {
   };
 
   // --- СОХРАНЕНИЕ ---
+const handleMainImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 20 * 1024 * 1024) {
+      alert('Файл слишком тяжелый! Максимум 20 МБ.');
+      return;
+    }
+
+    setIsUploadingMain(true);
+    const fd = new FormData();
+    fd.append('file', file);
+    const res = await uploadImageAction(fd);
+    
+    if (res.error) {
+      alert(`Ошибка загрузки: ${res.error}`);
+    } else if (res.url) {
+      setMainImage(res.url);
+    }
+    
+    setIsUploadingMain(false);
+    if (mainImageRef.current) mainImageRef.current.value = '';
+  };
 
   const formAction = (formData: FormData) => {
     setError(null);
@@ -216,6 +245,7 @@ export function ArticleForm({ initialData }: { initialData?: any }) {
     formData.set('slug', slug);
     formData.set('summary', summary);
     formData.set('content', content);
+    formData.set('main_image', mainImage);
 
     startTransition(async () => {
       const res = await saveArticle(initialData?.id || null, formData);
@@ -318,6 +348,34 @@ export function ArticleForm({ initialData }: { initialData?: any }) {
             <input type="text" name="tag" required defaultValue={initialData?.tag} placeholder="Собаки · обучение" className="p-4 border border-forest/15 rounded-xl bg-snow font-medium text-coal outline-none focus:border-forest/40 transition-colors" />
           </label>
           
+          <div className="flex flex-col gap-2 font-bold text-coal">
+            <span>Обложка статьи (Главное фото)</span>
+            {mainImage ? (
+              <div className="relative w-[300px] aspect-[16/9] rounded-xl overflow-hidden border border-forest/15">
+                <img src={mainImage} alt="Обложка" className="w-full h-full object-cover" />
+                <button 
+                  type="button" 
+                  onClick={() => setMainImage('')}
+                  className="absolute top-2 right-2 p-1.5 bg-rose/90 text-white rounded-lg hover:bg-rose transition-colors"
+                >
+                  <Eraser size={16} />
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-4">
+                <input type="file" ref={mainImageRef} onChange={handleMainImageUpload} accept="image/*" className="hidden" />
+                <button 
+                  type="button" 
+                  onClick={() => mainImageRef.current?.click()}
+                  disabled={isUploadingMain}
+                  className="flex items-center gap-2 px-5 py-3 bg-snow border border-forest/15 text-coal text-sm font-bold rounded-xl hover:border-forest/40 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+                >
+                  {isUploadingMain ? <Loader2 size={18} className="animate-spin" /> : <ImageIcon size={18} />}
+                  {isUploadingMain ? 'Загрузка...' : 'Выбрать обложку'}
+                </button>
+              </div>
+            )}
+          </div>
           <label className="flex flex-col gap-2 font-bold text-coal">
             <span>Краткое описание (summary) <span className="text-rose">*</span></span>
             <textarea value={summary} onChange={(e) => setSummary(e.target.value)} rows={3} required placeholder="Короткий текст для карточки и SEO..." className="p-4 border border-forest/15 rounded-xl bg-snow font-medium text-coal outline-none focus:border-forest/40 transition-colors resize-y" />

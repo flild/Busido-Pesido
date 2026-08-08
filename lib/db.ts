@@ -34,6 +34,10 @@ db.exec(`
     status TEXT DEFAULT 'published',
     is_premium INTEGER DEFAULT 0,
     views INTEGER DEFAULT 0,
+    main_image TEXT,                   
+    reads_count INTEGER DEFAULT 0,     
+    likes INTEGER DEFAULT 0,           
+    dislikes INTEGER DEFAULT 0,       
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
 

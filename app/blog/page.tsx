@@ -36,7 +36,7 @@ export type ArticleRow = {
 export default function BlogPage() {
   const articles = db
     .prepare(
-      "SELECT id, title, slug, summary, category, tag, views, is_premium, created_at FROM articles WHERE status = 'published' ORDER BY created_at DESC"
+      "SELECT id, title, slug, summary, category, tag, views, is_premium, created_at, main_image, reads_count FROM articles WHERE status = 'published' ORDER BY created_at DESC"
     )
     .all() as ArticleRow[];
 

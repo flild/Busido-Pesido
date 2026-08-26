@@ -51,6 +51,14 @@ const issueDetails: Record<string, { label: string, title: string, text: string,
     view: "ресурсы · пространство · здоровье",
     first: "карта среды и разделение ресурсов",
     accentColor: "border-t-caramel", hoverColor: "hover:border-caramel", bgColor: "bg-[linear-gradient(145deg,theme(colors.white),rgba(198,142,107,0.14))]"
+  },
+  aggression: {
+    label: "АГРЕССИЯ",
+    title: "Определяем мотивацию, мишени и уровень риска",
+    text: "Разбираем территориальную, внутривидовую и переадресованную агрессию. Учитываем видоспецифичные паттерны: например, территориальная агрессия у кошек часто протекает жестче, чем у собак.",
+    view: "безопасность · триггеры · дистанция",
+    first: "менеджмент среды и предотвращение конфликтов",
+    accentColor: "border-t-coal", hoverColor: "hover:border-coal", bgColor: "bg-[linear-gradient(145deg,theme(colors.white),rgba(20,20,20,0.06))]"
   }
 };
 
@@ -63,10 +71,11 @@ interface IssueProps {
 
 export function IssueCard({ id, num, title, text }: IssueProps) {
   const { openModal } = useModal();
-  const d = issueDetails[id];
+  
+  // Добавили fallback: если id не найден, берем дефолтный стиль, чтобы страница не падала
+  const d = issueDetails[id] || issueDetails['fear'];
 
   const handleClick = () => {
-    if (!d) return;
     openModal(
       <>
         <span className="kicker">{d.label}</span>
@@ -87,7 +96,7 @@ export function IssueCard({ id, num, title, text }: IssueProps) {
     );
   };
 
-return (
+  return (
     <TiltCard 
       className={`card relative overflow-hidden cursor-pointer transition-all duration-200 border-t-[6px] ${d.accentColor} ${d.hoverColor} hover:-translate-y-2 hover:shadow-[0_26px_60px_rgba(30,43,14,0.13)] outline-none focus:-translate-y-2 focus:shadow-[0_26px_60px_rgba(30,43,14,0.13)] focus:border-b focus:border-x group ${d.bgColor}`} 
     >

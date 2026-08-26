@@ -35,7 +35,7 @@ export function Header() {
       <div className="container flex items-center gap-[15px] min-h-[88px]">
         <Link className="flex flex-col items-start gap-1 shrink-0 min-w-[210px]" href="/">
           <span className="text-forest text-2xl font-[760] tracking-[0.025em] leading-none drop-shadow-sm">
-            Бусидо-Пёсидо
+            БУСИДО-ПЁСИДО
           </span>
           <span className="text-[9px] uppercase tracking-[0.13em] text-coal/60 font-[650] mobile:hidden">
             поведение · состояние · благополучие

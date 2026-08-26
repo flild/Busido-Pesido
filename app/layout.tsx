@@ -95,7 +95,6 @@ export default function RootLayout({
         <ToastProvider>
           <ModalProvider>
             <ReadingProgress />
-            <UtilityBar />
             <PaletteStripe />
             <Header />
             {children}

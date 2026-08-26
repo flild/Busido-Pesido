@@ -53,10 +53,18 @@ export default function SpecialistsPage() {
                 {/* Информация */}
                 <div className="w-[60%] flex flex-col justify-center mobile:w-full">
                   <h2 className="text-4xl font-bold text-coal mb-2 mobile:text-3xl">{spec.name}</h2>
-                  <div className="text-[14px] font-[800] text-matcha mb-6 uppercase tracking-wider">
-                    {spec.role}
-                  </div>
                   
+                  {/* ОБНОВЛЕННЫЙ БЛОК: Город + Роль */}
+                  <div className="flex flex-wrap items-center gap-2 text-[14px] font-[800] mb-6 uppercase tracking-wider">
+                    {spec.city && (
+                      <>
+                        <span className="text-caramel">{spec.city}</span>
+                        <span className="text-matcha/40">•</span>
+                      </>
+                    )}
+                    <span className="text-matcha">{spec.role}</span>
+                  </div>
+
                   <h3 className="text-xl font-medium mb-4 text-coal">
                     {spec.short_bio}
                   </h3>

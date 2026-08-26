@@ -41,10 +41,11 @@ db.exec(`
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
 
-  CREATE TABLE IF NOT EXISTS specialists (
+CREATE TABLE IF NOT EXISTS specialists (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     role TEXT NOT NULL,
+    city TEXT DEFAULT '', 
     short_bio TEXT NOT NULL,
     full_bio TEXT NOT NULL,
     image_url TEXT,
@@ -61,6 +62,7 @@ db.exec(`
   CREATE TABLE IF NOT EXISTS applications (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     service TEXT,
+    specialist_id INTEGER,
     date TEXT,
     time TEXT,
     name TEXT,

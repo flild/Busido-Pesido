@@ -57,6 +57,11 @@ export function SpecialistForm({ initialData = null }: { initialData?: any }) {
         </div>
 
         <label className="flex flex-col gap-2">
+          <span className="text-[12px] font-bold text-coal/60 uppercase tracking-widest">Город (локация)</span>
+          <input type="text" name="city" defaultValue={initialData?.city} required placeholder="Москва / Онлайн" className="input-base" />
+        </label>
+
+        <label className="flex flex-col gap-2">
           <span className="text-[12px] font-bold text-coal/60 uppercase tracking-widest">Должность (регалии)</span>
           <input type="text" name="role" defaultValue={initialData?.role} required placeholder="Ветеринарный врач · зоотехник-кинолог..." className="input-base" />
         </label>

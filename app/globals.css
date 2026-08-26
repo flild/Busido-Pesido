@@ -15,10 +15,10 @@
     @apply text-balance;
   }
 
-  h1 {
+h1 {
     font-weight: 750;
     letter-spacing: -0.05em;
-    font-size: clamp(48px, 7vw, 86px);
+    font-size: clamp(38px, 5.5vw, 64px);
     line-height: 0.95;
     @apply my-6 mobile:tracking-[-0.042em];
   }
@@ -26,7 +26,8 @@
   h2 {
     font-weight: 720;
     letter-spacing: -0.04em;
-    font-size: clamp(34px, 4.6vw, 58px);
+    /* Уменьшили с 34px-58px до 28px-46px */
+    font-size: clamp(28px, 4vw, 46px);
     line-height: 1;
     @apply my-4 mobile:tracking-[-0.032em];
   }
@@ -35,6 +36,8 @@
     font-weight: 690;
     letter-spacing: -0.025em;
     line-height: 1.13;
+    /* Добавляем базовый clamp для h3, чтобы не зависеть только от классов */
+    font-size: clamp(22px, 2.5vw, 32px);
   }
 
   p, li, dd, dt {

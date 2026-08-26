@@ -19,8 +19,8 @@ import { FaqItem } from "@/components/FaqItem";
 import { db } from "@/lib/db";
 
 export const metadata: Metadata = {
-  title: "Главная — Busido-Pesido",
-  description: "Busido-Pesido — поведение, состояние и благополучие животных.",
+  title: "Главная — Бусидо-Пёсидо",
+  description: "Бусидо-Пёсид — поведение, состояние и благополучие животных.",
   alternates: {
     canonical: "https://busidopesido.ru",
   },
@@ -125,7 +125,7 @@ const freshArticles = db.prepare(`
   const jsonLdLocalBusiness = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    name: "Busido-Pesido",
+    name: "Бусидо-Пёсидо",
     image: "https://busidopesido.ru/og-image.jpg",
     description: "Помощь владельцам собак и кошек в решении проблем поведения. Анализ состояния, среды и истории обучения.",
     url: "https://busidopesido.ru",
@@ -203,7 +203,7 @@ const freshArticles = db.prepare(`
               className="w-full max-w-[470px] p-[42px] mobile:p-7 rounded-[42px] text-white shadow-[0_45px_90px_rgba(30,43,14,0.28)] bg-[radial-gradient(circle_at_83%_13%,rgba(198,142,107,0.34),transparent_30%),linear-gradient(145deg,theme(colors.soldier),theme(colors.coal)_72%)] border border-snow/10 relative overflow-hidden"
               initialRotateZ={2}
             >
-              <span className="micro text-forest">BUSIDO-PESIDO METHOD</span>
+              <span className="micro text-forest">Бусидо-Пёсидо метод</span>
               <h3 className="text-[42px] mobile:text-[32px] my-4 relative z-10">Я вижу больше, чем одну реакцию</h3>
               <FactorCloud />
               
@@ -602,7 +602,7 @@ const freshArticles = db.prepare(`
       <section className="py-[92px] mobile:py-[64px] relative bg-[radial-gradient(circle_at_20%_80%,rgba(111,143,191,0.08),transparent_35rem),theme(colors.snow)]">
         <div className="container relative z-10">
           <ScrollReveal className="max-w-[820px] mb-[42px]">
-            <span className="kicker">BUSIDO-PESIDO SCHOOL</span>
+            <span className="kicker">Библиотека</span>
             <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice text-coal">
               Авторская библиотека практических материалов
             </h2>

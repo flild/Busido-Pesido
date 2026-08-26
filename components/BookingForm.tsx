@@ -255,8 +255,15 @@ export function BookingForm({
           </label>
           
           <label className="col-span-2 mobile:col-span-1 flex gap-3 items-start font-[500] mt-4 p-4 rounded-xl bg-snow/80 border border-forest/10 cursor-pointer hover:bg-snow transition-colors">
-            <input type="checkbox" required className="mt-1 w-5 h-5 accent-matcha cursor-pointer shrink-0 border-forest/20" />
-            <span className="text-sm text-coal/80 leading-snug">Я даю согласие на обработку...</span>
+            <input 
+              type="checkbox" 
+              name="agreement"
+              required 
+              className="mt-1 w-5 h-5 accent-matcha cursor-pointer shrink-0 border-forest/20" 
+            />
+            <span className="text-sm text-coal/80 leading-snug">
+              Я даю согласие на обработку персональных данных в соответствии с <Link href="/privacy" className="text-matcha underline underline-offset-2 hover:text-forest">Политикой конфиденциальности</Link> и принимаю условия <Link href="/terms" className="text-matcha underline underline-offset-2 hover:text-forest">Оферты</Link>.
+            </span>
           </label>
           
           <button className="button button-primary col-span-2 mobile:col-span-1 mt-4 shadow-none h-[60px] text-lg disabled:bg-coal/40" type="submit" disabled={isSubmitting}>

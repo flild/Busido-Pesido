@@ -18,8 +18,12 @@ export default async function BookingPage({
   
   const initialService = typeof resolvedParams.service === 'string' ? resolvedParams.service : null;
   const initialPet = typeof resolvedParams.pet === 'string' ? resolvedParams.pet : null;
+  const initialSpecialist = typeof resolvedParams.specialist === 'string' ? resolvedParams.specialist : null;
 
   const dbServices = db.prepare('SELECT id, title as name, price FROM services ORDER BY sort_order').all() as { id: string, name: string, price: string }[];
+  
+  // Достаем специалистов для формы
+  const dbSpecialists = db.prepare('SELECT id, name, role, city FROM specialists ORDER BY sort_order').all() as { id: number, name: string, role: string, city: string }[];
 
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
@@ -60,7 +64,9 @@ export default async function BookingPage({
           <BookingForm 
             initialService={initialService} 
             initialPet={initialPet} 
+            initialSpecialist={initialSpecialist} 
             services={dbServices} 
+            specialists={dbSpecialists}          
             minDate={minDate} 
           />
         </div>

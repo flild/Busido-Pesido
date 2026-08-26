@@ -2,7 +2,7 @@
 
 import { useState, useTransition, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { Trash2, Copy, Check, X, Eye, PawPrint, Calendar, Mail, Phone, FileText } from 'lucide-react';
+import { Trash2, Copy, Check, X, Eye, PawPrint, Calendar, Mail, Phone, FileText, User } from 'lucide-react';
 import { updateAppStatus, deleteApp } from './actions';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -164,7 +164,8 @@ export function ApplicationRow({ app }: { app: any }) {
                 <div className="p-6 overflow-y-auto custom-scrollbar flex flex-col gap-6">
                   
                   {/* Инфо-блоки гридом */}
-                  <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-4">
+                  <div className="grid grid-cols-3 max-sm:grid-cols-1 gap-4">
+                    {/* Питомец */}
                     <div className="bg-snow rounded-2xl p-4 border border-forest/5">
                       <div className="flex items-center gap-2 text-coal/50 text-xs font-bold uppercase tracking-wider mb-2">
                         <PawPrint size={14} /> Питомец
@@ -173,13 +174,27 @@ export function ApplicationRow({ app }: { app: any }) {
                       <p className="text-sm text-coal/60 m-0">{app.pet_type ? petTypeMap[app.pet_type] || app.pet_type : 'Вид не указан'}</p>
                     </div>
                     
+                    {/* Услуга */}
                     <div className="bg-snow rounded-2xl p-4 border border-forest/5">
                       <div className="flex items-center gap-2 text-coal/50 text-xs font-bold uppercase tracking-wider mb-2">
                         <Calendar size={14} /> Услуга
                       </div>
                       <p className="font-bold text-coal text-[15px] leading-tight m-0">{app.service}</p>
                       {(app.date || app.time) && (
-                        <p className="text-sm text-forest font-medium m-0 mt-1">Желаемое время: {app.date} {app.time}</p>
+                        <p className="text-sm text-forest font-medium m-0 mt-1">Время: {app.date} {app.time}</p>
+                      )}
+                    </div>
+
+                    {/* Специалист (НОВЫЙ БЛОК) */}
+                    <div className="bg-snow rounded-2xl p-4 border border-forest/5">
+                      <div className="flex items-center gap-2 text-coal/50 text-xs font-bold uppercase tracking-wider mb-2">
+                        <User size={14} /> Специалист
+                      </div>
+                      <p className="font-bold text-coal text-[15px] leading-tight m-0">
+                        {app.specialist_name ? app.specialist_name : 'Любой свободный'}
+                      </p>
+                      {app.specialist_city && (
+                        <p className="text-sm text-caramel font-medium m-0 mt-1">{app.specialist_city}</p>
                       )}
                     </div>
                   </div>

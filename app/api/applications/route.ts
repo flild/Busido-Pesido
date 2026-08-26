@@ -1,21 +1,20 @@
-// app/api/applications/route.ts
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { service, date, time, name, email, contact, petName, petType, request_text } = body;
+    const { service, date, time, name, email, contact, petName, petType, request_text, is_priority, specialist_id } = body;
 
     // Валидация базовых полей
     if (!service || !name || !contact) {
       return NextResponse.json({ error: 'Заполните все обязательные поля' }, { status: 400 });
     }
 
-    // Сохраняем заявку в базу с новыми полями
+    // Сохраняем заявку в базу с привязкой специалиста
     const insertStmt = db.prepare(`
-      INSERT INTO applications (service, date, time, name, email, contact, pet_type, pet_name, request_text, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO applications (service, date, time, name, email, contact, pet_type, pet_name, request_text, status, specialist_id)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
     insertStmt.run(
@@ -28,7 +27,8 @@ export async function POST(req: Request) {
       petType || 'Не указан',
       petName || 'Не указано',
       request_text || null, 
-      'new'
+      'new',
+      specialist_id || null // Если null, значит юзеру похуй к кому идти
     );
     
     return NextResponse.json({ success: true });

@@ -34,9 +34,11 @@ export default async function AdminApplications({
 
   // Достаем сами данные
   const appsStmt = db.prepare(`
-    SELECT * FROM applications
+    SELECT a.*, s.name as specialist_name, s.city as specialist_city
+    FROM applications a
+    LEFT JOIN specialists s ON a.specialist_id = s.id
     ${whereClause}
-    ORDER BY created_at DESC
+    ORDER BY a.created_at DESC
     LIMIT ? OFFSET ?
   `);
   const apps = appsStmt.all(...queryParams, ITEMS_PER_PAGE, offset) as any[];

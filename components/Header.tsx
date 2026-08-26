@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
+// Добавляем импорт иконки TG
+import { SiTelegram } from '@icons-pack/react-simple-icons'; 
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,7 +13,6 @@ export function Header() {
   const toggleNav = () => setIsOpen(!isOpen);
   const isActive = (path: string) => pathname === path;
 
-  // Выносим конфиг меню для чистоты кода
   const navLinks = [
     { path: '/', label: 'Главная' },
     { path: '/services', label: 'Услуги и цены' },
@@ -27,7 +28,7 @@ export function Header() {
       ]
     },
     { path: '/professionals', label: 'Специалистам' },
-    { path: '/blog', label: 'Блог' },
+    { path: '/blog', label: 'Блог' }, // Переименовали Школу
   ];
 
   return (
@@ -52,7 +53,6 @@ export function Header() {
 
         <nav className={`flex flex-1 justify-center items-center mobile:fixed mobile:inset-x-5 mobile:top-[114px] mobile:flex-col mobile:items-stretch mobile:bg-white mobile:p-4 mobile:rounded-2xl mobile:shadow-[0_24px_70px_rgba(30,43,14,0.12)] mobile:hidden ${isOpen ? 'mobile:!flex' : ''}`}>
           {navLinks.map((link) => {
-            // Рендер выпадающего списка
             if (link.subLinks) {
               const isSubActive = link.subLinks.some(sub => isActive(sub.path));
               return (
@@ -67,7 +67,7 @@ export function Header() {
                       <Link
                         key={sub.path}
                         href={sub.path}
-                        onClick={() => setIsOpen(false)} // Закрываем моб. меню при клике
+                        onClick={() => setIsOpen(false)}
                         className={`block px-4 py-2.5 text-[11px] font-[750] hover:bg-snow hover:text-coal transition-colors ${isActive(sub.path) ? 'text-coal bg-snow' : 'text-matcha'}`}
                       >
                         {sub.label}
@@ -78,12 +78,11 @@ export function Header() {
               );
             }
 
-            // Рендер обычной ссылки
             return (
               <Link 
                 key={link.path} 
                 href={link.path} 
-                onClick={() => setIsOpen(false)} // Закрываем моб. меню при клике
+                onClick={() => setIsOpen(false)}
                 className={`relative px-2 py-2 text-[11px] font-[650] whitespace-nowrap transition-colors hover:text-coal after:absolute after:inset-x-3 after:-bottom-0.5 after:h-0.5 after:rounded-full after:bg-gradient-dopamine after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-200 mobile:after:hidden ${isActive(link.path) ? 'text-coal after:scale-x-100' : 'text-matcha'}`}
               >
                 {link.label}
@@ -92,9 +91,21 @@ export function Header() {
           })}
         </nav>
 
-        <Link className="button button-dark h-[42px] px-[18px] text-[14px] whitespace-nowrap shrink-0 ml-auto mobile:hidden" href="/booking">
-          Записаться
-        </Link>
+        {/* Блок с кнопкой и соцсетью (ТГ) */}
+        <div className="flex items-center gap-3 shrink-0 ml-auto mobile:hidden">
+          <a 
+            href="https://t.me/busidopesido" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-forest/60 hover:text-forest transition-colors p-2"
+            title="Наш Telegram-канал"
+          >
+            <SiTelegram size={20} />
+          </a>
+          <Link className="button button-dark h-[42px] px-[18px] text-[14px] whitespace-nowrap" href="/booking">
+            Записаться
+          </Link>
+        </div>
       </div>
     </header>
   );

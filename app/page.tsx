@@ -159,7 +159,7 @@ export default function Home() {
               initialRotateZ={2}
             >
               <span className="micro text-forest">Бусидо-Пёсидо метод</span>
-              <h3 className="text-[42px] mobile:text-[32px] my-4 relative z-10">Мы видим больше, чем одну реакцию</h3>
+              <h3 className="text-[42px] mobile:text-[32px] my-4 relative z-10">У нас комплексный подход</h3>
               <FactorCloud />
             </TiltCard>
           </div>
@@ -269,7 +269,6 @@ export default function Home() {
             <IssueCard id="fear" num="01" title="Страхи и избегание" text="Люди, дети, собаки, улица, звуки, транспорт, ветеринарные процедуры." />
             <IssueCard id="reactivity" num="02" title="Реактивность и возбуждение" text="Лай, рывки, фиксация, фрустрация и трудности восстановления." />
             <IssueCard id="defense" num="03" title="Защитное поведение" text="Рычание, выпады, укусы, охрана пространства или ресурсов." />
-            <IssueCard id="separation" num="04" title="Тревога одиночества" text="Вокализация, разрушение, слюнотечение, невозможность оставаться без человека." />
             <IssueCard id="puppy" num="05" title="Щенки и подростки" text="Адаптация, прикусывание, туалет, прогулки, социализация и первые навыки." />
             <IssueCard id="cats" num="06" title="Поведение кошек" text="Лоток, вокализация, страхи, контакт, приучение к переноске и среде." />
             <IssueCard id="aggression" num="07" title="Агрессия" text="Территориальная, внутривидовая и переадресованная агрессия. У кошек часто протекает жестче, чем у собак." />

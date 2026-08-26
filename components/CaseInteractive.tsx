@@ -1,10 +1,12 @@
+// components/CaseInteractive.tsx
 'use client';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { themeColors } from '@/lib/theme';
+import { ArrowRight } from 'lucide-react';
 
 export interface CaseStep {
-  label: string;
+  label: string; // Желательно использовать "Ситуация (До)", "Гипотеза", "Результат (После)"
   headline: string;
   text: string;
   highlight?: string;
@@ -24,7 +26,7 @@ export function CaseInteractive({ initialCases }: { initialCases: CaseData[] }) 
   const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
 
   if (!initialCases || initialCases.length === 0) {
-    return <div className="mt-10 p-10 text-center text-coal/50 border border-forest/15 rounded-3xl">Кейсов пока нет</div>;
+    return <div className="mt-10 p-10 text-center text-coal/50 border border-forest/15 rounded-3xl bg-white">Кейсов пока нет</div>;
   }
 
   const activeCase = initialCases.find((c) => c.id === activeCaseId) || initialCases[0];
@@ -35,12 +37,12 @@ export function CaseInteractive({ initialCases }: { initialCases: CaseData[] }) 
 
   const handleTabChange = (id: string) => {
     setActiveCaseId(id);
-    setActiveStepIndex(0);
+    setActiveStepIndex(0); // Сбрасываем на первый шаг (До)
   };
 
   return (
     <div className="mt-10 overflow-hidden">
-      {/* Навигация по кейсам: Убрали отрицательные маржины, чтобы не обрезалось на мобилках */}
+      {/* Навигация по кейсам */}
       <div className="flex flex-wrap max-md:flex-nowrap max-md:overflow-x-auto max-md:pb-4 gap-2.5 mb-8 custom-scrollbar">
         {initialCases.map((c: CaseData) => {
           const isActive = activeCaseId === c.id;
@@ -59,82 +61,71 @@ export function CaseInteractive({ initialCases }: { initialCases: CaseData[] }) 
         })}
       </div>
 
-      <div className="grid grid-cols-[320px_1fr] rounded-[36px] bg-white border border-forest/10 shadow-[0_35px_80px_rgba(30,43,14,0.08)] tablet:grid-cols-1">
+      <div className="rounded-[36px] bg-white border border-forest/10 shadow-lg overflow-hidden flex flex-col">
         
-        {/* Боковой Таймлайн */}
-        <div className="bg-snow/60 p-8 border-r border-forest/10 tablet:border-r-0 tablet:border-b tablet:overflow-x-auto tablet:p-6 custom-scrollbar tablet:snap-x">
-          <div className="tablet:flex tablet:gap-6 tablet:min-w-max tablet:px-1">
-            {activeCase.steps.map((step: CaseStep, i: number) => {
-              const isActive = i === activeStepIndex;
-              const isPast = i < activeStepIndex;
-              
-              return (
-                <button 
-                  key={i} 
-                  onClick={() => setActiveStepIndex(i)}
-                  className="group relative w-full text-left flex items-start gap-4 mb-7 last:mb-0 cursor-pointer border-0 bg-transparent tablet:w-auto tablet:mb-0 tablet:shrink-0 tablet:snap-center"
-                >
-                  {i !== activeCase.steps.length - 1 && (
-                    <div className="absolute left-[11px] top-[30px] bottom-[-34px] w-[2px] bg-forest/5 tablet:hidden" />
-                  )}
-                  
-                  <div className={`relative z-10 shrink-0 w-[24px] h-[24px] rounded-full mt-0.5 border-2 flex items-center justify-center transition-colors duration-300 ${isActive ? `border-transparent ${theme.bg} ring-4 ${theme.ring}` : isPast ? `border-transparent bg-coal` : `border-forest/20 bg-white group-hover:border-forest/40`}`}>
-                    {(isActive || isPast) && (
-                      <div className="w-2 h-2 bg-white rounded-full" />
-                    )}
-                  </div>
-                  
-                  <div>
-                    <span className="block text-[11px] font-[900] tracking-widest text-coal/40 uppercase mb-0.5">
-                      Шаг {String(i + 1).padStart(2, '0')}
-                    </span>
-                    <span className={`block font-[820] text-[16px] transition-colors duration-300 ${isActive ? 'text-coal' : 'text-coal/60 group-hover:text-coal'}`}>
-                      {step.label}
-                    </span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Контентная область */}
-        <div className="relative p-12 tablet:p-8 mobile:p-6 bg-white overflow-hidden flex flex-col">
-          <div className={`absolute -top-[20%] -right-[10%] w-[500px] h-[500px] rounded-full bg-gradient-to-bl ${theme.gradient} to-transparent opacity-[0.07] blur-3xl pointer-events-none transition-colors duration-1000`} />
-
-          <div className="shrink-0 relative z-10">
-            <span className={`inline-block mb-6 px-3 py-1 rounded-full text-[12px] font-[900] tracking-widest uppercase bg-snow border border-forest/10 ${theme.text}`}>
-              {activeCase.tab_title}
+        {/* Заголовок кейса */}
+        <div className={`p-8 tablet:p-6 border-b border-forest/10 bg-gradient-to-r ${theme.gradient} to-transparent`}>
+           <span className={`inline-block mb-4 px-3 py-1 rounded-full text-[12px] font-[900] tracking-widest uppercase bg-white border border-forest/10 ${theme.text}`}>
+              Анализ случая
             </span>
-
-            <h3 className="text-[34px] tablet:text-[24px] font-[750] leading-tight text-coal mb-10 max-md:mb-6 max-w-[90%]">
+            <h3 className="text-[28px] tablet:text-[22px] font-[750] leading-tight text-coal max-w-[800px]">
               {activeCase.main_title}
             </h3>
+        </div>
+
+        <div className="grid grid-cols-[280px_1fr] tablet:grid-cols-1">
+          {/* Боковая навигация ДО / ПОСЛЕ */}
+          <div className="bg-snow/40 p-8 border-r border-forest/10 tablet:border-r-0 tablet:border-b tablet:flex tablet:overflow-x-auto tablet:p-6 custom-scrollbar">
+            <div className="flex flex-col gap-3 tablet:flex-row tablet:min-w-max tablet:gap-4">
+              {activeCase.steps.map((step: CaseStep, i: number) => {
+                const isActive = i === activeStepIndex;
+                const isResult = i === activeCase.steps.length - 1; // Последний шаг считаем результатом
+                
+                return (
+                  <button 
+                    key={i} 
+                    onClick={() => setActiveStepIndex(i)}
+                    className={`relative w-full text-left px-5 py-4 rounded-2xl transition-all duration-300 border ${isActive ? `bg-white border-forest/20 shadow-sm ${theme.text}` : 'bg-transparent border-transparent text-coal/60 hover:bg-white/50 hover:text-coal'}`}
+                  >
+                    <span className="block text-[11px] font-[900] tracking-widest uppercase mb-1 opacity-60">
+                      {isResult ? "Итог работы" : `Этап 0${i + 1}`}
+                    </span>
+                    <span className="block font-[820] text-[16px]">
+                      {step.label}
+                    </span>
+                    {isActive && <ArrowRight size={16} className="absolute right-4 top-1/2 -translate-y-1/2 opacity-50 tablet:hidden" />}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-          
-          <div className="relative z-10 flex-grow">
+
+          {/* Контентная область */}
+          <div className="p-12 tablet:p-8 mobile:p-6 bg-white min-h-[400px] flex flex-col justify-center">
             {activeStep ? (
               <AnimatePresence mode="wait">
                 <motion.div
                   key={`${activeCase.id}-${activeStepIndex}`}
-                  initial={{ opacity: 0, y: 15, filter: 'blur(4px)' }}
-                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                  exit={{ opacity: 0, y: -15, filter: 'blur(4px)' }}
-                  transition={{ duration: 0.35, ease: 'easeInOut' }}
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -10 }}
+                  transition={{ duration: 0.3 }}
                   className="max-w-[700px]"
                 >
-                  <h4 className="text-[22px] max-md:text-[18px] font-[700] text-coal mb-4">
+                  <h4 className="text-[24px] max-md:text-[20px] font-[800] text-coal mb-5">
                     {activeStep.headline}
                   </h4>
                   
-                  <p className="text-[17px] max-md:text-[15px] leading-[1.6] text-coal/75 mb-6 whitespace-pre-wrap">
+                  <p className="text-[17px] max-md:text-[15px] leading-[1.7] text-coal/80 mb-8 whitespace-pre-wrap">
                     {activeStep.text}
                   </p>
 
                   {activeStep.highlight && (
-                    <div className={`p-5 max-md:p-4 rounded-2xl bg-snow border-l-4 border-l-current ${theme.text}`}>
-                      <strong className="block text-[13px] font-[900] uppercase tracking-wider mb-2 text-coal">Обратите внимание</strong>
-                      <p className="text-[15px] max-md:text-[14px] font-[500] leading-snug text-coal/80 m-0">
+                    <div className="p-6 max-md:p-5 rounded-2xl bg-snow border border-forest/10">
+                      <strong className={`block text-[12px] font-[900] uppercase tracking-wider mb-3 ${theme.text}`}>
+                        Ключевой фактор
+                      </strong>
+                      <p className="text-[15px] max-md:text-[14px] font-[500] leading-relaxed text-coal m-0">
                         {activeStep.highlight}
                       </p>
                     </div>
@@ -142,7 +133,7 @@ export function CaseInteractive({ initialCases }: { initialCases: CaseData[] }) 
                 </motion.div>
               </AnimatePresence>
             ) : (
-              <div className="text-coal/50">Шаги не заполнены.</div>
+              <div className="text-coal/50">Данные этапа отсутствуют.</div>
             )}
           </div>
         </div>

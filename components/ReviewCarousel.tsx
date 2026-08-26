@@ -71,11 +71,10 @@ export function ReviewCarousel({ initialReviews }: { initialReviews: Review[] })
     })
   };
 
-  if (!currentReview) return <div className="text-center p-10 text-coal/50">Отзывов пока нет.</div>;
+  if (!currentReview) return <div className="text-center p-10 text-coal/50 border border-forest/15 rounded-3xl">Отзывов пока нет.</div>;
 
   return (
     <>
-      {/* ... Верхний блок с фильтрами и кнопками остается без изменений ... */}
       <div className="flex flex-wrap items-center justify-between gap-4 mb-10 max-md:mb-8">
         <div className="flex gap-2.5 flex-wrap">
           {filterTabs.map((tab) => {
@@ -103,7 +102,7 @@ export function ReviewCarousel({ initialReviews }: { initialReviews: Review[] })
       </div>
 
       <TiltCard className="w-full min-h-[420px] max-md:min-h-[480px] rounded-[38px] bg-white border border-forest/10 shadow-[0_28px_70px_rgba(30,43,14,0.06)] relative overflow-hidden" initialRotateZ={0}>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_18%,rgba(240,114,150,0.08),transparent_22rem),radial-gradient(circle_at_88%_80%,rgba(111,143,191,0.08),transparent_23rem)] pointer-events-none" />
+        <div className="absolute inset-0 bg-snow/20 pointer-events-none" />
         <div className="absolute -top-4 -right-2 text-[240px] font-serif leading-none text-forest/[0.03] pointer-events-none select-none">&rdquo;</div>
 
         <AnimatePresence mode="wait" custom={direction}>
@@ -117,15 +116,17 @@ export function ReviewCarousel({ initialReviews }: { initialReviews: Review[] })
             className="relative z-10 flex flex-col h-full p-12 max-md:p-8"
           >
             <div className="flex items-center gap-5 mb-8">
-              <div className="relative w-[72px] h-[72px] rounded-[20px] overflow-hidden bg-fog shrink-0 shadow-sm">
-                {/* Исправлено на image_url из БД */}
-                <Image src={currentReview.image_url} alt={currentReview.pet_name} fill className="object-cover" sizes="72px" />
+              <div className="relative w-[72px] h-[72px] rounded-[20px] overflow-hidden bg-fog shrink-0 shadow-sm border border-forest/5">
+                {currentReview.image_url ? (
+                  <Image src={currentReview.image_url} alt={currentReview.pet_name} fill className="object-cover" sizes="72px" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-snow text-coal/30 text-xs text-center font-medium p-2">Без фото</div>
+                )}
               </div>
               <div>
                 <span className="inline-block mb-1.5 px-2.5 py-1 rounded-full text-[10px] font-black tracking-widest uppercase bg-snow text-coal/60 border border-forest/10">
                   {currentReview.tag}
                 </span>
-                {/* Исправлено на pet_name */}
                 <h4 className="text-[19px] font-bold text-coal leading-none mb-1">{currentReview.pet_name}</h4>
                 <p className="text-[13px] font-medium text-coal/50">{currentReview.breed}</p>
               </div>
@@ -145,7 +146,6 @@ export function ReviewCarousel({ initialReviews }: { initialReviews: Review[] })
           </motion.div>
         </AnimatePresence>
         
-        {/* Индикаторы */}
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-1.5 z-20 max-md:hidden">
           {filteredReviews.map((_, i) => (
             <button
@@ -161,7 +161,6 @@ export function ReviewCarousel({ initialReviews }: { initialReviews: Review[] })
         </div>
       </TiltCard>
 
-      {/* Мобильная навигация остается без изменений */}
       <div className="hidden max-md:flex items-center justify-between mt-6">
         <button onClick={handlePrev} className="px-6 py-3 rounded-full border border-forest/15 bg-white font-bold text-coal shadow-sm hover:bg-snow active:scale-95 transition-all">← Назад</button>
         <div className="flex gap-1.5">

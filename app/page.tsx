@@ -15,6 +15,7 @@ import { LibraryInteractive } from "@/components/LibraryInteractive";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { ClinicalBehaviorChart } from "@/components/ClinicalBehaviorChart";
 import { FaqItem } from "@/components/FaqItem";
+import { AfterConsultation } from '@/components/AfterConsultation';
 
 import { db } from "@/lib/db";
 
@@ -415,46 +416,7 @@ export default function Home() {
       <FormatsSection formats={dbFormats} />
 
       {/* ПОСЛЕ КОНСУЛЬТАЦИИ (ТОЧКА А -> ТОЧКА Б) */}
-      <section className="py-[92px] mobile:py-[64px] bg-white relative overflow-hidden">
-        <div className="container relative z-10">
-          <ScrollReveal className="max-w-[820px] mb-[52px]">
-            <span className="kicker">ПОСЛЕ КОНСУЛЬТАЦИИ</span>
-            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice">
-              У вас остаётся рабочая система
-            </h2>
-          </ScrollReveal>
-
-          <div className="grid grid-cols-4 gap-5 tablet:grid-cols-2 mobile:grid-cols-1 items-stretch">
-            {[
-              { num: '01', title: 'Понятная гипотеза', desc: 'Что запускает и поддерживает поведение.', accentText: 'text-matcha', accentBg: 'bg-matcha', gradient: 'from-matcha/10', watermark: 'group-hover:text-matcha/[0.07]' },
-              { num: '02', title: 'План среды и режима', desc: 'Что изменить дома и на прогулке.', accentText: 'text-caramel', accentBg: 'bg-caramel', gradient: 'from-caramel/10', watermark: 'group-hover:text-caramel/[0.07]' },
-              { num: '03', title: 'Пошаговые упражнения', desc: 'Последовательность, критерии и признаки остановки.', accentText: 'text-rose', accentBg: 'bg-rose', gradient: 'from-rose/10', watermark: 'group-hover:text-rose/[0.07]' },
-              { num: '04', title: 'Маршрут помощи', desc: 'Когда нужен ветеринарный врач или другой специалист.', accentText: 'text-ice', accentBg: 'bg-ice', gradient: 'from-ice/10', watermark: 'group-hover:text-ice/[0.07]' }
-            ].map((step, i) => (
-              <ScrollReveal key={step.num} delay={i} className="flex h-full">
-                <article className="group relative w-full flex flex-col p-8 mobile:p-6 rounded-[28px] bg-snow border border-forest/10 hover:border-forest/20 shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden cursor-default hover:-translate-y-1.5">
-                  <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-br ${step.gradient} to-transparent transition-opacity duration-700 pointer-events-none`} />
-                  <span className={`absolute -bottom-8 -right-4 text-[140px] font-black leading-none text-coal/[0.02] ${step.watermark} transition-colors duration-500 pointer-events-none select-none`}>
-                    {step.num}
-                  </span>
-                  <div className={`absolute top-0 left-0 h-1.5 w-12 ${step.accentBg} rounded-br-full transition-all duration-500 group-hover:w-full`} />
-                  <div className="relative z-10 flex flex-col h-full mt-3">
-                    <strong className={`text-[13px] font-[900] tracking-widest uppercase ${step.accentText} mb-6 block`}>
-                      Шаг {step.num}
-                    </strong>
-                    <h3 className="text-[22px] leading-tight mb-4 text-coal">
-                      {step.title}
-                    </h3>
-                    <p className="text-coal/65 leading-relaxed mt-auto">
-                      {step.desc}
-                    </p>
-                  </div>
-                </article>
-              </ScrollReveal>
-            ))}
-          </div>
-        </div>
-      </section>
+      <AfterConsultation />
 
       {/* КЕЙСЫ ДО / ПОСЛЕ */}
       <section className="py-[92px] mobile:py-[64px]">

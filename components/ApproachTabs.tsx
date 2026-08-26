@@ -1,15 +1,31 @@
 'use client';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Check } from 'lucide-react';
 
 type TabId = 'state' | 'environment' | 'load' | 'recovery' | 'learning';
 
-const approachData: Record<TabId, { n: string, title: string, text: string, list: string[], colorClass: string }> = {
-  state: { n: "01", title: "Состояние определяет доступность поведения", text: "Оцениваются сон, боль, зуд, ЖКТ, аппетит, движение, сенсорная нагрузка, лекарства и способность возвращаться к спокойному состоянию.", list: ["Что изменилось вместе с поведением", "Какие признаки требуют медицинской проверки", "Какая нагрузка сейчас доступна"], colorClass: "bg-matcha text-white" },
-  environment: { n: "02", title: "Среда ежедневно поддерживает или снижает напряжение", text: "Разбираются пространство, ресурсы, дистанция, маршруты, режим, шум, контакты и возможность уйти из взаимодействия.", list: ["Где реакция появляется чаще", "Какие условия усиливают напряжение", "Что можно изменить до тренинга"], colorClass: "bg-caramel text-white" },
-  load: { n: "03", title: "Нагрузка оценивается в сумме, а не по одному событию", text: "Учитываются прогулки, социальные контакты, новизна, бытовые процедуры, дефицит сна и накопление сложных эпизодов.", list: ["Как быстро растёт возбуждение", "Сколько длится восстановление", "Какие нагрузки стоит сократить"], colorClass: "bg-rose text-white" },
-  recovery: { n: "04", title: "Восстановление создаёт основу для устойчивого обучения", text: "Проверяются качество сна, спокойные зоны, ритуалы, исследовательская активность и способность делать паузу после событий.", list: ["Есть ли полноценный сон", "Может ли животное прекращать активность", "Что возвращает спокойствие"], colorClass: "bg-ice text-white" },
-  learning: { n: "05", title: "Обучение строится внутри доступного уровня сложности", text: "Навык дробится на этапы, формируются ясные критерии, учитываются мотивация, контекст и последствия каждого действия.", list: ["Как выглядит исходное поведение", "Какой следующий шаг реалистичен", "По каким данным повышать сложность"], colorClass: "bg-oat text-coal" }
+const approachData: Record<TabId, { n: string, title: string, text: string, list: string[], accent: string, bgAccent: string }> = {
+  state: { 
+    n: "01", title: "Состояние определяет доступность поведения", text: "Оцениваются сон, боль, зуд, ЖКТ, аппетит, движение, сенсорная нагрузка, лекарства и способность возвращаться к спокойному состоянию.", list: ["Что изменилось вместе с поведением", "Какие признаки требуют медицинской проверки", "Какая нагрузка сейчас доступна"], 
+    accent: "text-matcha", bgAccent: "bg-matcha" 
+  },
+  environment: { 
+    n: "02", title: "Среда ежедневно поддерживает или снижает напряжение", text: "Разбираются пространство, ресурсы, дистанция, маршруты, режим, шум, контакты и возможность уйти из взаимодействия.", list: ["Где реакция появляется чаще", "Какие условия усиливают напряжение", "Что можно изменить до тренинга"], 
+    accent: "text-caramel", bgAccent: "bg-caramel" 
+  },
+  load: { 
+    n: "03", title: "Нагрузка оценивается в сумме, а не по одному событию", text: "Учитываются прогулки, социальные контакты, новизна, бытовые процедуры, дефицит сна и накопление сложных эпизодов.", list: ["Как быстро растёт возбуждение", "Сколько длится восстановление", "Какие нагрузки стоит сократить"], 
+    accent: "text-rose", bgAccent: "bg-rose" 
+  },
+  recovery: { 
+    n: "04", title: "Восстановление создаёт основу для обучения", text: "Проверяются качество сна, спокойные зоны, ритуалы, исследовательская активность и способность делать паузу после событий.", list: ["Есть ли полноценный сон", "Может ли животное прекращать активность", "Что возвращает спокойствие"], 
+    accent: "text-ice", bgAccent: "bg-ice" 
+  },
+  learning: { 
+    n: "05", title: "Обучение строится внутри доступного уровня сложности", text: "Навык дробится на этапы, формируются ясные критерии, учитываются мотивация, контекст и последствия каждого действия.", list: ["Как выглядит исходное поведение", "Какой следующий шаг реалистичен", "По каким данным повышать сложность"], 
+    accent: "text-forest", bgAccent: "bg-forest" 
+  }
 };
 
 const tabs: { id: TabId; num: string; label: string }[] = [
@@ -25,66 +41,81 @@ export function ApproachTabs() {
   const d = approachData[activeTab];
 
   return (
-    <div className="rounded-[38px] bg-white border border-forest/15 shadow-2xl overflow-hidden">
-      <div className="inline-flex items-center gap-2 m-[34px_38px_0] px-3 py-2 rounded-full bg-rose/10 text-espresso text-[11px] font-[700]">
-        <span className="w-2.5 h-2.5 rounded-full bg-rose shadow-[0_0_0_0_rgba(225,77,117,0.35)] animate-pulse-hint"></span>
-        Нажимайте на этапы
-      </div>
+    <div className="rounded-[40px] mobile:rounded-[28px] bg-white text-coal shadow-[0_32px_64px_rgba(30,43,14,0.12)] border border-forest/10 p-4 overflow-hidden">
       
-      <div className="grid grid-cols-5 gap-2 p-[18px] tablet:flex tablet:overflow-x-auto scrollbar-hide" role="tablist">
+      {/* Навигация (Табы) */}
+      <div className="bg-fog/40 p-2 rounded-[32px] mobile:rounded-[20px] flex overflow-x-auto custom-scrollbar snap-x relative z-20">
         {tabs.map(tab => {
           const isActive = activeTab === tab.id;
-          const activeColor = approachData[tab.id].colorClass;
+          const currentAccent = approachData[tab.id].accent;
           
           return (
             <button 
               key={tab.id}
-              role="tab"
-              aria-selected={isActive}
-              className={`p-[17px_14px] border-0 rounded-[17px] text-left font-[850] cursor-pointer transition-colors tablet:min-w-[170px] ${isActive ? activeColor : 'bg-snow hover:bg-fog/50'}`}
+              className={`relative flex-1 min-w-[150px] p-[16px_20px] rounded-[24px] mobile:rounded-[14px] text-left font-[800] transition-all duration-300 snap-center outline-none ${isActive ? 'bg-white shadow-sm' : 'bg-transparent hover:bg-white/40'}`}
               onClick={() => setActiveTab(tab.id)}
             >
-              <span className={`block text-[10px] mb-1.5 transition-colors ${isActive ? (tab.id === 'learning' ? 'text-forest' : 'text-oat') : 'text-matcha'}`}>
-                {tab.num}
+              <span className={`block text-[11px] font-[950] mb-1 transition-colors ${isActive ? currentAccent : 'text-coal/40'}`}>
+                Шаг {tab.num}
               </span>
-              {tab.label}
+              <span className={`block text-[15px] transition-colors ${isActive ? 'text-coal' : 'text-coal/60'}`}>
+                {tab.label}
+              </span>
             </button>
           )
         })}
       </div>
       
-      <div className="min-h-[340px] p-[42px] bg-gradient-to-br from-snow to-fog relative overflow-hidden mobile:p-7" role="tabpanel">
-        
-        {/* Быстрая анимация без каскадов: только fade и легкий сдвиг */}
+      {/* Контентная часть */}
+      <div className="p-[48px_32px] mobile:p-[32px_16px] min-h-[400px] flex flex-col justify-center relative">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
-            initial={{ opacity: 0, y: 5, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -5, scale: 0.98 }}
-            transition={{ duration: 0.15, ease: "easeOut" }}
-            className="grid grid-cols-[1.1fr_0.9fr] gap-[34px] tablet:grid-cols-1 relative z-10"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            className="grid grid-cols-[1.1fr_0.9fr] gap-[60px] tablet:grid-cols-1 tablet:gap-[40px] relative z-10"
           >
+            {/* Левая колонка: Текст */}
             <div>
-              <span className="block text-[11px] font-[950] text-matcha mb-2">{d.n}</span>
-              <h3 className="text-[39px] mobile:text-[32px] my-4 leading-tight text-coal">{d.title}</h3>
-              <p className="text-[17px] text-coal/60">{d.text}</p>
+              <div className="flex items-center gap-3 mb-5">
+                <span className={`flex items-center justify-center w-8 h-8 rounded-full text-white text-[12px] font-black ${d.bgAccent}`}>
+                  {d.n}
+                </span>
+                <span className={`text-[12px] font-[900] tracking-widest uppercase ${d.accent}`}>
+                  {tabs.find(t => t.id === activeTab)?.label}
+                </span>
+              </div>
+              <h3 className="text-[34px] mobile:text-[26px] font-[800] leading-[1.15] text-coal mb-6">
+                {d.title}
+              </h3>
+              <p className="text-[17px] mobile:text-[15px] leading-relaxed text-coal/70">
+                {d.text}
+              </p>
             </div>
 
-            <div className="grid content-start gap-3 mt-2 tablet:mt-0">
+            {/* Правая колонка: Чеклист */}
+            <div className="flex flex-col gap-3 justify-center">
               {d.list.map((item, i) => (
-                <span 
+                <div 
                   key={i} 
-                  className="p-[15px_17px] rounded-2xl bg-white/70 backdrop-blur-sm border border-forest/15 font-[800] text-coal shadow-sm"
+                  className="flex items-start gap-4 p-5 mobile:p-4 rounded-[24px] bg-snow border border-forest/5 shadow-sm"
                 >
-                  {item}
-                </span>
+                  <div className={`mt-0.5 shrink-0 w-6 h-6 rounded-full flex items-center justify-center bg-white shadow-sm border border-forest/10 ${d.accent}`}>
+                    <Check size={14} strokeWidth={3} />
+                  </div>
+                  <span className="font-[700] text-[15px] leading-snug text-coal pt-0.5">
+                    {item}
+                  </span>
+                </div>
               ))}
             </div>
           </motion.div>
         </AnimatePresence>
 
-        <div className="absolute w-[190px] h-[190px] -right-[75px] -bottom-[85px] rounded-full bg-gradient-to-br from-rose/20 to-ice/20 pointer-events-none"></div>
+        {/* Декоративный фон для текущего таба */}
+        <div className={`absolute -right-[10%] -bottom-[20%] w-[400px] h-[400px] rounded-full blur-[80px] opacity-[0.08] pointer-events-none transition-colors duration-500 ${d.bgAccent}`} />
       </div>
     </div>
   );

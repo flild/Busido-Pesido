@@ -276,72 +276,73 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ПОДХОД */}
+{/* ОБЪЕДИНЕННЫЙ БЛОК: ПОДХОД И ИНТЕРАКТИВНАЯ СХЕМА */}
       <section className="bg-[radial-gradient(circle_at_88%_12%,rgba(225,77,117,0.16),transparent_25rem),radial-gradient(circle_at_10%_90%,rgba(111,143,191,0.14),transparent_24rem),linear-gradient(145deg,theme(colors.coal),theme(colors.soldier))] text-white py-[92px] mobile:py-[64px]">
         <div className="container">
-          <ScrollReveal className="max-w-[820px] mb-[42px]">
-            <span className="kicker">ПОДХОД</span>
-            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice">
-              Поведение складывается из нескольких систем
-            </h2>
-            <p className="text-fog">
-              Команда может быть известна собаке и оставаться недоступной в конкретном состоянии. Поэтому мы работаем с причинами, условиями и навыками одновременно.
-            </p>
-          </ScrollReveal>
-          <div className="flex flex-wrap items-center gap-2.5 my-9">
-            <span className="px-4 py-3 rounded-full bg-white/10 font-black">состояние</span>
-            <b className="text-caramel text-2xl">+</b>
-            <span className="px-4 py-3 rounded-full bg-white/10 font-black">среда</span>
-            <b className="text-caramel text-2xl">+</b>
-            <span className="px-4 py-3 rounded-full bg-white/10 font-black">история</span>
-            <b className="text-caramel text-2xl">+</b>
-            <span className="px-4 py-3 rounded-full bg-white/10 font-black">обучение</span>
-            <b className="text-caramel text-2xl">+</b>
-            <span className="px-4 py-3 rounded-full bg-white/10 font-black">последствия</span>
-          </div>
-          <div className="grid grid-cols-4 gap-4 tablet:grid-cols-2 mobile:grid-cols-1">
-            <ScrollReveal delay={0}>
-              <article className="p-6 rounded-3xl bg-white/5 border border-white/10 text-oat border-t-[4px] border-t-matcha">
-                <h3 className="text-white">Собираем данные</h3>
-                <p>Анкета, видео, медицинские документы, режим, рацион, сон и динамика эпизодов.</p>
-              </article>
+          
+          <div className="grid grid-cols-[1fr_auto] tablet:grid-cols-1 gap-10 items-end mb-12">
+            <ScrollReveal className="max-w-[700px]">
+              <span className="kicker">МЕТОДОЛОГИЯ</span>
+              <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice">
+                Поведение складывается из нескольких систем
+              </h2>
+              <p className="text-fog mt-5 text-lg">
+                Команда может быть известна собаке и оставаться недоступной в конкретном состоянии. Поэтому мы работаем с причинами, условиями и навыками одновременно.
+              </p>
             </ScrollReveal>
-            <ScrollReveal delay={1}>
-              <article className="p-6 rounded-3xl bg-white/5 border border-white/10 text-oat border-t-[4px] border-t-caramel">
-                <h3 className="text-white">Формируем гипотезы</h3>
-                <p>Определяем факторы, которые запускают и поддерживают поведение, включая соматический вклад.</p>
-              </article>
-            </ScrollReveal>
-            <ScrollReveal delay={2}>
-              <article className="p-6 rounded-3xl bg-white/5 border border-white/10 text-oat border-t-[4px] border-t-rose">
-                <h3 className="text-white">Меняем условия</h3>
-                <p>Снижаем перегрузку, выстраиваем дистанцию, восстановление и безопасное управление.</p>
-              </article>
-            </ScrollReveal>
-            <ScrollReveal delay={3}>
-              <article className="p-6 rounded-3xl bg-white/5 border border-white/10 text-oat border-t-[4px] border-t-ice">
-                <h3 className="text-white">Обучаем навыкам</h3>
-                <p>Дробим задачу, задаем измеримые критерии и корректируем план по реальной динамике.</p>
-              </article>
-            </ScrollReveal>
-          </div>
-        </div>
-      </section>
 
-      {/* ИНТЕРАКТИВНАЯ СХЕМА ПОДХОДА */}
-      <section className="py-[92px] mobile:py-[64px] bg-[radial-gradient(circle_at_0_50%,rgba(240,114,150,0.09),transparent_24rem),radial-gradient(circle_at_100%_20%,rgba(111,143,191,0.09),transparent_24rem),theme(colors.snow)]">
-        <div className="container">
-          <ScrollReveal className="max-w-[820px] mb-[42px]">
-            <span className="kicker">ИНТЕРАКТИВНАЯ СХЕМА ПОДХОДА</span>
-            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice">
-              Этапы остаются частью общего повествования
-            </h2>
-            <p className="text-xl text-matcha">
-              Нажмите на этап, чтобы увидеть, какие данные мы собираем и почему
-              работа не начинается с повышения требований к животному.
-            </p>
+            <ScrollReveal delay={1} className="tablet:w-full">
+              {/* Собранная визуальная формула */}
+              <div className="inline-flex flex-wrap items-center gap-1.5 p-2 bg-white/5 border border-white/10 rounded-[24px] backdrop-blur-sm tablet:w-full">
+                {['состояние', 'среда', 'нагрузка', 'восстановление', 'обучение'].map((word, i, arr) => (
+                  <div key={word} className="flex items-center gap-1.5">
+                    <span className="px-3.5 py-2 rounded-xl bg-white/10 text-[13px] font-[800] tracking-wide uppercase text-white shadow-sm">
+                      {word}
+                    </span>
+                    {i !== arr.length - 1 && <b className="text-caramel/70 text-lg px-1">+</b>}
+                  </div>
+                ))}
+              </div>
+            </ScrollReveal>
+          </div>
+
+          {/* Интерактивная схема */}
+          <ScrollReveal delay={2} className="mb-16">
+            <ApproachTabs />
           </ScrollReveal>
-          <ApproachTabs />
+
+          {/* 4 Карточки (Действия специалиста) */}
+          <div className="grid grid-cols-4 gap-5 tablet:grid-cols-2 mobile:grid-cols-1">
+            <ScrollReveal delay={0} className="flex">
+              <article className="p-7 rounded-[28px] bg-white/5 border border-white/10 text-oat relative overflow-hidden group">
+                <div className="absolute top-0 left-0 w-full h-1 bg-matcha transform origin-left scale-x-100 transition-transform group-hover:scale-x-100" />
+                <h3 className="text-white text-[20px] font-bold mb-3 mt-2">Собираем данные</h3>
+                <p className="text-[15px] leading-relaxed opacity-80">Анкета, видео, медицинские документы, режим, рацион, сон и динамика эпизодов.</p>
+              </article>
+            </ScrollReveal>
+            <ScrollReveal delay={1} className="flex">
+              <article className="p-7 rounded-[28px] bg-white/5 border border-white/10 text-oat relative overflow-hidden group">
+                <div className="absolute top-0 left-0 w-full h-1 bg-caramel transform origin-left scale-x-100 transition-transform group-hover:scale-x-100" />
+                <h3 className="text-white text-[20px] font-bold mb-3 mt-2">Строим гипотезы</h3>
+                <p className="text-[15px] leading-relaxed opacity-80">Определяем факторы, которые запускают и поддерживают поведение.</p>
+              </article>
+            </ScrollReveal>
+            <ScrollReveal delay={2} className="flex">
+              <article className="p-7 rounded-[28px] bg-white/5 border border-white/10 text-oat relative overflow-hidden group">
+                <div className="absolute top-0 left-0 w-full h-1 bg-rose transform origin-left scale-x-100 transition-transform group-hover:scale-x-100" />
+                <h3 className="text-white text-[20px] font-bold mb-3 mt-2">Меняем условия</h3>
+                <p className="text-[15px] leading-relaxed opacity-80">Снижаем перегрузку, выстраиваем дистанцию и безопасное управление.</p>
+              </article>
+            </ScrollReveal>
+            <ScrollReveal delay={3} className="flex">
+              <article className="p-7 rounded-[28px] bg-white/5 border border-white/10 text-oat relative overflow-hidden group">
+                <div className="absolute top-0 left-0 w-full h-1 bg-ice transform origin-left scale-x-100 transition-transform group-hover:scale-x-100" />
+                <h3 className="text-white text-[20px] font-bold mb-3 mt-2">Обучаем навыкам</h3>
+                <p className="text-[15px] leading-relaxed opacity-80">Дробим задачу, задаем измеримые критерии и корректируем план.</p>
+              </article>
+            </ScrollReveal>
+          </div>
+          
         </div>
       </section>
 

@@ -1,9 +1,9 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
-// Добавляем импорт иконки TG
 import { SiTelegram } from '@icons-pack/react-simple-icons'; 
 
 export function Header() {
@@ -28,19 +28,32 @@ export function Header() {
       ]
     },
     { path: '/professionals', label: 'Специалистам' },
-    { path: '/blog', label: 'Блог' }, // Переименовали Школу
+    { path: '/blog', label: 'Блог' }, 
   ];
 
   return (
     <header className="sticky top-0 z-40 bg-snow/92 backdrop-blur-md border-b border-forest/10 after:absolute after:inset-x-[8%] after:-bottom-[1px] after:h-[1px] after:bg-gradient-to-r after:from-transparent after:via-matcha after:to-transparent after:opacity-30">
       <div className="container flex items-center gap-[15px] min-h-[88px]">
-        <Link className="flex flex-col items-start gap-1 shrink-0 min-w-[210px]" href="/">
-          <span className="text-forest text-2xl font-[760] tracking-[0.025em] leading-none drop-shadow-sm">
-            БУСИДО-ПЁСИДО
-          </span>
-          <span className="text-[9px] uppercase tracking-[0.13em] text-coal/60 font-[650] mobile:hidden">
-            поведение · состояние · благополучие
-          </span>
+        
+        {/* Обновленный блок с логотипом и текстом */}
+        <Link className="flex items-center gap-3 shrink-0 min-w-[210px] group" href="/">
+          <div className="relative w-11 h-11 shrink-0 overflow-hidden transition-transform duration-300 group-hover:scale-105">
+            <Image 
+              src="/logo.png" 
+              alt="Бусидо-Пёсидо Лого" 
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
+          <div className="flex flex-col items-start gap-1">
+            <span className="text-forest text-2xl font-[760] tracking-[0.025em] leading-none drop-shadow-sm">
+              БУСИДО-ПЁСИДО
+            </span>
+            <span className="text-[9px] uppercase tracking-[0.13em] text-coal/60 font-[650] mobile:hidden">
+              поведение · состояние · благополучие
+            </span>
+          </div>
         </Link>
         
         <button 
@@ -91,7 +104,6 @@ export function Header() {
           })}
         </nav>
 
-        {/* Блок с кнопкой и соцсетью (ТГ) */}
         <div className="flex items-center gap-3 shrink-0 ml-auto mobile:hidden">
           <a 
             href="https://t.me/busidopesido" 

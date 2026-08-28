@@ -19,6 +19,8 @@ export interface CaseData {
   main_title: string;
   steps: CaseStep[];
   sort_order: number;
+  image_before?: string | null;
+  image_after?: string | null;
 }
 
 export function CaseInteractive({ initialCases }: { initialCases: CaseData[] }) {
@@ -131,6 +133,25 @@ export function CaseInteractive({ initialCases }: { initialCases: CaseData[] }) 
                     </div>
                   )}
                 </motion.div>
+                {/* Фотографии выводятся только на последнем шаге */}
+                {(activeStepIndex === activeCase.steps.length - 1) && (activeCase.image_before || activeCase.image_after) && (
+                  <div className="grid grid-cols-2 gap-4 mt-8 pt-8 border-t border-forest/10 max-sm:grid-cols-1">
+                    {activeCase.image_before && (
+                      <div className="flex flex-col gap-2.5">
+                        <span className="text-[12px] font-[900] uppercase tracking-wider text-coal/50">Ситуация до</span>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={activeCase.image_before} alt="Было" className="rounded-xl w-full h-auto object-cover aspect-video shadow-sm border border-forest/10" />
+                      </div>
+                    )}
+                    {activeCase.image_after && (
+                      <div className="flex flex-col gap-2.5">
+                        <span className={`text-[12px] font-[900] uppercase tracking-wider ${theme.text}`}>Результат работы</span>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={activeCase.image_after} alt="Стало" className="rounded-xl w-full h-auto object-cover aspect-video shadow-sm border border-forest/10" />
+                      </div>
+                    )}
+                  </div>
+                )}
               </AnimatePresence>
             ) : (
               <div className="text-coal/50">Данные этапа отсутствуют.</div>

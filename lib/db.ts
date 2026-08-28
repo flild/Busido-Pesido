@@ -107,7 +107,9 @@ CREATE TABLE IF NOT EXISTS specialists (
     tab_title TEXT NOT NULL,
     main_title TEXT NOT NULL,
     steps TEXT NOT NULL,
-    sort_order INTEGER DEFAULT 0
+    sort_order INTEGER DEFAULT 0,
+    image_before TEXT,
+    image_after TEXT
   );
 
   CREATE TABLE IF NOT EXISTS free_schedule (

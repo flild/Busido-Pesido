@@ -48,6 +48,10 @@ export async function saveCase(formData: FormData) {
   const main_title = (formData.get('main_title') as string)?.trim();
   const sort_order = parseInt(formData.get('sort_order') as string) || 0;
   const steps = formData.get('steps') as string;
+  
+  // Достаем фото
+  const image_before = (formData.get('image_before') as string)?.trim() || null;
+  const image_after = (formData.get('image_after') as string)?.trim() || null;
 
   if (!id || !theme || !tab_title || !main_title || !steps) {
     throw new Error('Заполните обязательные поля');
@@ -62,14 +66,14 @@ export async function saveCase(formData: FormData) {
   if (oldId) {
     db.prepare(`
       UPDATE cases 
-      SET id = ?, theme = ?, tab_title = ?, main_title = ?, steps = ?, sort_order = ?
+      SET id = ?, theme = ?, tab_title = ?, main_title = ?, steps = ?, sort_order = ?, image_before = ?, image_after = ?
       WHERE id = ?
-    `).run(id, theme, tab_title, main_title, steps, sort_order, oldId);
+    `).run(id, theme, tab_title, main_title, steps, sort_order, image_before, image_after, oldId);
   } else {
     db.prepare(`
-      INSERT INTO cases (id, theme, tab_title, main_title, steps, sort_order)
-      VALUES (?, ?, ?, ?, ?, ?)
-    `).run(id, theme, tab_title, main_title, steps, sort_order);
+      INSERT INTO cases (id, theme, tab_title, main_title, steps, sort_order, image_before, image_after)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(id, theme, tab_title, main_title, steps, sort_order, image_before, image_after);
   }
 
   revalidatePath('/admin/cases');

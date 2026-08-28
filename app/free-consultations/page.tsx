@@ -86,7 +86,7 @@ export default function FreeConsultationsPage() {
           <div>
             <ScrollReveal className="max-w-[820px] mb-[32px]">
               <span className="kicker">ФОРМАТ</span>
-              <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice text-coal">
+              <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-matcha">
                 Что входит
               </h2>
             </ScrollReveal>
@@ -138,7 +138,7 @@ export default function FreeConsultationsPage() {
         <div className="container">
           <ScrollReveal className="max-w-[820px] mb-[42px]">
             <span className="kicker text-white/80">ПРАВИЛА</span>
-            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice text-white">
+            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-matcha">
               Как распределяются места
             </h2>
           </ScrollReveal>
@@ -186,7 +186,7 @@ export default function FreeConsultationsPage() {
         <div className="container">
           <ScrollReveal className="max-w-[820px] mb-[42px] text-center mx-auto flex flex-col items-center">
             <span className="kicker">ЗАПИСЬ</span>
-            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice text-coal flex flex-col items-center">
+            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-matcha flex flex-col items-center">
               Онлайн-бронирование
             </h2>
             <p className="text-xl text-matcha mt-4 max-w-[600px]">

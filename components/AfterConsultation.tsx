@@ -22,7 +22,7 @@ export function AfterConsultation() {
         {/* Заголовок */}
         <ScrollReveal className="max-w-[820px] mb-[52px]">
           <span className="kicker">ПОСЛЕ КОНСУЛЬТАЦИИ</span>
-          <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice">
+          <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-matcha">
             У вас остаётся рабочая система
           </h2>
         </ScrollReveal>

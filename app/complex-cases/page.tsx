@@ -162,7 +162,7 @@ export default function ComplexCasesPage() {
           <ScrollReveal delay={1}>
             <div className="max-w-[820px] mb-[32px]">
               <span className="kicker">РАЗБОР ДОКУМЕНТОВ</span>
-              <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice text-coal">
+              <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-matcha">
                 Что входит
               </h2>
             </div>
@@ -194,7 +194,7 @@ export default function ComplexCasesPage() {
         <div className="container">
           <ScrollReveal className="max-w-[820px] mb-[52px]">
             <span className="kicker">ГРАНИЦЫ РАБОТЫ</span>
-            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice text-coal">
+            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-matcha">
               Когда я перенаправляю случай
             </h2>
           </ScrollReveal>

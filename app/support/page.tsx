@@ -187,7 +187,7 @@ export default function SupportPage() {
         <div className="container">
           <ScrollReveal className="max-w-[820px] mb-[52px]">
             <span className="kicker text-white/80">КАК УСТРОЕНА РАБОТА</span>
-            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice text-white">
+            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-matcha">
               Один цикл сопровождения
             </h2>
           </ScrollReveal>

@@ -63,7 +63,7 @@ export function FormatsSection({ formats }: FormatsSectionProps) {
       <div className="container">
         <ScrollReveal className="max-w-[820px] mb-[42px] max-md:mb-[32px]">
           <span className="kicker">ФОРМАТЫ РАБОТЫ</span>
-          <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice text-coal">
+          <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-matcha">
             Выберите формат работы
           </h2>
           <p className="text-xl max-md:text-[16px] text-matcha mt-4">

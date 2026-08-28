@@ -23,7 +23,7 @@ export default function SpecialistsPage() {
       <div className="container">
         <ScrollReveal className="max-w-[820px] mb-[64px]">
           <span className="kicker">КОМАНДА</span>
-          <h1 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice text-coal">
+          <h1 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-matcha">
             Наши специалисты
           </h1>
           <p className="text-xl text-matcha mt-4">

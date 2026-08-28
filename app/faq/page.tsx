@@ -97,7 +97,7 @@ export default function FaqPage() {
       <div className="container narrow">
         <ScrollReveal className="mb-12">
           <span className="kicker">БАЗА ЗНАНИЙ</span>
-          <h1 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice">
+          <h1 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-matcha">
             Ответы на частые вопросы
           </h1>
           <p className="text-xl text-matcha mt-6">

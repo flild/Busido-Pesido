@@ -110,7 +110,7 @@ export default function CatsPage() {
         <div className="container">
           <ScrollReveal className="max-w-[820px] mb-[52px]">
             <span className="kicker">С ЧЕМ Я РАБОТАЮ</span>
-            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice text-coal">
+            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-matcha">
               Запросы владельцев кошек
             </h2>
           </ScrollReveal>

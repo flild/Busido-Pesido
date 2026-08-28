@@ -113,7 +113,7 @@ export default function ProfessionalsPage() {
           <ScrollReveal delay={1}>
             <div className="max-w-[820px] mb-[32px]">
               <span className="kicker">ЧТО ПОДГОТОВИТЬ</span>
-              <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice text-coal">
+              <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-matcha">
                 Материалы случая
               </h2>
             </div>
@@ -143,7 +143,7 @@ export default function ProfessionalsPage() {
         <div className="container">
           <ScrollReveal className="max-w-[820px] mb-[52px]">
             <span className="kicker text-white/80">ФОКУС РАЗБОРА</span>
-            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice text-white">
+            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-matcha">
               Что мы пересобираем
             </h2>
           </ScrollReveal>

@@ -87,7 +87,7 @@ export function StateSlider() {
       <div>
         <div className="max-w-[820px] mb-[42px]">
           <span className="inline-block text-[12px] uppercase tracking-[0.14em] font-[650] text-forest mb-2">ИНТЕРАКТИВНАЯ ШКАЛА</span>
-          <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice text-coal">Насколько обучение доступно в текущем состоянии</h2>
+          <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-matcha">Насколько обучение доступно в текущем состоянии</h2>
           <p className="mt-4 text-matcha text-lg">Передвиньте шкалу. Она показывает, как меняются приоритеты работы по мере роста возбуждения и нагрузки.</p>
         </div>
 

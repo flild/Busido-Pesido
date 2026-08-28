@@ -236,7 +236,7 @@ export default function Home() {
             <div>
               <ScrollReveal className="max-w-[820px] mb-[42px]">
                 <span className="kicker">РУКОВОДИТЕЛЬ ПРОЕКТА</span>
-                <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice">
+                <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-matcha">
                   {dbMainSpecialist.short_bio}
                 </h2>
               </ScrollReveal>
@@ -277,7 +277,7 @@ export default function Home() {
         <div className="container">
           <ScrollReveal className="max-w-[820px] mb-[42px]">
             <span className="kicker">С ЧЕМ МЫ РАБОТАЕМ</span>
-            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice">
+            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-matcha">
               Когда поведение стало сложным для животного и семьи
             </h2>
           </ScrollReveal>
@@ -299,7 +299,7 @@ export default function Home() {
           <div className="grid grid-cols-[1fr_auto] tablet:grid-cols-1 gap-10 items-end mb-12">
             <ScrollReveal className="max-w-[700px]">
               <span className="kicker">МЕТОДОЛОГИЯ</span>
-              <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice">
+              <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-matcha">
                 Поведение складывается из нескольких систем
               </h2>
               <p className="text-fog mt-5 text-lg">
@@ -374,7 +374,7 @@ export default function Home() {
         <div className="container">
           <ScrollReveal className="max-w-[820px] mb-[42px]">
             <span className="kicker">НАВИГАТОР ЗАПРОСА</span>
-            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice">
+            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-matcha">
               Ответьте на вопросы и получите следующий шаг
             </h2>
             <p className="text-xl text-matcha">
@@ -391,7 +391,7 @@ export default function Home() {
           <div>
             <ScrollReveal className="max-w-[820px] mb-[42px]">
               <span className="kicker">ПОВЕДЕНИЕ И ЗДОРОВЬЕ</span>
-              <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice">
+              <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-matcha">
                 Когда сначала нужна диагностика
               </h2>
             </ScrollReveal>
@@ -438,7 +438,7 @@ export default function Home() {
         <div className="container">
           <ScrollReveal className="max-w-[820px] mb-[42px]">
             <span className="kicker">Примеры из практики</span>
-            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice">
+            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-matcha">
               От гипотезы к результату (До / После)
             </h2>
             <p className="text-xl text-matcha">
@@ -454,7 +454,7 @@ export default function Home() {
         <div className="container">
           <ScrollReveal className="max-w-[820px] mb-[42px]">
             <span className="kicker">ОТЗЫВЫ</span>
-            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice">
+            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-matcha">
               Более 150 историй владельцев
             </h2>
           </ScrollReveal>
@@ -493,7 +493,7 @@ export default function Home() {
         <div className="container relative z-10">
           <ScrollReveal className="max-w-[820px] mb-[42px]">
             <span className="kicker">БЛОГ И БИБЛИОТЕКА</span>
-            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice text-coal">
+            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-matcha">
               Практические материалы и статьи
             </h2>
             <p className="text-xl text-matcha mt-4">
@@ -512,7 +512,7 @@ export default function Home() {
         <div className="container narrow">
           <ScrollReveal className="max-w-[820px] mb-[42px]">
             <span className="kicker">FAQ</span>
-            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice">
+            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-matcha">
               Частые вопросы
             </h2>
           </ScrollReveal>

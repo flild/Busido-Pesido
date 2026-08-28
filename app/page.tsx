@@ -91,22 +91,23 @@ export default function Home() {
   const dbNavSteps = navRow ? JSON.parse(navRow.value) : [];
   const reviewsCount = dbReviews.length > 0 ? dbReviews.length : 150; 
 
+// 1. Оставляем только "горячие" вопросы для главной
   const faqData = [
     {
-      q: "Подойдёт ли консультация, если у животного уже есть ветеринарный врач?",
-      a: "Да. Мы работаем с поведенческой частью случая, анализируем документы и при необходимости формулируем вопросы для лечащего врача. Назначения вашего врача самостоятельно не отменяются.",
+      q: "С чем можно обратиться?",
+      a: "С любыми бытовыми и поведенческими проблемами: страхи, агрессия, нечистоплотность, тревога расставания, конфликты между питомцами, охрана ресурсов или трудности на прогулке.\nДаже если вам сложно назвать проблему одним словом, но вы видите, что животному стало тяжелее справляться с привычной жизнью — приходите, разберемся."
     },
     {
-      q: "Почему после консультации может понадобиться сопровождение?",
-      a: "Разовая консультация даёт гипотезу и план. Сопровождение нужно для регулярной оценки видео, изменения критериев и отслеживания состояния в динамике.",
+      q: "Как понять, какой формат работы мне нужен?",
+      a: "Вам не нужно выбирать формат наугад. Опишите вашу ситуацию в анкете, и мы сами подскажем, что подойдет лучше.\nЭто может быть разовая консультация, серия практических занятий или длительное онлайн-сопровождение. Всё зависит от того, насколько глубоко нужно погрузиться в среду животного и как часто потребуется корректировать план."
     },
     {
-      q: "Можете ли вы отказать в работе?",
-      a: "Да. Мы перенаправляем случай, когда сначала требуется экстренная ветеринарная помощь, очная диагностика или специалист другой квалификации.",
+      q: "Можно ли обратиться, если уже были укусы или другое опасное поведение?",
+      a: "Да, но мы начнем с жесткой техники безопасности.\nСначала разбираем контекст: кто пострадал, при каких обстоятельствах, насколько сильными были повреждения. Первым шагом мы выстраиваем менеджмент среды так, чтобы полностью исключить новые эпизоды. И только обеспечив безопасность людей и животного, переходим к коррекции самого поведения."
     },
     {
-      q: "Работаете ли вы только через еду?",
-      a: "Нет. Мы учитываем пищевую, игровую, социальную, исследовательскую и средовую мотивацию, а также выбор, безопасную дистанцию и доступ к восстановлению.",
+      q: "Что делать, если мы уже работали с другим специалистом, но проблема осталась?",
+      a: "Мы не заставляем начинать с чистого листа, если в этом нет смысла.\nМы проанализируем ваш прошлый опыт: что делали, как реагировало животное, почему прогресс остановился. Часто проблема решается не полной сменой курса, а точечной корректировкой критериев, дистанции или снижением фонового стресса."
     }
   ];
 
@@ -125,9 +126,23 @@ export default function Home() {
     }
   };
 
+  const jsonLdFaq = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqData.map(item => ({
+      "@type": "Question",
+      "name": item.q,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": item.a
+      }
+    }))
+  };
+
   return (
     <main>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdLocalBusiness) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdFaq) }} />
       
       {/* ГЕРОЙ-БЛОК */}
       <section className="relative overflow-hidden pt-[108px] pb-[74px] bg-[radial-gradient(circle_at_8%_22%,rgba(240,114,150,0.18),transparent_21rem),radial-gradient(circle_at_88%_12%,rgba(111,143,191,0.22),transparent_24rem),radial-gradient(circle_at_72%_86%,rgba(198,142,107,0.18),transparent_22rem),linear-gradient(145deg,theme(colors.snow),rgba(230,218,207,0.72)_48%,theme(colors.snow))] before:absolute before:w-[170px] before:h-[170px] before:rounded-full before:bg-gradient-to-br before:from-rose/70 before:to-berry/20 before:blur-[1px] before:animate-float-blob before:-left-[55px] before:top-[90px] before:pointer-events-none after:absolute after:w-[120px] after:h-[120px] after:rounded-full after:bg-gradient-to-br after:from-ice/60 after:to-matcha/20 after:blur-[1px] after:animate-float-blob after:right-[5%] after:-bottom-[42px] after:pointer-events-none after:[animation-delay:-4s]">
@@ -422,7 +437,7 @@ export default function Home() {
       <section className="py-[92px] mobile:py-[64px]">
         <div className="container">
           <ScrollReveal className="max-w-[820px] mb-[42px]">
-            <span className="kicker">КЕЙСЫ</span>
+            <span className="kicker">Примеры из практики</span>
             <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-gradient-to-r after:from-matcha after:via-caramel after:to-ice">
               От гипотезы к результату (До / После)
             </h2>
@@ -505,6 +520,11 @@ export default function Home() {
             {faqData.map((faq, i) => (
               <FaqItem key={i} question={faq.q} answer={faq.a} />
             ))}
+          </div>
+          <div className="mt-8 text-center">
+            <Link href="/faq" className="button button-ghost">
+              Читать все вопросы и ответы
+            </Link>
           </div>
         </div>
       </section>

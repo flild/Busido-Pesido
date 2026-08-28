@@ -55,7 +55,11 @@ export function FaqItem({ question, answer }: FaqItemProps) {
             className="overflow-hidden" // Важно для обрезки текста при схлопывании высоты
           >
             {/* Добавили pt-4 вместо mt-4, чтобы margin не выпадал из расчета высоты Framer Motion */}
-            <p className="pt-4 text-matcha">{answer}</p>
+            <div className="pt-4 text-matcha space-y-3">
+              {answer.split('\n').map((paragraph, idx) => (
+                <p key={idx}>{paragraph}</p>
+              ))}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

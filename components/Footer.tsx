@@ -5,7 +5,7 @@ import { SiTelegram } from '@icons-pack/react-simple-icons';
 
 export function Footer() {
   return (
-    <footer className="relative bg-coal text-white pt-[70px] pb-6 after:absolute after:inset-x-0 after:top-0 after:h-[7px] after:bg-gradient-dopamine">
+    <footer className="relative bg-coal text-white pt-[70px] pb-6 after:absolute after:inset-x-0 after:top-0 after:h-[7px] after:bg-rose">
       <div className="container grid grid-cols-[1.6fr_0.7fr_0.7fr] gap-12 tablet:grid-cols-1">
         
         {/* Логотип и описание */}

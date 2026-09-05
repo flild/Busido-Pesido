@@ -88,7 +88,7 @@ export default function SupportPage() {
         <div className="container relative z-10">
           <ScrollReveal>
             <span className="eyebrow mb-4">СОПРОВОЖДЕНИЕ</span>
-            <h1 className="relative after:block after:w-[min(270px,48%)] after:h-[9px] after:mt-5 after:rounded-full after:bg-gradient-dopamine after:opacity-90 max-w-[820px]">
+            <h1 className="relative after:block after:w-[min(270px,48%)] after:h-[9px] after:mt-5 after:rounded-full after:bg-rose after:opacity-90 max-w-[820px]">
               План меняется вместе с животным
             </h1>
             <p className="text-xl text-matcha max-w-[800px] mt-6 leading-relaxed">

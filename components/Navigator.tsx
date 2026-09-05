@@ -163,7 +163,7 @@ export function Navigator({ initialSteps, formats }: { initialSteps: GraphData |
       
       <aside className="p-[34px] bg-[radial-gradient(circle_at_86%_12%,rgba(240,114,150,0.26),transparent_28%),linear-gradient(150deg,theme(colors.forest),theme(colors.soldier))] text-white flex flex-col">
         <div className="h-[7px] bg-white/15 rounded-full overflow-hidden shrink-0">
-          <i className="block h-full bg-gradient-dopamine transition-all duration-500 ease-out" style={{ width: `${progress}%` }}></i>
+          <i className="block h-full bg-rose transition-all duration-500 ease-out" style={{ width: `${progress}%` }}></i>
         </div>
         <small className="block mt-4 text-oat font-semibold text-sm shrink-0">
           {isResult ? "Готово" : `Шаг ${currentStepNum}`}

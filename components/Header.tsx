@@ -70,7 +70,7 @@ export function Header() {
               const isSubActive = link.subLinks.some(sub => isActive(sub.path));
               return (
                 <div key={link.label} className="relative group mobile:w-full">
-                  <button className={`w-full flex items-center justify-between gap-1 px-2 py-2 text-[11px] font-[650] whitespace-nowrap transition-colors hover:text-coal relative after:absolute after:inset-x-3 after:-bottom-0.5 after:h-0.5 after:rounded-full after:bg-gradient-dopamine after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-200 mobile:after:hidden ${isSubActive ? 'text-coal after:scale-x-100' : 'text-matcha'}`}>
+                  <button className={`w-full flex items-center justify-between gap-1 px-2 py-2 text-[11px] font-[650] whitespace-nowrap transition-colors hover:text-coal relative after:absolute after:inset-x-3 after:-bottom-0.5 after:h-0.5 after:rounded-full after:bg-rose after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-200 mobile:after:hidden ${isSubActive ? 'text-coal after:scale-x-100' : 'text-matcha'}`}>
                     {link.label} 
                     <ChevronDown size={12} className="opacity-60 group-hover:rotate-180 transition-transform duration-300" />
                   </button>
@@ -96,7 +96,7 @@ export function Header() {
                 key={link.path} 
                 href={link.path} 
                 onClick={() => setIsOpen(false)}
-                className={`relative px-2 py-2 text-[11px] font-[650] whitespace-nowrap transition-colors hover:text-coal after:absolute after:inset-x-3 after:-bottom-0.5 after:h-0.5 after:rounded-full after:bg-gradient-dopamine after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-200 mobile:after:hidden ${isActive(link.path) ? 'text-coal after:scale-x-100' : 'text-matcha'}`}
+                className={`relative px-2 py-2 text-[11px] font-[650] whitespace-nowrap transition-colors hover:text-coal after:absolute after:inset-x-3 after:-bottom-0.5 after:h-0.5 after:rounded-full after:bg-rose after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-200 mobile:after:hidden ${isActive(link.path) ? 'text-coal after:scale-x-100' : 'text-matcha'}`}
               >
                 {link.label}
               </Link>

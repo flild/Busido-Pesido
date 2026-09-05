@@ -149,7 +149,7 @@ export default function Home() {
         <div className="container grid grid-cols-[1.05fr_0.95fr] gap-[78px] items-center mobile:grid-cols-1 mobile:gap-6 relative z-10">
           <div>
             <span className="eyebrow">Ветеринарное поведение · Этология · Обучение</span>
-            <h1 className="relative after:block after:w-[min(270px,48%)] after:h-[9px] after:mt-5 after:rounded-full after:bg-gradient-dopamine after:opacity-90">
+            <h1 className="relative after:block after:w-[min(270px,48%)] after:h-[9px] after:mt-5 after:rounded-full after:bg-rose after:opacity-90">
               Поведение животного начинается с состояния
             </h1>
             <p className="text-xl text-matcha max-w-[800px]">
@@ -167,7 +167,7 @@ export default function Home() {
           </div>
           
           <div className="min-h-[380px] flex items-center justify-center relative">
-            <span className="absolute z-10 px-4 py-3 rounded-full text-white font-black shadow-xl bg-gradient-rose top-5 right-0 rotate-3">Сначала состояние</span>
+            <span className="absolute z-10 px-4 py-3 rounded-full text-white font-black shadow-xl bg-rose top-5 right-0 rotate-3">Сначала состояние</span>
             <span className="absolute z-10 px-4 py-3 rounded-full text-white font-black shadow-xl bg-gradient-to-br from-ice to-matcha bottom-[50px] -left-2.5 -rotate-3">Контекст важен</span>
             
             <TiltCard 
@@ -186,21 +186,21 @@ export default function Home() {
       <section className="pb-10">
         <div className="container grid grid-cols-3 gap-4 mobile:grid-cols-1">
           <ScrollReveal delay={0}>
-            <article className="p-7 rounded-[28px] text-white min-h-[245px] relative overflow-hidden transition-all duration-300 hover:-translate-y-2 bg-gradient-green">
+            <article className="p-7 rounded-[28px] text-white min-h-[245px] relative overflow-hidden transition-all duration-300 hover:-translate-y-2 bg-matcha">
               <span className="font-bold">01</span>
               <h3 className="text-[30px] mt-10 mb-3.5">Сначала состояние</h3>
               <p>Оцениваем сон, боль, зуд, работу ЖКТ, сенсорную нагрузку, медикаментозный фон и способность восстанавливаться.</p>
             </article>
           </ScrollReveal>
           <ScrollReveal delay={1}>
-            <article className="p-7 rounded-[28px] text-white min-h-[245px] relative overflow-hidden transition-all duration-300 hover:-translate-y-2 bg-gradient-warm">
+            <article className="p-7 rounded-[28px] text-white min-h-[245px] relative overflow-hidden transition-all duration-300 hover:-translate-y-2 bg-oat">
               <span className="font-bold text-espresso">02</span>
               <h3 className="text-[30px] mt-10 mb-3.5 text-espresso">Затем среда</h3>
               <p className="text-espresso">Ищем факторы, которые ежедневно поддерживают напряжение, возбуждение, избегание или конфликт.</p>
             </article>
           </ScrollReveal>
           <ScrollReveal delay={2}>
-            <article className="p-7 rounded-[28px] text-white min-h-[245px] relative overflow-hidden transition-all duration-300 hover:-translate-y-2 bg-gradient-to-br from-ice via-berry to-rose">
+            <article className="p-7 rounded-[28px] text-white min-h-[245px] relative overflow-hidden transition-all duration-300 hover:-translate-y-2 bg-berry">
               <span className="font-bold">03</span>
               <h3 className="text-[30px] mt-10 mb-3.5">После — обучение</h3>
               <p>Подбираем навыки, доступные конкретному животному и сохраняющиеся в реальной жизни.</p>
@@ -464,7 +464,7 @@ export default function Home() {
       </section>
 
       {/* БЕСПЛАТНЫЕ КОНСУЛЬТАЦИИ */}
-      <section className="py-[92px] mobile:py-[64px] relative overflow-hidden bg-[radial-gradient(circle_at_10%_12%,rgba(240,114,150,0.32),transparent_22rem),radial-gradient(circle_at_90%_90%,rgba(111,143,191,0.28),transparent_23rem),linear-gradient(120deg,theme(colors.forest),theme(colors.soldier))] text-white after:absolute after:w-[190px] after:h-[190px] after:right-[3%] after:-top-[80px] after:rounded-full after:bg-gradient-rose after:opacity-45">
+      <section className="py-[92px] mobile:py-[64px] relative overflow-hidden bg-[radial-gradient(circle_at_10%_12%,rgba(240,114,150,0.32),transparent_22rem),radial-gradient(circle_at_90%_90%,rgba(111,143,191,0.28),transparent_23rem),linear-gradient(120deg,theme(colors.forest),theme(colors.soldier))] text-white after:absolute after:w-[190px] after:h-[190px] after:right-[3%] after:-top-[80px] after:rounded-full after:bg-rose after:opacity-45">
         <div className="container relative z-10">
           <div className="grid grid-cols-[1.25fr_0.55fr_auto] gap-9 items-center mobile:grid-cols-1">
             <div>
@@ -531,7 +531,7 @@ export default function Home() {
 
       {/* CTA */}
       <section className="py-[92px] mobile:py-[64px]">
-        <div className="container flex items-center justify-between gap-8 p-10 mobile:p-7 rounded-[38px] shadow-2xl bg-[radial-gradient(circle_at_8%_12%,rgba(240,114,150,0.2),transparent_20rem),radial-gradient(circle_at_92%_88%,rgba(111,143,191,0.2),transparent_22rem),linear-gradient(135deg,theme(colors.snow),theme(colors.fog)_48%,rgba(216,211,179,0.75))] relative overflow-hidden after:absolute after:inset-x-0 after:bottom-0 after:h-[7px] after:bg-gradient-dopamine mobile:flex-col mobile:items-start">
+        <div className="container flex items-center justify-between gap-8 p-10 mobile:p-7 rounded-[38px] shadow-2xl bg-[radial-gradient(circle_at_8%_12%,rgba(240,114,150,0.2),transparent_20rem),radial-gradient(circle_at_92%_88%,rgba(111,143,191,0.2),transparent_22rem),linear-gradient(135deg,theme(colors.snow),theme(colors.fog)_48%,rgba(216,211,179,0.75))] relative overflow-hidden after:absolute after:inset-x-0 after:bottom-0 after:h-[7px] after:bg-rose mobile:flex-col mobile:items-start">
           <div className="relative z-10">
             <span className="kicker">НАЧАТЬ РАБОТУ</span>
             <h2 className="text-[44px] mobile:text-[34px] max-w-[16ch] leading-[1.05] after:hidden">

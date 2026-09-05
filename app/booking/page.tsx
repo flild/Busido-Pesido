@@ -49,7 +49,7 @@ export default async function BookingPage({
       <section className="pt-[108px] pb-[74px] bg-[linear-gradient(135deg,rgba(111,143,191,0.24),theme(colors.snow)_52%,rgba(198,142,107,0.26))] relative overflow-hidden">
         <div className="container relative z-10">
           <span className="eyebrow mb-4">ЗАПИСЬ</span>
-          <h1 className="relative after:block after:w-[min(270px,48%)] after:h-[9px] after:mt-5 after:rounded-full after:bg-gradient-dopamine after:opacity-90 max-w-[820px] text-coal">
+          <h1 className="relative after:block after:w-[min(270px,48%)] after:h-[9px] after:mt-5 after:rounded-full after:bg-rose after:opacity-90 max-w-[820px] text-coal">
             Сначала забронируйте время, затем заполните анкету
           </h1>
           <p className="text-xl text-matcha max-w-[800px] mt-6 leading-relaxed">

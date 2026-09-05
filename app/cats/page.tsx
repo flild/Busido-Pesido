@@ -72,7 +72,7 @@ export default function CatsPage() {
         <div className="container relative z-10">
           <ScrollReveal>
             <span className="eyebrow mb-4">ПОВЕДЕНИЕ КОШЕК</span>
-            <h1 className="relative after:block after:w-[min(270px,48%)] after:h-[9px] after:mt-5 after:rounded-full after:bg-gradient-dopamine after:opacity-90 max-w-[820px]">
+            <h1 className="relative after:block after:w-[min(270px,48%)] after:h-[9px] after:mt-5 after:rounded-full after:bg-rose after:opacity-90 max-w-[820px]">
               Кошка управляет дистанцией, ресурсами и темпом контакта
             </h1>
             <p className="text-xl text-matcha max-w-[800px] mt-6 leading-relaxed">
@@ -145,7 +145,7 @@ export default function CatsPage() {
       <section className="py-[92px] max-md:py-[64px]">
         <div className="container">
           <ScrollReveal>
-            <div className="flex items-center justify-between gap-8 p-10 max-md:p-7 rounded-[38px] shadow-2xl bg-[radial-gradient(circle_at_8%_12%,rgba(240,114,150,0.2),transparent_20rem),radial-gradient(circle_at_92%_88%,rgba(111,143,191,0.2),transparent_22rem),linear-gradient(135deg,theme(colors.snow),theme(colors.fog)_48%,rgba(216,211,179,0.75))] relative overflow-hidden after:absolute after:inset-x-0 after:bottom-0 after:h-[7px] after:bg-gradient-dopamine max-md:flex-col max-md:items-start">
+            <div className="flex items-center justify-between gap-8 p-10 max-md:p-7 rounded-[38px] shadow-2xl bg-[radial-gradient(circle_at_8%_12%,rgba(240,114,150,0.2),transparent_20rem),radial-gradient(circle_at_92%_88%,rgba(111,143,191,0.2),transparent_22rem),linear-gradient(135deg,theme(colors.snow),theme(colors.fog)_48%,rgba(216,211,179,0.75))] relative overflow-hidden after:absolute after:inset-x-0 after:bottom-0 after:h-[7px] after:bg-rose max-md:flex-col max-md:items-start">
               <div className="relative z-10">
                 <span className="kicker">КОНСУЛЬТАЦИЯ</span>
                 <h2 className="text-[44px] max-md:text-[34px] max-w-[16ch] leading-[1.05] font-bold text-coal mt-4 mb-4">

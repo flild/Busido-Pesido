@@ -86,7 +86,7 @@ export default function ServicesPage() {
       <section className="pt-[108px] pb-[74px] bg-[radial-gradient(circle_at_15%_50%,rgba(198,142,107,0.12),transparent_25rem),radial-gradient(circle_at_85%_30%,rgba(111,143,191,0.15),transparent_25rem),linear-gradient(135deg,theme(colors.snow),theme(colors.fog)_75%)] relative overflow-hidden">
         <div className="container relative z-10">
           <span className="eyebrow mb-4">УСЛУГИ И ЦЕНЫ</span>
-          <h1 className="relative after:block after:w-[min(270px,48%)] after:h-[9px] after:mt-5 after:rounded-full after:bg-gradient-dopamine after:opacity-90 max-w-[820px]">
+          <h1 className="relative after:block after:w-[min(270px,48%)] after:h-[9px] after:mt-5 after:rounded-full after:bg-rose after:opacity-90 max-w-[820px]">
             Формат определяется задачей, объёмом данных и необходимой поддержкой
           </h1>
           <p className="text-xl text-matcha max-w-[800px] mt-6">

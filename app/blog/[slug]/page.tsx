@@ -129,7 +129,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             <span className="eyebrow m-0 border-forest/10">{article.tag}</span>
           </div>
           
-          <h1 className="text-[48px] max-md:text-[34px] font-bold leading-[1.1] text-coal mb-8 relative after:block after:w-[120px] after:h-[6px] after:mt-8 after:rounded-full after:bg-gradient-dopamine after:opacity-90">
+          <h1 className="text-[48px] max-md:text-[34px] font-bold leading-[1.1] text-coal mb-8 relative after:block after:w-[120px] after:h-[6px] after:mt-8 after:rounded-full after:bg-rose after:opacity-90">
             {article.title}
           </h1>
 

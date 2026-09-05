@@ -74,7 +74,7 @@ export default function ProfessionalsPage() {
         <div className="container relative z-10">
           <ScrollReveal>
             <span className="eyebrow mb-4 bg-white/10 border-white/20 text-white shadow-none">СПЕЦИАЛИСТАМ</span>
-            <h1 className="relative after:block after:w-[min(270px,48%)] after:h-[9px] after:mt-5 after:rounded-full after:bg-gradient-dopamine after:opacity-90 max-w-[900px] text-white">
+            <h1 className="relative after:block after:w-[min(270px,48%)] after:h-[9px] after:mt-5 after:rounded-full after:bg-rose after:opacity-90 max-w-[900px] text-white">
               Профессиональный разбор случая без сведения работы к одному упражнению
             </h1>
             <p className="text-xl text-oat max-w-[800px] mt-6 leading-relaxed font-medium">

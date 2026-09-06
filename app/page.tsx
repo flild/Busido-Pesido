@@ -65,7 +65,7 @@ export default function Home() {
       WHERE status = 'published' AND id NOT IN (${placeholders})
       ORDER BY (reads_count * 2 + views) DESC 
       LIMIT 1
-    `).all(...freshIds) as any[];
+    `).all(...freshIds) as any[]; 
   } else {
     popularArticles = db.prepare(`
       SELECT id, slug, category, tag, title, summary, main_image 
@@ -363,7 +363,7 @@ export default function Home() {
       </section>
 
       {/* ИНТЕРАКТИВНАЯ ШКАЛА (STATE LAB) */}
-      <section className="py-[92px] mobile:py-[64px] bg-[linear-gradient(135deg,rgba(216,211,179,0.42),rgba(247,243,239,0.92)_42%,rgba(111,143,191,0.13))]">
+      <section className="py-[92px] mobile:py-[64px] bg-oat/30">
         <div className="container grid grid-cols-[1.05fr_0.95fr] gap-16 items-center tablet:grid-cols-1">
           <StateSlider />
         </div>

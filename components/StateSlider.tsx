@@ -32,7 +32,8 @@ const STATE_ZONES = [
     title: "Главная задача — сохранить спокойное состояние", 
     text: "Подойдут сон, свободное исследование, спокойный контакт и отсутствие новых требований.", 
     priority: "сон · безопасность · предсказуемость", 
-    bg: "radial-gradient(circle at 80% 10%,rgba(216,211,179,.28),transparent 27%),linear-gradient(145deg,#2F3F17,#1E2B0E)", 
+    bg: "#1E2B0E", 
+    accent: "bg-matcha",
     badgeText: "text-oat", 
     badgeBg: "bg-white/5 border-white/10" 
   },
@@ -42,7 +43,8 @@ const STATE_ZONES = [
     title: "Доступны короткие и понятные задачи", 
     text: "Можно обучать, сохраняя высокую частоту подкрепления, небольшие шаги и возможность сделать паузу.", 
     priority: "ясность · короткая серия · восстановление", 
-    bg: "radial-gradient(circle at 80% 10%,rgba(111,143,191,.24),transparent 27%),radial-gradient(circle at 12% 88%,rgba(198,142,107,.24),transparent 29%),linear-gradient(145deg,#1E2B0E,#141414)", 
+    bg: "#182315", 
+    accent: "bg-ice",
     badgeText: "text-ice", 
     badgeBg: "bg-ice/10 border-ice/20" 
   },
@@ -52,7 +54,8 @@ const STATE_ZONES = [
     title: "Сначала снижаем сложность и увеличиваем дистанцию", 
     text: "Формальные задачи становятся менее надёжными. Приоритетом становятся управление, движение, дистанция и выход из ситуации.", 
     priority: "дистанция · упрощение · прекращение серии", 
-    bg: "radial-gradient(circle at 80% 10%,rgba(240,114,150,.31),transparent 30%),linear-gradient(145deg,#571F0B,#141414)", 
+    bg: "#3E1E12", 
+    accent: "bg-caramel",
     badgeText: "text-caramel", 
     badgeBg: "bg-caramel/10 border-caramel/20" 
   },
@@ -62,7 +65,8 @@ const STATE_ZONES = [
     title: "Обучение временно недоступно", 
     text: "Нужны безопасность, прекращение воздействия, выход из контекста и последующее восстановление. Проверка навыка откладывается.", 
     priority: "безопасность · выход · восстановление", 
-    bg: "radial-gradient(circle at 80% 10%,rgba(225,77,117,.38),transparent 31%),radial-gradient(circle at 12% 88%,rgba(111,143,191,.22),transparent 29%),linear-gradient(145deg,#141414,#571F0B)", 
+    bg: "#4A1616", 
+    accent: "bg-rose",
     badgeText: "text-rose", 
     badgeBg: "bg-rose/10 border-rose/20" 
   }
@@ -101,7 +105,7 @@ export function StateSlider() {
           <div className="relative w-full h-10 flex items-center group">
             <div className="absolute w-full h-3 bg-fog/50 rounded-full overflow-hidden inset-y-0 my-auto pointer-events-none">
               <motion.div
-                className="h-full bg-gradient-to-r from-matcha via-caramel to-rose"
+                className={`h-full ${data.accent} transition-colors duration-200`}
                 animate={{ width: `${value}%` }}
                 transition={{ type: 'spring', bounce: 0, duration: 0.25 }}
               />
@@ -151,7 +155,7 @@ export function StateSlider() {
       <TiltCard 
         className="min-h-[500px] rounded-[42px] text-white shadow-[0_35px_90px_rgba(30,43,14,0.24)] transition-all duration-300 ease-out transform-gpu preserve-3d flex flex-col relative overflow-hidden" 
       >
-        {/* Плавный Crossfade фонов */}
+        {/* Плавный Crossfade сплошных фонов */}
         <AnimatePresence>
           <motion.div
             key={data.label}
@@ -160,17 +164,17 @@ export function StateSlider() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
             className="absolute inset-0 z-0"
-            style={{ background: data.bg }}
+            style={{ backgroundColor: data.bg }}
           />
         </AnimatePresence>
 
         <div className="relative z-10 p-10 max-md:p-7 flex flex-col h-full flex-1">
-          {/* Вращается ТОЛЬКО фон с кругами */}
+          {/* Сплошной вращающийся круг без градиента */}
           <div className="relative w-[190px] h-[190px] max-md:w-[155px] max-md:h-[155px] mx-auto mb-7 grid place-items-center shrink-0">
             <motion.div 
               animate={{ rotate: value * 1.5, scale: 1 + value / 400 }}
               transition={{ type: 'spring', bounce: 0.2 }}
-              className="absolute inset-0 rounded-full bg-[conic-gradient(var(--matcha),var(--caramel),var(--rose),var(--ice),var(--matcha))] shadow-[0_20px_50px_rgba(0,0,0,0.24)]"
+              className={`absolute inset-0 rounded-full ${data.accent} shadow-[0_20px_50px_rgba(0,0,0,0.24)] transition-colors duration-300`}
             >
               <div className="absolute inset-[15px] rounded-full bg-coal"></div>
               <i className="absolute inset-[-17px] rounded-full border border-white/20"></i>

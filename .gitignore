@@ -105,7 +105,7 @@ data/*.db-wal
 data/*.db-shm
 
 # Пользовательские загрузки
-public/uploads/*
+public/*
 !public/uploads/.gitkeep
 
 *.db-*

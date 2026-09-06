@@ -98,8 +98,16 @@ evals/experiments/
 evals/results/
 evals/agent-results.json
 # SQLite
-*.db
-*.sqlite*
+# База данных SQLite
+data/sqlite.db*
+data/*.db
+data/*.db-wal
+data/*.db-shm
+
+# Пользовательские загрузки
+public/uploads/*
+!public/uploads/.gitkeep
+
 *.db-*
 code.txt
 правки.md

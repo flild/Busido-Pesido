@@ -3,7 +3,6 @@ import { ToastProvider } from "@/components/Toast";
 import { ModalProvider } from "@/components/Modal";
 import "./globals.css";
 import { ReadingProgress } from "@/components/ReadingProgress";
-import { UtilityBar } from "@/components/UtilityBar";
 import { PaletteStripe } from "@/components/PaletteStripe";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";

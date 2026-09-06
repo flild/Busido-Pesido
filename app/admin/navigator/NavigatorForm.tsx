@@ -21,7 +21,6 @@ import {
   Node,
 } from '@xyflow/react';
 
-// @ts-expect-error
 import '@xyflow/react/dist/style.css'; // Обязательные стили либы
 
 export interface ServiceFormat {

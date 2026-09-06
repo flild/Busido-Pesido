@@ -442,7 +442,7 @@ export default function Home() {
               От гипотезы к результату (До / После)
             </h2>
             <p className="text-xl text-matcha">
-              Мы показываем не только успешный исход, но и то, какие конкретные изменения в среде и обучении помогли снизить остроту проблемы.
+              Мы показываем успешный исход и то, какие конкретно изменения в среде и обучении помогли снизить остроту проблемы.
             </p>
           </ScrollReveal>
           <CaseInteractive initialCases={dbCases} />
@@ -473,7 +473,7 @@ export default function Home() {
                 Онлайн-консультации
               </h2>
               <p className="text-lg text-white/80 max-w-[500px]">
-                Ежедневно открываем места. Одно животное, один запрос и 30–40 минут предметной работы с нашим специалистом.
+                Ежедневно открываем места. Один питомец, один основной запрос и 30–40 минут предметной работы с нашим специалистом.
               </p>
             </div>
             <div className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 items-baseline border-l border-white/20 pl-8 max-md:border-none max-md:pl-0">

@@ -154,14 +154,13 @@ export default function Home() {
           fill="currentColor"
           aria-hidden="true"
         >
-          {/* Пальцы */}
-          <ellipse cx="20" cy="48" rx="8" ry="12.5" transform="rotate(-30 20 48)" />
-          <ellipse cx="37" cy="34" rx="8.5" ry="14" transform="rotate(-8 37 34)" />
-          <ellipse cx="63" cy="34" rx="8.5" ry="14" transform="rotate(8 63 34)" />
-          <ellipse cx="80" cy="48" rx="8" ry="12.5" transform="rotate(30 80 48)" />
-
-          {/* Основная подушечка */}
-          <path d="M 50 50 C 62 50 74 56 78 66 C 83 77 76 87 64 87 C 56 87 53 81 50 81 C 47 81 44 87 36 87 C 24 87 17 77 22 66 C 26 56 38 50 50 50 Z" />
+          {/* Пальцы собаки: овальные, средние два вытянуты вперед */}
+          <ellipse cx="22" cy="38" rx="8" ry="13" transform="rotate(-28 22 38)" />
+          <ellipse cx="40" cy="22" rx="8.5" ry="14.5" transform="rotate(-8 40 22)" />
+          <ellipse cx="60" cy="22" rx="8.5" ry="14.5" transform="rotate(8 60 22)" />
+          <ellipse cx="78" cy="38" rx="8" ry="13" transform="rotate(28 78 38)" />
+          {/* Подушечка собаки: щитовидная форма с характерной выемкой снизу */}
+          <path d="M 50 44 C 38 44 24 55 24 70 C 24 82 34 88 44 85 C 47 84 49 79 50 79 C 51 79 53 84 56 85 C 66 88 76 82 76 70 C 76 55 62 44 50 44 Z" />
         </svg>
 
         {/* 🐈 Кошачья лапа (как слева на картинке: веерные овалы, без когтей) */}

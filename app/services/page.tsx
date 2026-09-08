@@ -90,8 +90,7 @@ export default function ServicesPage() {
             Формат определяется задачей, объёмом данных и необходимой поддержкой
           </h1>
           <p className="text-xl text-matcha max-w-[800px] mt-6">
-            Базовая стоимость каждого формата включает работу с одним животным.
-            Для двух и более животных объём и стоимость согласуются после анкеты.
+            Базовая стоимость каждого формата рассчитана на работу с одним животным. Если в разборе участвуют несколько животных, стоимость зависит от объёма работы.
           </p>
         </div>
       </section>
@@ -99,27 +98,66 @@ export default function ServicesPage() {
       <section className="py-[92px] max-md:py-[64px]">
         <div className="container">
           
-          {/* Информационный блок с тематическими акцентами */}
-          <div className="grid grid-cols-3 max-lg:grid-cols-1 gap-[18px]">
-            <article className="p-7 rounded-[28px] bg-rose/5 border border-rose/20 shadow-sm relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-rose/10 rounded-bl-full -z-10" />
-              <strong className="block text-[20px] font-black text-rose mb-3">Срочный формат</strong>
-              <p className="text-coal/80 leading-relaxed text-[15px]">
-                Наценка +50% применяется только к разовым форматам и зависит от доступности ближайшего времени. К сопровождению срочная наценка не применяется.
-              </p>
-            </article>
-            <article className="p-7 rounded-[28px] bg-matcha/5 border border-matcha/20 shadow-sm relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-matcha/10 rounded-bl-full -z-10" />
-              <strong className="block text-[20px] font-black text-matcha mb-3">Приюты и волонтёры</strong>
-              <p className="text-coal/80 leading-relaxed text-[15px]">
-                Предусматриваются льготные условия. Ориентир — скидка около 20%; окончательный размер фиксируется после расчёта формата.
-              </p>
-            </article>
-            <article className="p-7 rounded-[28px] bg-caramel/5 border border-caramel/20 shadow-sm relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-caramel/10 rounded-bl-full -z-10" />
-              <strong className="block text-[20px] font-black text-caramel mb-3">Приоритет</strong>
-              <p className="text-coal/80 leading-relaxed text-[15px]">
-                Запрос передан на приоритетное рассмотрение. Специалист ознакомится с ним в ближайшее время и свяжется для согласования.
+      {/* Информационный блок с тематическими акцентами */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-[18px]">
+            {/* Левая колонка: 2 компактных блока в стек */}
+            <div className="lg:col-span-5 flex flex-col gap-[18px]">
+              {/* Срочный формат */}
+              <article className="p-6 rounded-[28px] bg-rose/5 border border-rose/20 shadow-sm relative overflow-hidden flex-1 flex flex-col justify-between">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-rose/10 rounded-bl-full -z-10" />
+                <div>
+                  <strong className="block text-[19px] font-black text-rose mb-2">Срочный формат</strong>
+                  <p className="text-coal/80 leading-relaxed text-[14px]">
+                    Если консультация нужна в ближайшее доступное время вне стандартной записи, к стоимости разового формата применяется наценка <strong className="text-coal font-bold">+50%</strong>.
+                  </p>
+                </div>
+                <p className="text-coal/60 leading-relaxed text-[12px] pt-3 mt-3 border-t border-rose/15">
+                  На сопровождение срочная наценка не распространяется.
+                </p>
+              </article>
+
+              {/* Приюты и волонтёры */}
+              <article className="p-6 rounded-[28px] bg-matcha/5 border border-matcha/20 shadow-sm relative overflow-hidden flex-1 flex flex-col justify-between">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-matcha/10 rounded-bl-full -z-10" />
+                <div>
+                  <strong className="block text-[19px] font-black text-matcha mb-2">Приюты и волонтёры</strong>
+                  <p className="text-coal/80 leading-relaxed text-[14px]">
+                    Для приютов, кураторов и волонтёрских проектов предусмотрены <strong className="text-coal font-bold">льготные условия</strong>.
+                  </p>
+                </div>
+                <p className="text-coal/60 leading-relaxed text-[12px] pt-3 mt-3 border-t border-matcha/15">
+                  Формат работы и окончательная стоимость определяются индивидуально после знакомства с запросом.
+                </p>
+              </article>
+            </div>
+
+            {/* Правая колонка: детальный блок на всю высоту */}
+            <article className="lg:col-span-7 p-7 rounded-[28px] bg-caramel/5 border border-caramel/20 shadow-sm relative overflow-hidden flex flex-col justify-between">
+              <div className="absolute top-0 right-0 w-28 h-28 bg-caramel/10 rounded-bl-full -z-10" />
+              <div>
+                <strong className="block text-[20px] font-black text-caramel mb-2">Несколько животных</strong>
+                <p className="text-coal/80 leading-relaxed text-[14px] mb-3">
+                  Базовая стоимость рассчитана на работу с <strong className="text-coal font-bold">одним животным</strong>.
+                </p>
+
+                <div className="grid gap-2 my-3 text-[14px]">
+                  <div className="px-3.5 py-2.5 rounded-xl bg-white/70 border border-caramel/15 flex items-center justify-between gap-3 max-sm:flex-col max-sm:items-start">
+                    <span className="font-bold text-coal shrink-0">2 животных</span>
+                    <span className="text-coal/80 font-medium text-right max-sm:text-left">+30% к стоимости выбранного формата</span>
+                  </div>
+                  <div className="px-3.5 py-2.5 rounded-xl bg-white/70 border border-caramel/15 flex items-center justify-between gap-3 max-sm:flex-col max-sm:items-start">
+                    <span className="font-bold text-coal shrink-0">3 животных</span>
+                    <span className="text-coal/80 font-medium text-right max-sm:text-left">+50%</span>
+                  </div>
+                  <div className="px-3.5 py-2.5 rounded-xl bg-white/70 border border-caramel/15 flex items-center justify-between gap-3 max-sm:flex-col max-sm:items-start">
+                    <span className="font-bold text-coal shrink-0">4 и более</span>
+                    <span className="text-coal/80 font-medium text-right max-sm:text-left">индивидуальный расчёт после анкеты</span>
+                  </div>
+                </div>
+              </div>
+
+              <p className="text-coal/60 leading-relaxed text-[12px] pt-3 mt-3 border-t border-caramel/15">
+                Если в ситуации участвуют несколько животных, но полноценная поведенческая оценка требуется только одному из них, дополнительная стоимость может не применяться. Объём работы определяется после анкеты.
               </p>
             </article>
           </div>

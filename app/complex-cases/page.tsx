@@ -195,7 +195,7 @@ export default function ComplexCasesPage() {
           <ScrollReveal className="max-w-[820px] mb-[52px]">
             <span className="kicker">ГРАНИЦЫ РАБОТЫ</span>
             <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-matcha">
-              Когда я перенаправляю случай
+              Когда случай перенаправляется
             </h2>
           </ScrollReveal>
           

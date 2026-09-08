@@ -145,30 +145,61 @@ export default function Home() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdFaq) }} />
       
       {/* ГЕРОЙ-БЛОК */}
-      <section className="relative overflow-hidden pt-[108px] pb-[74px] bg-[radial-gradient(circle_at_8%_22%,rgba(240,114,150,0.18),transparent_21rem),radial-gradient(circle_at_88%_12%,rgba(111,143,191,0.22),transparent_24rem),radial-gradient(circle_at_72%_86%,rgba(198,142,107,0.18),transparent_22rem),linear-gradient(145deg,theme(colors.snow),rgba(230,218,207,0.72)_48%,theme(colors.snow))] before:absolute before:w-[170px] before:h-[170px] before:rounded-full before:bg-gradient-to-br before:from-rose/70 before:to-berry/20 before:blur-[1px] before:animate-float-blob before:-left-[55px] before:top-[90px] before:pointer-events-none after:absolute after:w-[120px] after:h-[120px] after:rounded-full after:bg-gradient-to-br after:from-ice/60 after:to-matcha/20 after:blur-[1px] after:animate-float-blob after:right-[5%] after:-bottom-[42px] after:pointer-events-none after:[animation-delay:-4s]">
-        <div className="container grid grid-cols-[1.05fr_0.95fr] gap-[78px] items-center mobile:grid-cols-1 mobile:gap-6 relative z-10">
+      <section className="relative overflow-hidden pt-[108px] pb-[74px] bg-[radial-gradient(circle_at_8%_22%,rgba(240,114,150,0.18),transparent_21rem),radial-gradient(circle_at_88%_12%,rgba(111,143,191,0.22),transparent_24rem),radial-gradient(circle_at_72%_86%,rgba(198,142,107,0.18),transparent_22rem),linear-gradient(145deg,theme(colors.snow),rgba(230,218,207,0.72)_48%,theme(colors.snow))]">
+        
+        {/* 🐕 Собачья лапа (как справа на картинке: вытянутые овалы + загнутые когти) */}
+        <svg
+          className="absolute -left-10 top-20 w-44 h-44 text-rose/35 pointer-events-none animate-float-blob -rotate-12 select-none z-0"
+          viewBox="0 0 100 100"
+          fill="currentColor"
+          aria-hidden="true"
+        >
+          {/* Пальцы */}
+          <ellipse cx="20" cy="48" rx="8" ry="12.5" transform="rotate(-30 20 48)" />
+          <ellipse cx="37" cy="34" rx="8.5" ry="14" transform="rotate(-8 37 34)" />
+          <ellipse cx="63" cy="34" rx="8.5" ry="14" transform="rotate(8 63 34)" />
+          <ellipse cx="80" cy="48" rx="8" ry="12.5" transform="rotate(30 80 48)" />
+
+          {/* Основная подушечка */}
+          <path d="M 50 50 C 62 50 74 56 78 66 C 83 77 76 87 64 87 C 56 87 53 81 50 81 C 47 81 44 87 36 87 C 24 87 17 77 22 66 C 26 56 38 50 50 50 Z" />
+        </svg>
+
+        {/* 🐈 Кошачья лапа (как слева на картинке: веерные овалы, без когтей) */}
+        <svg
+          className="absolute right-[5%] -bottom-7 w-36 h-36 text-ice/45 pointer-events-none animate-float-blob [animation-delay:-4s] rotate-12 select-none z-0"
+          viewBox="0 0 100 100"
+          fill="currentColor"
+          aria-hidden="true"
+        >
+          {/* Пальцы веером */}
+          <ellipse cx="19" cy="45" rx="8.5" ry="12" transform="rotate(-40 19 45)" />
+          <ellipse cx="36" cy="30" rx="8.5" ry="12.5" transform="rotate(-14 36 30)" />
+          <ellipse cx="64" cy="30" rx="8.5" ry="12.5" transform="rotate(14 64 30)" />
+          <ellipse cx="81" cy="45" rx="8.5" ry="12" transform="rotate(40 81 45)" />
+
+          {/* Основная подушечка */}
+          <path d="M 50 48 C 61 48 73 54 77 64 C 82 75 75 85 63 85 C 56 85 53 79 50 79 C 47 79 44 85 37 85 C 25 85 18 75 23 64 C 27 54 39 48 50 48 Z" />
+        </svg>
+          <div className="container grid grid-cols-[1.05fr_0.95fr] gap-[78px] items-center mobile:grid-cols-1 mobile:gap-6 relative z-10">
           <div>
-            <span className="eyebrow">Ветеринарное поведение · Этология · Обучение</span>
-            <h1 className="relative after:block after:w-[min(270px,48%)] after:h-[9px] after:mt-5 after:rounded-full after:bg-rose after:opacity-90">
-              Поведение животного начинается с состояния
+            <h1 className="relative after:block after:w-[min(270px,48%)] ">
+              Поведение формируеться на пересечении состояния, среды и опыта
             </h1>
             <p className="text-xl text-matcha max-w-[800px]">
-              Мы помогаем владельцам собак и кошек понять, что поддерживает сложное поведение, снизить фоновую нагрузку и выстроить понятный план работы, который учитывает здоровье, нервную систему, среду, историю обучения и отношения с человеком.
+              Мы помогаем понять, какие факторы формируют и поддерживают поведение животного, снизить избыточную нагрузку и выстроить последовательный план работы с учётом здоровья, эмоционального состояния, среды, истории обучения и взаимодействия с человеком.
             </p>
             <div className="flex flex-wrap gap-2.5 mt-7">
               <Link className="button button-primary" href="/booking">Выбрать формат работы</Link>
               <Link className="button button-ghost" href="/services">Услуги и цены</Link>
             </div>
             <div className="flex flex-wrap gap-2.5 mt-7">
-              <span className="px-3 py-2 border border-forest/15 rounded-full text-[13px] font-[800] bg-oat/70">Командный подход</span>
-              <span className="px-3 py-2 border border-forest/15 rounded-full text-[13px] font-[800] bg-caramel/20">150+ отзывов</span>
-              <span className="px-3 py-2 border border-forest/15 rounded-full text-[13px] font-[800] bg-ice/20">Доказательная база</span>
+              <span className="px-3 py-2 border border-forest/15 rounded-full text-[13px] font-[800] bg-oat/70">С учётом здоровья</span>
+              <span className="px-3 py-2 border border-forest/15 rounded-full text-[13px] font-[800] bg-caramel/20">Без давления и наказаний</span>
+              <span className="px-3 py-2 border border-forest/15 rounded-full text-[13px] font-[800] bg-ice/20">Понятный план действий</span>
             </div>
           </div>
           
           <div className="min-h-[380px] flex items-center justify-center relative">
-            <span className="absolute z-10 px-4 py-3 rounded-full text-white font-black shadow-xl bg-rose top-5 right-0 rotate-3">Сначала состояние</span>
-            <span className="absolute z-10 px-4 py-3 rounded-full text-white font-black shadow-xl bg-gradient-to-br from-ice to-matcha bottom-[50px] -left-2.5 -rotate-3">Контекст важен</span>
             
             <TiltCard 
               className="w-full max-w-[470px] p-[42px] mobile:p-7 rounded-[42px] text-white shadow-[0_45px_90px_rgba(30,43,14,0.28)] bg-[radial-gradient(circle_at_83%_13%,rgba(198,142,107,0.34),transparent_30%),linear-gradient(145deg,theme(colors.soldier),theme(colors.coal)_72%)] border border-snow/10 relative overflow-hidden"
@@ -374,12 +405,9 @@ export default function Home() {
         <div className="container">
           <ScrollReveal className="max-w-[820px] mb-[42px]">
             <span className="kicker">НАВИГАТОР ЗАПРОСА</span>
-            <h2 className="after:block after:w-[92px] after:h-[5px] after:mt-4 after:rounded-full after:bg-matcha">
+            <h2 className="after:block after:w-[152px] after:h-[5px] after:mt-5 after:rounded-full after:bg-matcha">
               Ответьте на вопросы и получите следующий шаг
             </h2>
-            <p className="text-xl text-matcha">
-              Результат помогает выбрать формат работы, но не является диагнозом.
-            </p>
           </ScrollReveal>
           <Navigator initialSteps={dbNavSteps} formats={dbFormats} />
         </div>

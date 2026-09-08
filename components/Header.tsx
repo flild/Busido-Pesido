@@ -51,7 +51,7 @@ export function Header() {
               БУСИДО-ПЁСИДО
             </span>
             <span className="text-[9px] uppercase tracking-[0.13em] text-coal/60 font-[650] mobile:hidden">
-              поведение · состояние · благополучие
+              Платформа благополучия животных
             </span>
           </div>
         </Link>

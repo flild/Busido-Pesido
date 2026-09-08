@@ -93,7 +93,6 @@ export default function RootLayout({
       <body className="theme-expressive" suppressHydrationWarning>
         <ToastProvider>
           <ModalProvider>
-            <ReadingProgress />
             <PaletteStripe />
             <Header />
             {children}

@@ -558,7 +558,7 @@ export default function Home() {
 
       {/* CTA */}
       <section className="py-[92px] mobile:py-[64px]">
-        <div className="container flex items-center justify-between gap-8 p-10 mobile:p-7 rounded-[38px] shadow-2xl bg-[radial-gradient(circle_at_8%_12%,rgba(240,114,150,0.2),transparent_20rem),radial-gradient(circle_at_92%_88%,rgba(111,143,191,0.2),transparent_22rem),linear-gradient(135deg,theme(colors.snow),theme(colors.fog)_48%,rgba(216,211,179,0.75))] relative overflow-hidden after:absolute after:inset-x-0 after:bottom-0 after:h-[7px] after:bg-rose mobile:flex-col mobile:items-start">
+        <div className="container flex items-center justify-between gap-8 p-10 mobile:p-7 rounded-[38px] shadow-2xl bg-[radial-gradient(circle_at_8%_12%,rgba(240,114,150,0.2),transparent_20rem),radial-gradient(circle_at_92%_88%,rgba(111,143,191,0.2),transparent_22rem),linear-gradient(135deg,theme(colors.snow),theme(colors.fog)_48%,rgba(216,211,179,0.75))] relative overflow-hidden after:absolute after:inset-x-0 after:bottom-0 after:h-[7px]">
           <div className="relative z-10">
             <span className="kicker">НАЧАТЬ РАБОТУ</span>
             <h2 className="text-[44px] mobile:text-[34px] max-w-[16ch] leading-[1.05] after:hidden">

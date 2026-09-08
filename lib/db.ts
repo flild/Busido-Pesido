@@ -99,6 +99,7 @@ CREATE TABLE IF NOT EXISTS specialists (
     text TEXT NOT NULL,
     author TEXT NOT NULL,
     format TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'published',
     image_url TEXT NOT NULL,
     sort_order INTEGER DEFAULT 0
   );

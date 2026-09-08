@@ -22,7 +22,7 @@ export default async function EditReviewPage({ params }: { params: Promise<{ id:
       
       <h1 className="text-[32px] font-bold text-coal mb-8 m-0">Редактировать отзыв</h1>
 
-      <form action={saveReview} encType="multipart/form-data" className="bg-white border border-forest/15 rounded-[24px] p-8 shadow-sm flex flex-col gap-6">
+      <form action={saveReview} className="bg-white border border-forest/15 rounded-[24px] p-8 shadow-sm flex flex-col gap-6">
         <input type="hidden" name="id" value={review.id} />
 
         <div className="grid grid-cols-2 gap-6">

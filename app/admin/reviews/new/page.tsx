@@ -12,7 +12,7 @@ export default function NewReviewPage() {
       
       <h1 className="text-[32px] font-bold text-coal mb-8 m-0">Новый отзыв</h1>
 
-      <form action={saveReview} encType="multipart/form-data" className="bg-white border border-forest/15 rounded-[24px] p-8 shadow-sm flex flex-col gap-6">
+      <form action={saveReview} className="bg-white border border-forest/15 rounded-[24px] p-8 shadow-sm flex flex-col gap-6">
         <div className="grid grid-cols-2 gap-6">
           <label className="flex flex-col gap-2 text-sm font-bold text-coal">
             Категория (ID)

@@ -60,18 +60,20 @@ CREATE TABLE IF NOT EXISTS specialists (
   );
 
   CREATE TABLE IF NOT EXISTS applications (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    service TEXT,
-    specialist_id INTEGER,
-    date TEXT,
-    time TEXT,
-    name TEXT,
-    email TEXT,
-    contact TEXT,
-    request_text TEXT,
-    status TEXT DEFAULT 'new',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-  );
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      service TEXT,
+      specialist_id INTEGER,
+      date TEXT,
+      time TEXT,
+      name TEXT,
+      email TEXT,
+      contact TEXT,
+      request_text TEXT,
+      status TEXT DEFAULT 'new',
+      pet_type TEXT,
+      pet_name TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
 
   CREATE TABLE IF NOT EXISTS services (
     id TEXT PRIMARY KEY,
@@ -127,86 +129,4 @@ CREATE TABLE IF NOT EXISTS specialists (
 `);
 
 
-// Сид данных для услуг (выполняется только если таблица пустая)
-const servicesCount = db.prepare('SELECT COUNT(*) as c FROM services').get() as { c: number };
-if (servicesCount.c === 0) {
-  const insertService = db.prepare(`
-    INSERT INTO services (id, title, price, description, tag, theme, is_featured, link, link_text, steps, sort_order)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `);
 
-  const defaultSteps = JSON.stringify([
-    ["Кому подходит", "Владельцам собак и кошек..."], 
-    ["Что подготовить", "Анкету, короткие видео..."]
-  ]);
-}
-
-// Сид данных для специалистов
-const specCount = db.prepare('SELECT COUNT(*) as c FROM specialists').get() as { c: number };
-if (specCount.c === 0) {
-  const insertSpec = db.prepare(`
-    INSERT INTO specialists (name, role, short_bio, full_bio, image_url, is_main, sort_order)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
-  `);
-  insertSpec.run(
-    'Ярослава Ковалевская',
-    'Ветеринарный врач · зоотехник-кинолог · специалист по поведению животных',
-    'Я работаю на стыке поведения, здоровья и среды',
-    'Я окончила ВГАВМ по специальности ветеринарный врач и РГУНХ по квалификации зоотехник-кинолог. Работала в ветеринарных клиниках, Минском государственном зоопарке, с животными экзотариума и крупными хищниками, затем перешла в частную практику.\n\nВ каждом случае я собираю анамнез, анализирую состояние животного, условия жизни, режим, нагрузку, предшествующий опыт и последствия поведения. Это помогает отличить задачу обучения от проблемы состояния и вовремя направить животное на дополнительную диагностику.',
-    null, // Пока без фото
-    1,
-    0
-  );
-}
-
-const scheduleCount = db.prepare('SELECT COUNT(*) as c FROM free_schedule').get() as { c: number };
-if (scheduleCount.c === 0) {
-  const insertSchedule = db.prepare(`
-    INSERT INTO free_schedule (date_id, day_number, is_available, custom_message, slots)
-    VALUES (?, ?, ?, ?, ?)
-  `);
-  
-  insertSchedule.run('2026-08-01', 1, 1, null, JSON.stringify(["10:00", "12:00", "15:30"]));
-  insertSchedule.run('2026-08-02', 2, 1, null, JSON.stringify(["11:00", "16:00"]));
-  insertSchedule.run('2026-08-03', 3, 1, null, JSON.stringify(["18:00"]));
-  insertSchedule.run('2026-08-04', 4, 0, 'Нет мест', JSON.stringify([]));
-  insertSchedule.run('2026-08-05', 5, 1, null, JSON.stringify(["10:00", "12:00", "14:00", "17:00"]));
-  insertSchedule.run('2026-08-06', 6, 0, 'Отменено', JSON.stringify([]));
-  insertSchedule.run('2026-08-07', 7, 1, null, JSON.stringify(["10:00", "13:00"]));
-}
-
-const navCount = db.prepare("SELECT COUNT(*) as c FROM settings WHERE key = 'navigator_steps'").get() as { c: number };
-if (navCount.c === 0) {
-  const defaultNavSteps = [
-    { key: "species", title: "С кем связан запрос?", options: [["dog", "Собака", "Щенок, подросток, взрослая или пожилая собака"], ["cat", "Кошка", "Одна кошка или несколько животных дома"]] },
-  ];
-  db.prepare("INSERT INTO settings (key, value) VALUES ('navigator_steps', ?)").run(JSON.stringify(defaultNavSteps));
-}
-
-// Демо-данные с учетом новых колонок
-const count = db.prepare('SELECT COUNT(*) as c FROM applications').get() as { c: number };
-if (count.c === 0) {
-  const insertApp = db.prepare(`
-    INSERT INTO applications (service, date, time, name, email, contact, request_text, status, pet_type, pet_name, created_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now', ?))
-  `);
-  
-  insertApp.run('Онлайн-консультация', '12.11.2023', '15:30', 'Анна', 'anna@example.com', '@anna_tg', 'Очень длинный текст запроса. Собака тянет поводок так сильно, что я уже не могу с ней гулять. Пробовали разные методы, ничего не помогает. Помогите, пожалуйста, разобраться с этой проблемой!', 'new', 'dog', 'Шарик', '-2 days');
-  insertApp.run('Очная / выездная', '15.11.2023', '12:00', 'Михаил', 'mike@example.com', '1234567890', 'Агрессия к собакам', 'contacted', 'dog', 'Рекс', '-5 days');
-}
-
-const articleCount = db.prepare('SELECT COUNT(*) as c FROM articles').get() as { c: number };
-if (articleCount.c === 0) {
-  const insertArticle = db.prepare(`
-    INSERT INTO articles (title, slug, summary, content, category, tag)
-    VALUES (?, ?, ?, ?, ?, ?)
-  `);
-  insertArticle.run(
-    'Почему известная команда исчезает в сложной ситуации',
-    'command-disappears',
-    'Доступность внимания, уровень возбуждения, контекст и история подкрепления.',
-    'Полный текст статьи...',
-    'dogs learning',
-    'Собаки · обучение'
-  );
-}

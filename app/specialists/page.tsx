@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { db } from "@/lib/db";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
+import { absoluteUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Специалисты",
@@ -16,8 +17,8 @@ export default function SpecialistsPage() {
     <main className="pt-[108px] pb-[92px] bg-[linear-gradient(180deg,theme(colors.snow),rgba(255,255,255,0))] min-h-screen">
     <BreadcrumbJsonLd 
         items={[
-          { name: "Главная", url: "https://busidopesido.ru" },
-          { name: "Специалисты", url: "https://busidopesido.ru/specialists" }
+          { name: "Главная", url: absoluteUrl("/") },
+          { name: "Специалисты", url: absoluteUrl("/specialists") }
         ]} 
       />
       <div className="container">

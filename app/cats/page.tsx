@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { TiltCard } from '@/components/TiltCard';
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
+import { absoluteUrl } from "@/lib/site";
 import { 
   Box, 
   Swords, 
@@ -20,12 +21,12 @@ export const metadata: Metadata = {
   title: 'Зоопсихолог для кошек: коррекция поведения, агрессия, лоток',
   description: 'Помощь зоопсихолога при проблемах поведения кошек. Решение проблем с лотком, агрессией, страхами, ночной активностью и конфликтами между животными.',
   alternates: {
-    canonical: "https://busidopesido.ru/cats",
+    canonical: absoluteUrl("/cats"),
   },
   openGraph: {
     title: 'Зоопсихолог для кошек',
     description: 'Решение проблем с лотком, агрессией, конфликтами и адаптацией кошек. Работа со средой и состоянием.',
-    url: 'https://busidopesido.ru/cats',
+    url: absoluteUrl("/cats"),
     type: 'website',
   },
 };
@@ -52,7 +53,7 @@ export default function CatsPage() {
       "name": "Busido-Pesido"
     },
     "description": "Профессиональная помощь в решении поведенческих проблем у кошек: агрессия, проблемы с лотком, ночная вокализация, конфликты в семье.",
-    "url": "https://busidopesido.ru/cats"
+    "url": absoluteUrl("/cats")
   };
 
   return (
@@ -63,8 +64,8 @@ export default function CatsPage() {
       />
       <BreadcrumbJsonLd 
               items={[
-                { name: "Главная", url: "https://busidopesido.ru" },
-                { name: "О котах", url: "https://busidopesido.ru/cats" }
+                { name: "Главная", url: absoluteUrl("/") },
+                { name: "О котах", url: absoluteUrl("/cats") }
               ]} 
             />
 

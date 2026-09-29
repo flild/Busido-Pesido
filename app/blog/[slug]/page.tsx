@@ -9,6 +9,7 @@ import { ViewTracker } from "./ViewTracker";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 import { ArticleFeedback } from "./ArticleFeedback";
 import Image from "next/image";
+import { absoluteUrl } from "@/lib/site";
 
 // Функция расчета времени чтения (примерно 1500 символов в минуту)
 const getReadTime = (text: string) => Math.max(1, Math.ceil(text.length / 1500));
@@ -33,7 +34,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const article = db.prepare("SELECT title, summary, created_at, category FROM articles WHERE slug = ?").get(slug) as Pick<ArticleFull, 'title' | 'summary' | 'created_at' | 'category'> | undefined;
 
   if (!article) return { title: "Статья не найдена" };
-  const url = `https://busidopesido.ru/blog/${slug}`;
+  const url = absoluteUrl(`/blog/${slug}`);
 
   return {
     title: article.title,
@@ -75,7 +76,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     author: [{
       "@type": "Person",
       name: "Ярослава Ковалевская",
-      url: "https://busidopesido.ru",
+      url: absoluteUrl("/"),
     }],
     datePublished: article.created_at,
     dateModified: article.created_at, 
@@ -84,12 +85,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       name: "Busido-Pesido",
       logo: {
         "@type": "ImageObject",
-        url: "https://busidopesido.ru/logo.png", 
+        url: absoluteUrl("/logo.png"), 
       },
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://busidopesido.ru/blog/${slug}`,
+      "@id": absoluteUrl(`/blog/${slug}`),
     },
     interactionStatistic: {
       "@type": "InteractionCounter",
@@ -105,9 +106,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       {/* ДОБАВЛЯЕМ КРОШКИ С ТРЕМЯ УРОВНЯМИ */}
       <BreadcrumbJsonLd 
         items={[
-          { name: "Главная", url: "https://busidopesido.ru" },
-          { name: "Блог", url: "https://busidopesido.ru/blog" },
-          { name: article.title, url: `https://busidopesido.ru/blog/${slug}` }
+          { name: "Главная", url: absoluteUrl("/") },
+          { name: "Блог", url: absoluteUrl("/blog") },
+          { name: article.title, url: absoluteUrl(`/blog/${slug}`) }
         ]} 
       />
       <ViewTracker slug={slug} />

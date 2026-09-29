@@ -5,17 +5,18 @@ import { ScrollReveal } from '@/components/ScrollReveal';
 import { FreeConsultationsWidget } from '@/components/FreeConsultationsWidget';
 import { CheckCircle2, Clock, ShieldAlert, CreditCard, Scale } from 'lucide-react';
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
+import { absoluteUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: 'Бесплатные поведенческие консультации',
   description: 'Бесплатная онлайн-помощь специалиста по поведению животных (собак и кошек). 1–7 числа каждого месяца, разбор сложных случаев и рекомендации.',
   alternates: {
-    canonical: "https://busidopesido.ru/free-consultations",
+    canonical: absoluteUrl("/free-consultations"),
   },
   openGraph: {
     title: 'Бесплатные поведенческие консультации',
     description: '1–7 числа каждого месяца. Бесплатная онлайн-помощь специалиста по поведению животных.',
-    url: 'https://busidopesido.ru/free-consultations',
+    url: absoluteUrl("/free-consultations"),
     type: 'website',
   }
 };
@@ -56,8 +57,8 @@ export default function FreeConsultationsPage() {
       />
             <BreadcrumbJsonLd 
         items={[
-          { name: "Главная", url: "https://busidopesido.ru" },
-          { name: "Бесплатные консультации", url: "https://busidopesido.ru/free-consultations" }
+          { name: "Главная", url: absoluteUrl("/") },
+          { name: "Бесплатные консультации", url: absoluteUrl("/free-consultations") }
         ]} 
       />
       {/* ХЕДЕР СТРАНИЦЫ */}

@@ -2,12 +2,13 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { FaqItem } from "@/components/FaqItem";
 import { ScrollReveal } from "@/components/ScrollReveal";
+import { absoluteUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Частые вопросы (FAQ) — Бусидо-Пёсидо",
   description: "Ответы на частые вопросы о работе специалиста по поведению животных. С чем мы работаем, какие методы используем и сколько длится коррекция поведения.",
   alternates: {
-    canonical: "https://busidopesido.ru/faq",
+    canonical: absoluteUrl("/faq"),
   },
 };
 

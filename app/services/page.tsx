@@ -3,18 +3,19 @@ import Link from "next/link";
 import { db } from "@/lib/db";
 import { themeColors, type BrandTheme } from "@/lib/theme";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
+import { absoluteUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Услуги и цены зоопсихолога",
   description:
     "Цены на услуги зоопсихолога: онлайн-консультации, очные встречи, сопровождение, решение поведенческих проблем собак и кошек.",
   alternates: {
-    canonical: "https://busidopesido.ru/services",
+    canonical: absoluteUrl("/services"),
   },
   openGraph: {
     title: "Услуги и цены зоопсихолога",
     description: "Полный прайс-лист и форматы работы с поведением животных.",
-    url: "https://busidopesido.ru/services",
+    url: absoluteUrl("/services"),
     type: "website",
   },
 };
@@ -65,7 +66,7 @@ export default function ServicesPage() {
         },
         "price": s.price_int, 
         "priceCurrency": "RUB",
-        "url": `https://busidopesido.ru${s.link.split('?')[0]}`
+        "url": absoluteUrl(s.link.split('?')[0])
       }))
     }
   };
@@ -78,8 +79,8 @@ export default function ServicesPage() {
       />
       <BreadcrumbJsonLd 
         items={[
-          { name: "Главная", url: "https://busidopesido.ru" },
-          { name: "Форматы работы, цены", url: "https://busidopesido.ru/sevices" }
+          { name: "Главная", url: absoluteUrl("/") },
+          { name: "Форматы работы, цены", url: absoluteUrl("/services") }
         ]} 
       />
       {/* Улучшенный Герой-блок с декоративными градиентами */}

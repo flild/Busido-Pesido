@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { SITE_EMAIL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Политика конфиденциальности — Busido-Pesido",
@@ -55,7 +56,7 @@ export default function PrivacyPage() {
 
           <section>
             <h2 className="text-xl font-bold text-coal mb-3">5. Заключительные положения</h2>
-            <p>Пользователь может получить любые разъяснения по интересующим вопросам, касающимся обработки его персональных данных, обратившись к Оператору с помощью электронной почты <strong>info.busidopesido.ru</strong> или через мессенджеры.</p>
+            <p>Пользователь может получить любые разъяснения по интересующим вопросам, касающимся обработки его персональных данных, обратившись к Оператору с помощью электронной почты <strong>{SITE_EMAIL}</strong> или через мессенджеры.</p>
           </section>
         </div>
       </div>

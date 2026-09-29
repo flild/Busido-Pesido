@@ -18,12 +18,13 @@ import { FaqItem } from "@/components/FaqItem";
 import { AfterConsultation } from '@/components/AfterConsultation';
 
 import { db } from "@/lib/db";
+import { absoluteUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Главная — Бусидо-Пёсидо",
   description: "Бусидо-Пёсидо — команда специалистов по поведению, состоянию и благополучию животных.",
   alternates: {
-    canonical: "https://busidopesido.ru",
+    canonical: absoluteUrl("/"),
   },
 };
 
@@ -115,9 +116,9 @@ export default function Home() {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     name: "Бусидо-Пёсидо",
-    image: "https://busidopesido.ru/og-image.jpg",
+    image: absoluteUrl("/og-image.jpg"),
     description: "Помощь владельцам собак и кошек в решении проблем поведения. Анализ состояния, среды и истории обучения.",
-    url: "https://busidopesido.ru",
+    url: absoluteUrl("/"),
     priceRange: "$$",
     aggregateRating: {
       "@type": "AggregateRating",

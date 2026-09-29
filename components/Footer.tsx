@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { Mail } from 'lucide-react';
 import { SiTelegram } from '@icons-pack/react-simple-icons';
+import { SITE_EMAIL, TELEGRAM_URL } from '@/lib/site';
 
 export function Footer() {
   return (
@@ -36,14 +37,14 @@ export function Footer() {
         <div className="flex flex-col gap-3">
           <h3 className="text-[13px] font-[900] tracking-widest uppercase mb-2 text-white/40">Связаться с нами</h3>
           
-          <a className="flex items-center gap-2 text-[15px] font-[600] text-oat hover:text-white transition-colors" href="mailto:info@busidopesido.ru">
+          <a className="flex items-center gap-2 text-[15px] font-[600] text-oat hover:text-white transition-colors" href={`mailto:${SITE_EMAIL}`}>
             <Mail size={16} />
-            <span>info@busidopesido.ru</span>
+            <span>{SITE_EMAIL}</span>
           </a>
           
           <a 
             className="flex items-center gap-2 text-[15px] font-[600] text-oat hover:text-white transition-colors" 
-            href="https://t.me/busidopesido" 
+            href={TELEGRAM_URL} 
             target="_blank" 
             rel="noopener noreferrer"
           >

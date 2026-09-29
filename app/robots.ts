@@ -1,29 +1,14 @@
-// import { MetadataRoute } from "next";
-
-// export default function robots(): MetadataRoute.Robots {
-//   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://busidopesido.ru";
-
-//   return {
-//     rules: {
-//       userAgent: "*",
-//       allow: "/",
-//       disallow: ["/admin/", "/api/"],
-//     },
-//     sitemap: `${baseUrl}/sitemap.xml`,
-//   };
-// }
-
 import { MetadataRoute } from "next";
+import { SITE_URL } from "@/lib/site";
 
+// Сейчас весь сайт закрыт от индексации (disallow: "/").
+// Перед релизом открыть: allow: "/", disallow: ["/admin/", "/api/"].
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_BASE_URL || "https://busidopesido.ru";
-
   return {
     rules: {
       userAgent: "*",
       disallow: "/",
     },
-    sitemap: `${baseUrl}/sitemap.xml`,
+    sitemap: `${SITE_URL}/sitemap.xml`,
   };
 }

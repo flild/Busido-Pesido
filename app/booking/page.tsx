@@ -2,11 +2,12 @@ import { Metadata } from "next";
 import { BookingForm } from "@/components/BookingForm";
 import { db } from "@/lib/db";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
+import { absoluteUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Запись на консультацию — Busido-Pesido",
   description: "Запись на консультацию зоопсихолога. Выберите удобное время для онлайн или очной встречи по поведению собак и кошек.",
-  alternates: { canonical: "https://busidopesido.ru/booking" },
+  alternates: { canonical: absoluteUrl("/booking") },
 };
 
 export default async function BookingPage({
@@ -34,7 +35,7 @@ export default async function BookingPage({
     "@type": "ContactPage",
     "name": "Запись на консультацию",
     "description": "Форма бронирования времени для консультации со специалистом по поведению животных.",
-    "url": "https://busidopesido.ru/booking"
+    "url": absoluteUrl("/booking")
   };
 
   return (
@@ -42,8 +43,8 @@ export default async function BookingPage({
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdContact) }} />
       <BreadcrumbJsonLd 
         items={[
-          { name: "Главная", url: "https://busidopesido.ru" },
-          { name: "Запись на консультацию", url: "https://busidopesido.ru/booking" }
+          { name: "Главная", url: absoluteUrl("/") },
+          { name: "Запись на консультацию", url: absoluteUrl("/booking") }
         ]} 
       />
       <section className="pt-[108px] pb-[74px] bg-[linear-gradient(135deg,rgba(111,143,191,0.24),theme(colors.snow)_52%,rgba(198,142,107,0.26))] relative overflow-hidden">

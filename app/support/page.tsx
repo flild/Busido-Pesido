@@ -5,17 +5,18 @@ import { ScrollReveal } from '@/components/ScrollReveal';
 import { TiltCard } from '@/components/TiltCard';
 import { CheckCircle2, Video, MapPin, Eye, Brain, Wrench, Route } from 'lucide-react';
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
+import { absoluteUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: 'Сопровождение зоопсихолога',
   description: 'Длительное сопровождение зоопсихолога: онлайн и с выездами. Регулярная оценка видео, среды и корректировка плана для собак и кошек.',
   alternates: {
-    canonical: 'https://busidopesido.ru/support',
+    canonical: absoluteUrl("/support"),
   },
   openGraph: {
     title: 'Сопровождение зоопсихолога',
     description: 'План, который меняется вместе с животным. Длительная работа для сложных случаев.',
-    url: 'https://busidopesido.ru/support',
+    url: absoluteUrl("/support"),
     type: 'website',
   },
 };
@@ -80,8 +81,8 @@ export default function SupportPage() {
       />
       <BreadcrumbJsonLd 
         items={[
-          { name: "Главная", url: "https://busidopesido.ru" },
-          { name: "Поддержка", url: "https://busidopesido.ru/support" }
+          { name: "Главная", url: absoluteUrl("/") },
+          { name: "Поддержка", url: absoluteUrl("/support") }
         ]} 
       />
       <section className="pt-[108px] pb-[74px] bg-[linear-gradient(135deg,theme(colors.oat),theme(colors.snow)_62%,rgba(111,143,191,0.22))] relative overflow-hidden">

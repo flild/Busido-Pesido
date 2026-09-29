@@ -3,6 +3,7 @@
 import { db } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { absoluteUrl } from '@/lib/site';
 
 export async function saveArticle(id: number | null, formData: FormData) {
   const title = (formData.get('title') as string)?.trim();
@@ -39,7 +40,7 @@ export async function saveArticle(id: number | null, formData: FormData) {
   }
 
   if (status === 'published') {
-    const articleUrl = `https://busidopesido.ru/blog/${slug}`;
+    const articleUrl = absoluteUrl(`/blog/${slug}`);
     // Бросаем пинг поисковикам в фоновом режиме (без await)
     notifyIndexNow(articleUrl).catch(console.error);
   }
@@ -62,7 +63,6 @@ export async function deleteArticle(formData: FormData) {
 }
 
 async function notifyIndexNow(url: string) {
-  const host = 'busidopesido.ru'; 
   const key = 'busido-pesido-indexnow-key-2026'; // Замени на свой ключ
   const endpoint = 'https://yandex.com/indexnow'; 
   // Яндекс и Bing обмениваются ссылками друг с другом, так что достаточно слать в Яндекс

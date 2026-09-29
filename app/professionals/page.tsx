@@ -4,6 +4,7 @@ import { db } from '@/lib/db';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { TiltCard } from '@/components/TiltCard';
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
+import { absoluteUrl } from "@/lib/site";
 import { 
   CheckCircle2, 
   Map, 
@@ -16,12 +17,12 @@ export const metadata: Metadata = {
   title: 'Супервизия и разбор случаев для специалистов',
   description: 'Профессиональный разбор сложных поведенческих кейсов собак и кошек для кинологов, ветеринарных врачей, фелинологов и специалистов по поведению.',
   alternates: {
-    canonical: "https://busidopesido.ru/professionals",
+    canonical: absoluteUrl("/professionals"),
   },
   openGraph: {
     title: 'Супервизия и разбор случаев',
     description: 'Профессиональный разбор поведенческих кейсов для специалистов.',
-    url: 'https://busidopesido.ru/professionals',
+    url: absoluteUrl("/professionals"),
     type: 'website',
   },
 };
@@ -53,7 +54,7 @@ export default function ProfessionalsPage() {
       "@type": "Offer",
       "price": priceInt,
       "priceCurrency": "RUB",
-      "url": "https://busidopesido.ru/professionals"
+      "url": absoluteUrl("/professionals")
     }
   };
 
@@ -65,8 +66,8 @@ export default function ProfessionalsPage() {
       />
       <BreadcrumbJsonLd 
         items={[
-          { name: "Главная", url: "https://busidopesido.ru" },
-          { name: "Супервизия для специалистов", url: "https://busidopesido.ru/professionals" }
+          { name: "Главная", url: absoluteUrl("/") },
+          { name: "Супервизия для специалистов", url: absoluteUrl("/professionals") }
         ]} 
       />
       {/* HERO СЕКЦИЯ */}

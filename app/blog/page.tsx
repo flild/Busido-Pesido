@@ -3,6 +3,7 @@ import { BlogList } from "@/components/BlogList";
 import { db } from "@/lib/db";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
+import { absoluteUrl } from "@/lib/site";
 
 export const dynamic = 'force-dynamic';
 
@@ -10,12 +11,12 @@ export const metadata: Metadata = {
   title: "Блог",
   description: "Статьи о собаках и кошках, поведении, здоровье, обучении и благополучии животных.",
   alternates: {
-    canonical: "https://busidopesido.ru/blog",
+    canonical: absoluteUrl("/blog"),
   },
   openGraph: {
     title: "Блог зоопсихолога",
     description: "Статьи о собаках и кошках, поведении, здоровье, обучении и благополучии животных.",
-    url: "https://busidopesido.ru/blog",
+    url: absoluteUrl("/blog"),
     type: "website",
   },
 };
@@ -46,11 +47,11 @@ export default function BlogPage() {
     "@type": "Blog",
     "name": "Блог зоопсихолога",
     "description": "Статьи о собаках и кошках, поведении, здоровье, обучении и благополучии животных.",
-    "url": "https://busidopesido.ru/blog",
+    "url": absoluteUrl("/blog"),
     "blogPost": articles.slice(0, 5).map(article => ({
       "@type": "BlogPosting",
       "headline": article.title,
-      "url": `https://busidopesido.ru/blog/${article.slug}`,
+      "url": absoluteUrl(`/blog/${article.slug}`),
       "datePublished": article.created_at
     }))
   };
@@ -60,8 +61,8 @@ export default function BlogPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdBlog) }} />
       <BreadcrumbJsonLd 
         items={[
-          { name: "Главная", url: "https://busidopesido.ru" },
-          { name: "Блог", url: "https://busidopesido.ru/blog" }
+          { name: "Главная", url: absoluteUrl("/") },
+          { name: "Блог", url: absoluteUrl("/blog") }
         ]} 
       />
       <section className="pt-[108px] pb-[74px] bg-[linear-gradient(135deg,rgba(111,143,191,0.24),theme(colors.snow)_52%,rgba(198,142,107,0.26))] relative overflow-hidden">

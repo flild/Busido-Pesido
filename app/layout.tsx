@@ -6,6 +6,7 @@ import { ReadingProgress } from "@/components/ReadingProgress";
 import { PaletteStripe } from "@/components/PaletteStripe";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { SITE_URL } from "@/lib/site";
 
 export const viewport: Viewport = {
   themeColor: "#ffffff",
@@ -15,7 +16,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://busidopesido.ru"), // Replace with actual domain
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Busido-Pesido | Зоопсихолог, специалист по поведению животных",
     template: "%s | Busido-Pesido",
@@ -46,7 +47,7 @@ export const metadata: Metadata = {
     title: "Busido-Pesido | Специалист по поведению животных",
     description:
       "Ярослава Ковалевская — ветеринарный врач, зоотехник-кинолог. Помощь с поведением собак и кошек, учитывая их состояние, здоровье и среду.",
-    url: "https://busidopesido.ru",
+    url: SITE_URL,
     siteName: "Busido-Pesido",
     images: [
       {

@@ -1,8 +1,9 @@
 import { MetadataRoute } from "next";
 import { db } from '@/lib/db';
+import { SITE_URL } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://busidopesido.ru";
+  const baseUrl = SITE_URL;
 
   // Вытягиваем только опубликованные статьи
   const articles = db
@@ -18,15 +19,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const staticRoutes = [
     "",
-    "/about",
     "/services",
-    "/complex-cases",
+    "/support",
+    "/dogs",
     "/cats",
+    "/complex-cases",
     "/professionals",
-    "/library",
+    "/specialists",
     "/booking",
     "/free-consultations",
     "/blog",
+    "/faq",
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     changeFrequency:

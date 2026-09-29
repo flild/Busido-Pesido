@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { TiltCard } from '@/components/TiltCard';
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
+import { absoluteUrl } from "@/lib/site";
 import { 
   Activity, 
   ShieldAlert, 
@@ -20,12 +21,12 @@ export const metadata: Metadata = {
   title: 'Зоопсихолог для собак: коррекция поведения, агрессия, страхи',
   description: 'Помощь зоопсихолога при проблемах поведения собак. Реактивность, агрессия, сепарационная тревога, натянутый поводок и страхи.',
   alternates: {
-    canonical: "https://busidopesido.ru/dogs",
+    canonical: absoluteUrl("/dogs"),
   },
   openGraph: {
     title: 'Зоопсихолог для собак',
     description: 'Комплексная работа с поведением собак. Снижаем реактивность, выстраиваем контакт и комфортные прогулки.',
-    url: 'https://busidopesido.ru/dogs',
+    url: absoluteUrl("/dogs"),
     type: 'website',
   },
 };
@@ -52,7 +53,7 @@ export default function DogsPage() {
       "name": "Busido-Pesido"
     },
     "description": "Профессиональная помощь в решении поведенческих проблем у собак: агрессия, страхи, реактивность, натянутый поводок, сепарационная тревога.",
-    "url": "https://busidopesido.ru/dogs"
+    "url": absoluteUrl("/dogs")
   };
 
   return (
@@ -63,8 +64,8 @@ export default function DogsPage() {
       />
             <BreadcrumbJsonLd 
               items={[
-                { name: "Главная", url: "https://busidopesido.ru" },
-                { name: "О собаках", url: "https://busidopesido.ru/dogs" }
+                { name: "Главная", url: absoluteUrl("/") },
+                { name: "О собаках", url: absoluteUrl("/dogs") }
               ]} 
             />
 

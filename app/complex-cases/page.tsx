@@ -4,6 +4,7 @@ import { db } from '@/lib/db';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { TiltCard } from '@/components/TiltCard';
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
+import { absoluteUrl } from "@/lib/site";
 import { 
   ShieldAlert, 
   Stethoscope, 
@@ -20,12 +21,12 @@ export const metadata: Metadata = {
   title: 'Сложные случаи: реактивность, страхи, зоопсихолог',
   description: 'Помощь зоопсихолога при сложных поведенческих нарушениях: агрессия, страхи, реактивность собак и кошек. Ветеринарное второе мнение.',
   alternates: {
-    canonical: "https://busidopesido.ru/complex-cases",
+    canonical: absoluteUrl("/complex-cases"),
   },
   openGraph: {
     title: 'Сложные случаи и ветеринарное второе мнение',
     description: 'Когда поведение, здоровье и среда связаны. Анализ сложных поведенческих проблем.',
-    url: 'https://busidopesido.ru/complex-cases',
+    url: absoluteUrl("/complex-cases"),
     type: 'website',
   },
 };
@@ -55,7 +56,7 @@ export default function ComplexCasesPage() {
       "@type": "Offer",
       "price": priceInt,
       "priceCurrency": "RUB",
-      "url": "https://busidopesido.ru/complex-cases"
+      "url": absoluteUrl("/complex-cases")
     }
   };
 
@@ -67,8 +68,8 @@ export default function ComplexCasesPage() {
       />
       <BreadcrumbJsonLd 
               items={[
-                { name: "Главная", url: "https://busidopesido.ru" },
-                { name: "сложные случаи", url: "https://busidopesido.ru/complex-cases" }
+                { name: "Главная", url: absoluteUrl("/") },
+                { name: "сложные случаи", url: absoluteUrl("/complex-cases") }
               ]} 
             />
 

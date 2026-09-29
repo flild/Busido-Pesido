@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { SiTelegram } from '@icons-pack/react-simple-icons'; 
+import { TELEGRAM_URL } from '@/lib/site'; 
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -106,7 +107,7 @@ export function Header() {
 
         <div className="flex items-center gap-3 shrink-0 ml-auto mobile:hidden">
           <a 
-            href="https://t.me/busidopesido" 
+            href={TELEGRAM_URL} 
             target="_blank" 
             rel="noopener noreferrer"
             className="text-forest/60 hover:text-forest transition-colors p-2"

@@ -44,8 +44,10 @@ export function FactorCloud() {
         })}
       </div>
       
-      {/* Жесткая высота и flex-центрирование, чтобы текст не рвал блок */}
-      <div className="h-[108px] flex flex-col justify-center mt-3.5 p-[14px_16px] rounded-[17px] bg-gradient-to-br from-snow/95 to-fog/90 text-coal relative z-10" id="factorResponse">
+      <div 
+        className="min-h-[108px] h-auto flex flex-col justify-center mt-3.5 p-[14px_16px] mobile:p-3 rounded-[17px] bg-gradient-to-br from-snow/95 to-fog/90 text-coal relative z-10" 
+        id="factorResponse"
+      >
         {activeFactor ? (
           <>
             <span className="text-[9px] tracking-[0.12em] font-[800] text-forest">{factorDescriptions[activeFactor][0]}</span>
